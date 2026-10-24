@@ -1,6 +1,6 @@
 import type { Project, SuggestResult } from "../core/schemas.ts";
 
-const useColor = process.stdout.isTTY && !process.env.NO_COLOR;
+const useColor = !process.env.NO_COLOR && (process.stdout.isTTY || !!process.env.FORCE_COLOR);
 const paint = (code: string) => (s: string) => (useColor ? `\x1b[${code}m${s}\x1b[0m` : s);
 export const c = {
   bold: paint("1"),
@@ -29,11 +29,11 @@ function wrap(text: string, width: number, indent: string): string {
 
 const czk = (n: number) => `${Math.round(n).toLocaleString("cs-CZ")} CZK`;
 
-export function formatProject(p: Project, index: number): string {
+export function formatProject(p: Project, index: number, opts: { numbered?: boolean } = {}): string {
   const out: string[] = [];
   const width = Math.min(process.stdout.columns || 100, 100);
 
-  const header = ` ${index + 1}. ${p.title} `;
+  const header = opts.numbered === false ? ` ${p.title} ` : ` ${index + 1}. ${p.title} `;
   out.push(c.bold(c.cyan(`━━━${header}${"━".repeat(Math.max(3, width - header.length - 3))}`)));
   out.push(wrap(p.summary, width, ""));
 
@@ -67,10 +67,12 @@ export function formatProject(p: Project, index: number): string {
     for (const n of p.safetyNotes) out.push(`  ${c.yellow("!")} ${wrap(n, width - 4, "    ")}`);
   }
 
-  out.push(
-    "",
-    `${c.bold("Checks")}  ` + p.checks.map((ch) => (ch.ok ? c.green(`✓ ${ch.name}`) : c.red(`✗ ${ch.name} (${ch.detail})`))).join("  "),
-  );
+  if (p.checks.length) {
+    out.push(
+      "",
+      `${c.bold("Checks")}  ` + p.checks.map((ch) => (ch.ok ? c.green(`✓ ${ch.name}`) : c.red(`✗ ${ch.name} (${ch.detail})`))).join("  "),
+    );
+  }
   return out.join("\n");
 }
 

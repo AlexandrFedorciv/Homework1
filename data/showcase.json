@@ -1,0 +1,288 @@
+{
+  "_note": "Curated example projects. Shown in the gallery (CLI --gallery, web 'Gallery' tab) and used by the offline mock provider. Same shape as what the LLM returns, plus id + tags (+ optional tutorial link).",
+  "projects": [
+    {
+      "id": "desk-crab",
+      "tags": ["robot", "walking", "servo"],
+      "title": "Desk Crab — a 4-servo walking robot",
+      "summary": "A palm-sized quadruped that shuffles across your desk and backs away from obstacles it 'sees' with the ultrasonic sensor.",
+      "difficulty": "intermediate",
+      "estimatedHours": 6,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "brain: gait timing and obstacle logic" },
+        { "name": "SG90 micro servo", "qty": 4, "purpose": "one per leg (hip joint)" },
+        { "name": "HC-SR04 ultrasonic sensor", "qty": 1, "purpose": "eyes: obstacle distance" },
+        { "name": "Battery holder (4×AA or 2×18650)", "qty": 1, "purpose": "separate 6 V supply for the servos" },
+        { "name": "AA battery", "qty": 4, "purpose": "servo power" },
+        { "name": "Breadboard", "qty": 1, "purpose": "power distribution" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "Popsicle sticks", "qty": 8, "purpose": "legs and body frame" },
+        { "name": "Hot glue sticks", "qty": 2, "purpose": "mounting servos to the frame" }
+      ],
+      "steps": [
+        { "title": "Build the frame", "detail": "Glue two popsicle sticks into a cross for the body. Hot-glue one servo at each arm end, horns facing outward." },
+        { "title": "Attach the legs", "detail": "Screw a servo horn onto each servo and glue a popsicle-stick leg to it, angled ~30° down so the body sits 3 cm off the desk." },
+        { "title": "Wire the servos", "detail": "Signal wires to D3, D5, D6, D9. Servo + and − go to the AA pack via the breadboard rails — NOT to the Arduino 5 V pin. Connect the pack's − to Arduino GND (common ground)." },
+        { "title": "Wire the sensor", "detail": "HC-SR04: VCC→5V, GND→GND, TRIG→D10, ECHO→D11. Mount it on the front of the body with a dab of glue." },
+        { "title": "Center and calibrate", "detail": "Upload a sketch that writes 90° to every servo, then re-seat the horns so all legs point straight. Note any per-leg offset in an array." },
+        { "title": "Write the gait", "detail": "Use a 4-phase creep gait: lift-swing one leg at a time in order FL, BR, FR, BL. Store poses in a table and step through them every 150 ms with millis() instead of delay()." },
+        { "title": "Add obstacle avoidance", "detail": "Read distance every 100 ms; if < 15 cm, play the gait table backwards for 2 s, then turn by running only the left legs." },
+        { "title": "Test and tune", "detail": "Run on a non-slip surface. If it drags, increase the lift angle; if it tips, shorten the swing range." }
+      ],
+      "safetyNotes": [
+        "Power the servos from the battery pack: four servos stalling at once can brown out or damage the Arduino's regulator.",
+        "Hot glue is hot enough to burn — let joints cool before handling."
+      ]
+    },
+    {
+      "id": "air-theremin",
+      "tags": ["music", "sound", "sensor"],
+      "tutorial": "docs/tutorials/05-build-air-theremin.md",
+      "title": "Air Theremin",
+      "summary": "Play notes by moving your hand above an ultrasonic sensor; a potentiometer picks the musical scale.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "reads distance, generates tones" },
+        { "name": "HC-SR04 ultrasonic sensor", "qty": 1, "purpose": "measures hand height" },
+        { "name": "Piezo buzzer", "qty": 1, "purpose": "sound output" },
+        { "name": "Potentiometer (10k)", "qty": 1, "purpose": "scale / octave selector" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" }
+      ],
+      "steps": [
+        { "title": "Wire the sensor", "detail": "HC-SR04: VCC→5V, GND→GND, TRIG→D9, ECHO→D10." },
+        { "title": "Wire the buzzer and pot", "detail": "Buzzer + to D8, − to GND. Potentiometer outer legs to 5V and GND, wiper to A0." },
+        { "title": "Measure distance", "detail": "Send a 10 µs TRIG pulse, read ECHO with pulseIn(), convert to cm (duration / 58). Clamp to 5–50 cm." },
+        { "title": "Map distance to notes", "detail": "Split 5–50 cm into 8 zones and map each to a note of the selected scale (major, minor, pentatonic — chosen by the pot reading)." },
+        { "title": "Play", "detail": "Call tone(8, frequency) when the note changes; noTone(8) when no hand is detected for 300 ms." },
+        { "title": "Smooth it", "detail": "Average the last 5 readings so the pitch doesn't jitter between notes." }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "radar-sweep",
+      "tags": ["sensor", "servo", "visualization"],
+      "tutorial": "docs/tutorials/06-build-radar-sweep.md",
+      "title": "Ultrasonic Radar Sweep",
+      "summary": "A servo sweeps the ultrasonic sensor back and forth and your laptop draws a live radar screen of nearby objects.",
+      "difficulty": "beginner",
+      "estimatedHours": 3,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "controls the sweep and takes readings" },
+        { "name": "SG90 micro servo", "qty": 1, "purpose": "pans the sensor 15–165°" },
+        { "name": "HC-SR04 ultrasonic sensor", "qty": 1, "purpose": "distance at each angle" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "USB cable", "qty": 1, "purpose": "serial link to the laptop" }
+      ],
+      "steps": [
+        { "title": "Mount the sensor", "detail": "Glue or tape the HC-SR04 onto the servo horn so it rotates with it." },
+        { "title": "Wire it up", "detail": "Servo signal→D9, servo power→5V/GND (one SG90 is fine on USB power). HC-SR04 TRIG→D10, ECHO→D11." },
+        { "title": "Sweep and measure", "detail": "Loop the servo from 15° to 165° and back in 2° steps; at each step wait 30 ms, then measure distance." },
+        { "title": "Stream the data", "detail": "Print 'angle,distance' lines over Serial at 115200 baud." },
+        { "title": "Draw the radar", "detail": "Run the Python viewer (pyserial + matplotlib polar plot) that reads the lines and draws fading green dots." },
+        { "title": "Calibrate", "detail": "Place an object at a measured 30 cm and check the plot; adjust the speed-of-sound constant if it's off." }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "sunflower",
+      "tags": ["light", "servo", "beginner-friendly"],
+      "title": "Light-Seeking Sunflower",
+      "summary": "A servo turns a cardboard flower toward the brightest light using two light sensors.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "compares the two light readings" },
+        { "name": "SG90 micro servo", "qty": 1, "purpose": "turns the flower" },
+        { "name": "Photoresistor (LDR)", "qty": 2, "purpose": "left/right light sensors" },
+        { "name": "Resistor", "qty": 2, "purpose": "10k voltage dividers for the LDRs" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "Cardboard", "qty": 1, "purpose": "the flower" }
+      ],
+      "steps": [
+        { "title": "Build two dividers", "detail": "Each LDR from 5V to A0/A1, with a 10k resistor from that pin to GND." },
+        { "title": "Wire the servo", "detail": "Signal→D9, power→5V/GND." },
+        { "title": "Steer toward light", "detail": "If A0 − A1 > 20, move the servo 1° left; if < −20, 1° right. Repeat every 20 ms." },
+        { "title": "Add a dead zone", "detail": "Ignore differences smaller than the threshold so the flower doesn't twitch; tune it in a room with even light." },
+        { "title": "Decorate", "detail": "Glue a cardboard flower to the servo horn with the LDRs on either side of the face, separated by a small cardboard divider so each one 'sees' its own side." }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "plant-buddy",
+      "tags": ["plants", "iot", "wifi", "pump"],
+      "title": "Plant Watering Buddy",
+      "summary": "An ESP32 watches the soil moisture of one plant, waters it with a tiny pump when it gets dry and shows the moisture history on a web page on your Wi-Fi.",
+      "difficulty": "intermediate",
+      "estimatedHours": 4,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "ESP32 dev board", "qty": 1, "purpose": "reads the sensor, runs the pump and a small web server" },
+        { "name": "Capacitive soil moisture sensor", "qty": 1, "purpose": "measures how wet the soil is (no corrosion, unlike resistive probes)" },
+        { "name": "5 V relay module", "qty": 1, "purpose": "switches the pump" },
+        { "name": "Mini 5 V water pump + tubing", "qty": 1, "purpose": "moves water from a jar to the pot" },
+        { "name": "5 V / 2 A power supply", "qty": 1, "purpose": "powers the pump (and the ESP32 via USB)" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "Water jar", "qty": 1, "purpose": "reservoir" }
+      ],
+      "steps": [
+        { "title": "Wire the sensor", "detail": "Sensor VCC→3V3, GND→GND, AOUT→GPIO34 (an ADC1 pin — ADC2 pins don't work while Wi-Fi is on)." },
+        { "title": "Calibrate dry and wet", "detail": "Print analogRead(34) with the probe in air (dry value, ~3000) and in a glass of water (wet value, ~1200). Map readings to 0–100 % between those two numbers." },
+        { "title": "Wire relay and pump", "detail": "Relay VCC→5V (VIN), GND→GND, IN→GPIO26. Pump + goes through the relay's COM/NO contacts to the 5 V supply; pump − to supply GND. Share GND with the ESP32." },
+        { "title": "Watering logic", "detail": "Every 10 minutes: if moisture < 30 %, run the pump for 3 s, then wait at least 30 minutes before watering again so the water has time to soak in. Never run the pump more than 5 times per day (safety cap)." },
+        { "title": "Web dashboard", "detail": "Connect to Wi-Fi and serve a page with the current moisture and the last 24 readings (keep them in a ring buffer) using the WebServer library." },
+        { "title": "Test without the plant", "detail": "Put the probe in a cup, let it dry, check the pump triggers once and stops. Only then place it in the real pot, with the pump tube clipped to the pot's edge." }
+      ],
+      "safetyNotes": [
+        "Keep the electronics above and away from the water; put the board in a box or bag.",
+        "Mini pumps burn out if they run dry — keep the reservoir filled or add a water-level check."
+      ]
+    },
+    {
+      "id": "line-follower",
+      "tags": ["robot", "car", "motors"],
+      "title": "Line-Following Car",
+      "summary": "A two-wheeled robot car that follows a black tape track on the floor using two infrared line sensors.",
+      "difficulty": "intermediate",
+      "estimatedHours": 5,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "steering logic" },
+        { "name": "2WD robot car chassis kit", "qty": 1, "purpose": "frame, two TT motors, wheels and caster" },
+        { "name": "L298N / TB6612 motor driver", "qty": 1, "purpose": "drives both motors forward/backward with PWM speed" },
+        { "name": "TCRT5000 line-tracking sensor", "qty": 2, "purpose": "left/right line detection" },
+        { "name": "Battery holder (4×AA or 2×18650)", "qty": 1, "purpose": "motor power" },
+        { "name": "AA battery", "qty": 4, "purpose": "power" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "Black electrical tape", "qty": 1, "purpose": "the track" }
+      ],
+      "steps": [
+        { "title": "Assemble the chassis", "detail": "Mount the two TT motors, wheels and the caster as in the chassis kit instructions. Fix the Arduino and driver on top with screws or double-sided tape." },
+        { "title": "Wire the motor driver", "detail": "L298N: motor A to OUT1/OUT2, motor B to OUT3/OUT4, battery + to 12V input, battery − to GND. ENA→D5, IN1→D7, IN2→D8, ENB→D6, IN3→D9, IN4→D10. Connect driver GND to Arduino GND." },
+        { "title": "Mount the line sensors", "detail": "Place the two TCRT5000 modules at the front, ~2 cm apart and 5–10 mm above the floor. VCC→5V, GND→GND, D0 outputs to D2 (left) and D3 (right)." },
+        { "title": "Tune the sensors", "detail": "Turn each module's trim pot until its LED switches exactly when it moves from the floor onto black tape." },
+        { "title": "Steering logic", "detail": "Both sensors on floor → drive forward. Left sees black → slow the left motor (turn left). Right sees black → slow the right motor. Both black → stop (end of track)." },
+        { "title": "Build a track and tune speed", "detail": "Tape a loop with gentle curves. Start at ~60 % PWM; raise speed only once it stays on the line through every curve." }
+      ],
+      "safetyNotes": ["The L298N heatsink gets hot under load — don't touch it while the car is running."]
+    },
+    {
+      "id": "weather-station",
+      "tags": ["iot", "display", "sensor"],
+      "title": "Desk Weather Station",
+      "summary": "A tiny OLED dashboard showing temperature, humidity and pressure with a 'rain coming?' trend arrow based on the pressure change over 3 hours.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "ESP32 dev board", "qty": 1, "purpose": "reads the sensor, drives the display" },
+        { "name": "BME280 environment sensor", "qty": 1, "purpose": "temperature, humidity, pressure" },
+        { "name": "0.96\" OLED display (SSD1306, I2C)", "qty": 1, "purpose": "shows the readings" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "USB cable", "qty": 1, "purpose": "power" }
+      ],
+      "steps": [
+        { "title": "Share the I2C bus", "detail": "Both modules: VCC→3V3, GND→GND, SDA→GPIO21, SCL→GPIO22. They have different addresses (BME280 0x76, OLED 0x3C), so they can share the two wires." },
+        { "title": "Scan the bus", "detail": "Upload an I2C scanner sketch and check both addresses appear in the Serial Monitor before writing any other code." },
+        { "title": "Read the sensor", "detail": "Use the Adafruit BME280 library; read every 5 s. Note: a sensor mounted right next to the ESP32 reads 1–2 °C warm — keep them a few cm apart." },
+        { "title": "Draw the dashboard", "detail": "With Adafruit SSD1306: big temperature on top, humidity and pressure below, and an arrow (↑ / → / ↓) for the pressure trend." },
+        { "title": "Pressure trend", "detail": "Store one pressure sample every 10 minutes in an 18-slot ring buffer (3 hours). A drop of more than 3 hPa over 3 hours means weather is likely getting worse." }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "reaction-duel",
+      "tags": ["game", "display", "beginner-friendly"],
+      "title": "Reaction Timer Duel",
+      "summary": "A two-player reflex game: wait for the green LED, slam your button first. The LCD shows who won and both reaction times in milliseconds.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Uno", "qty": 1, "purpose": "game logic and timing" },
+        { "name": "Push button", "qty": 2, "purpose": "one per player" },
+        { "name": "LED (5 mm)", "qty": 3, "purpose": "red = wait, green = go, yellow = false start" },
+        { "name": "Resistor", "qty": 3, "purpose": "220 Ω current limiters for the LEDs" },
+        { "name": "Piezo buzzer", "qty": 1, "purpose": "start beep and winner fanfare" },
+        { "name": "16x2 LCD with I2C backpack", "qty": 1, "purpose": "scores and times" },
+        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" }
+      ],
+      "steps": [
+        { "title": "Wire inputs", "detail": "Buttons between D2/D3 and GND; use INPUT_PULLUP so no extra resistors are needed (pressed = LOW)." },
+        { "title": "Wire outputs", "detail": "LEDs through 220 Ω resistors on D5 (red), D6 (green), D7 (yellow). Buzzer on D8. LCD backpack SDA→A4, SCL→A5, VCC→5V, GND→GND." },
+        { "title": "Game loop", "detail": "Show 'Get ready', light red, wait a random 2–5 s (random()), then light green and record millis()." },
+        { "title": "Detect presses", "detail": "Poll both buttons in a tight loop; the first press wins. Pressing before green = false start: yellow LED, that player loses the round." },
+        { "title": "Show results", "detail": "Print both reaction times on the LCD, keep a best-of-5 score and play a short tune for the winner." }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "night-light",
+      "tags": ["light", "home", "led"],
+      "title": "Motion Night Light",
+      "summary": "A warm LED strip under the bed or along the hallway that fades on when you walk past in the dark — and stays off during the day.",
+      "difficulty": "beginner",
+      "estimatedHours": 2.5,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Nano", "qty": 1, "purpose": "controls the strip" },
+        { "name": "HC-SR501 PIR motion sensor", "qty": 1, "purpose": "detects people walking by" },
+        { "name": "WS2812B addressable LED strip (1 m)", "qty": 1, "purpose": "the light (buy one with pre-attached JST leads to avoid soldering)" },
+        { "name": "Photoresistor (LDR)", "qty": 1, "purpose": "only switch on when it's dark" },
+        { "name": "Resistor", "qty": 2, "purpose": "10k for the LDR divider, 330 Ω on the strip's data line" },
+        { "name": "5 V / 2 A power supply", "qty": 1, "purpose": "power for strip and Nano" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" }
+      ],
+      "steps": [
+        { "title": "Wire the strip", "detail": "Strip 5V and GND straight to the power supply. Data-in → 330 Ω resistor → D6. Connect the supply GND to the Nano GND." },
+        { "title": "Wire the sensors", "detail": "PIR: VCC→5V, GND→GND, OUT→D2. LDR from 5V to A0, 10k from A0 to GND." },
+        { "title": "Set up the PIR", "detail": "Set the PIR's jumper to 'repeat trigger' and turn its delay pot to minimum; the code handles timing." },
+        { "title": "Fade logic", "detail": "If motion AND A0 < dark threshold: fade a warm color (255, 120, 30) up over 1 s with FastLED, keep it on for 30 s after the last motion, then fade out over 3 s." },
+        { "title": "Limit brightness", "detail": "Use FastLED.setBrightness(60) — at night that's plenty and keeps current well below the supply's limit." }
+      ],
+      "safetyNotes": [
+        "60 LEDs at full white can draw up to ~3.6 A — keep brightness capped or use a bigger supply.",
+        "Don't power the strip through the Nano's 5 V pin."
+      ]
+    },
+    {
+      "id": "mini-biped",
+      "tags": ["robot", "walking", "servo"],
+      "title": "Mini Biped Walker",
+      "summary": "A small two-legged robot with hips and ankles that waddles forward, dances and turns away from walls — a first step towards a bigger walking robot.",
+      "difficulty": "intermediate",
+      "estimatedHours": 8,
+      "requiresSoldering": false,
+      "parts": [
+        { "name": "Arduino Nano", "qty": 1, "purpose": "gait and behaviour" },
+        { "name": "SG90 micro servo", "qty": 4, "purpose": "left/right hip and left/right ankle" },
+        { "name": "HC-SR04 ultrasonic sensor", "qty": 1, "purpose": "the 'eyes' (and the head)" },
+        { "name": "Piezo buzzer", "qty": 1, "purpose": "beeps and chirps" },
+        { "name": "Battery holder (4×AA or 2×18650)", "qty": 1, "purpose": "servo power" },
+        { "name": "AA battery", "qty": 4, "purpose": "power" },
+        { "name": "Mini breadboard", "qty": 1, "purpose": "wiring hub inside the body" },
+        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
+        { "name": "Cardboard or 3D-printed body", "qty": 1, "purpose": "head, hips and feet" }
+      ],
+      "steps": [
+        { "title": "Build the body", "detail": "Make a box for the head/body that holds the Nano, battery pack and sensor. Hip servos mount under the box, vertical shafts; each ankle servo hangs off its hip horn, horizontal shaft, with a flat foot glued to its horn." },
+        { "title": "Wire everything", "detail": "Servos: left hip D2, right hip D3, left ankle D4, right ankle D5; power from the battery pack, shared GND. HC-SR04 TRIG→D8, ECHO→D9. Buzzer→D10." },
+        { "title": "Find home positions", "detail": "Center all servos at 90°, re-seat horns so the robot stands straight with feet flat. Store the per-servo trim offsets in an array." },
+        { "title": "Walk with sine waves", "detail": "Drive each joint as angle = home + A·sin(2πt/T + φ). Ankles: A ≈ 25°, in phase (rocks the weight side to side). Hips: A ≈ 30°, shifted by +90° phase. T ≈ 1 s per step." },
+        { "title": "Tune balance", "detail": "If it falls sideways, reduce ankle amplitude; if it shuffles in place, increase the hip amplitude or the phase shift." },
+        { "title": "Add behaviours", "detail": "Walk forward; when the wall is < 20 cm, chirp, step back 3 times and turn (asymmetric hip amplitude). Add a 'dance' that plays with the phases." }
+      ],
+      "safetyNotes": ["Disconnect the servo battery while uploading code so the robot doesn't jump off the table."]
+    }
+  ]
+}

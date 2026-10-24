@@ -5,13 +5,15 @@ import { dirname, join } from "node:path";
 import { z } from "zod";
 import { PartCatalog } from "../core/catalog.ts";
 import { ConfigError, loadEnv, readConfig } from "../core/config.ts";
-import { detectParts, InvalidOutputError, suggestProjects } from "../core/generate.ts";
+import { detectParts, enrichProject, InvalidOutputError, suggestProjects } from "../core/generate.ts";
+import { illustrateProject } from "../core/illustrate.ts";
 import { parseInventory } from "../core/inventory.ts";
 import { createClient } from "../core/llm.ts";
 import { HttpError } from "../core/retry.ts";
-import { ConstraintsSchema } from "../core/schemas.ts";
+import { ConstraintsSchema, type Project } from "../core/schemas.ts";
+import { loadShowcase } from "../core/showcase.ts";
 
-/** Minimal web UI: one static page + two JSON endpoints, no framework. */
+/** Minimal web UI: one static page + a few JSON endpoints, no framework. */
 
 loadEnv();
 const config = (() => {
@@ -33,6 +35,9 @@ const page = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "index.h
 const MAX_BODY = 10 * 1024 * 1024; // photos are sent as base64
 
 const SuggestBody = z.object({ parts: z.string().max(5000), constraints: ConstraintsSchema });
+const GalleryBody = z.object({ parts: z.string().max(5000).default("") });
+
+const withPicture = (p: Project, showStatus = true) => ({ ...p, svg: illustrateProject(p, { showStatus }) });
 const DetectBody = z.object({
   image: z.string().regex(/^data:image\/(jpeg|png|webp|gif);base64,/, "image must be a JPEG, PNG, WebP or GIF data URL"),
 });
@@ -80,7 +85,20 @@ const server = createServer(async (req, res) => {
       const inventory = parseInventory(body.parts, catalog);
       if (inventory.length === 0) throw new BadRequest("Add at least one part.");
       const result = await suggestProjects({ inventory, constraints: body.constraints }, { client, catalog, log });
-      return send(res, 200, { inventory, ...result, model: client.label });
+      return send(res, 200, { inventory, ...result, projects: result.projects.map((p) => withPicture(p)), model: client.label });
+    }
+    if (req.method === "POST" && req.url === "/api/gallery") {
+      // Curated examples, checked against whatever is in the parts box (may be empty).
+      const { parts } = parse(GalleryBody, await readJson(req));
+      const inventory = parseInventory(parts, catalog);
+      const has = inventory.length > 0;
+      const projects = loadShowcase().map((sp) => {
+        const p = enrichProject(sp, inventory, {}, catalog);
+        if (!has) p.checks = [];
+        return { id: sp.id, tags: sp.tags, tutorial: sp.tutorial, ...withPicture(p, has) };
+      });
+      if (has) projects.sort((a, b) => b.coverage - a.coverage);
+      return send(res, 200, { projects, checkedAgainstParts: has });
     }
     if (req.method === "POST" && req.url === "/api/detect") {
       const { image } = parse(DetectBody, await readJson(req));

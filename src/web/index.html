@@ -50,7 +50,7 @@
   }
   textarea { min-height: 120px; resize: vertical; }
   textarea:focus, input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .row { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; }
   .row label { margin-top: 14px; }
   .check { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--ink); font-weight: 400; }
   .check input { width: auto; }
@@ -111,6 +111,46 @@
   .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
   .toolbar button { width: auto; margin: 0; padding: 8px 14px; font-size: 13px; background: var(--ink); color: var(--paper); }
   .notes { font: 12px var(--mono); color: var(--muted); }
+  nav.tabs { max-width: 1200px; margin: 0 auto; padding: 4px 16px 0; display: flex; gap: 4px; }
+  nav.tabs button {
+    width: auto; margin: 0; padding: 8px 16px; font: 600 14px var(--sans); background: transparent; color: var(--muted);
+    border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0;
+  }
+  nav.tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); border-color: var(--line); }
+  .view[hidden] { display: none !important; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .presets button {
+    width: auto; margin: 0; padding: 4px 10px; font: 12px var(--mono); color: var(--ink); background: var(--paper);
+    border: 1px solid var(--line); border-radius: 999px;
+  }
+  .presets button:hover { border-color: var(--accent); }
+  .pic { border-bottom: 1px solid var(--line); background: #f4f1ea; }
+  .pic svg { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; }
+  .gallery-wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  .gallery-intro { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .gallery-intro p { margin: 0; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; text-align: left; padding: 0; color: var(--ink); font: inherit; margin: 0; width: 100%; }
+  .tile:hover { border-color: var(--accent); }
+  .tile .thumb { aspect-ratio: 16 / 10; overflow: hidden; background: #f4f1ea; border-bottom: 1px solid var(--line); }
+  .tile .thumb svg { width: 100%; height: auto; display: block; }
+  .tile .info { padding: 12px 14px 14px; }
+  .tile h3 { margin: 0 0 4px; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+  .tile p { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+  .tag { font: 11px var(--mono); color: var(--muted); }
+  #detail:not(:empty) { margin-bottom: 24px; }
+  .back { width: auto !important; margin: 0 0 12px !important; padding: 6px 12px !important; font-size: 13px !important; background: var(--ink) !important; color: var(--paper) !important; }
+  .how { max-width: 1200px; margin: 0 auto; padding: 16px; }
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+  .how-step { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .how-step .n { font: 600 13px var(--mono); color: var(--accent); }
+  .how-step h3 { margin: 6px 0; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+  .how-step p { margin: 0; font-size: 14px; color: var(--muted); }
+  .how h2 { font-size: 20px; margin: 8px 0; }
+  .how ul { padding-left: 20px; }
+  .how li { margin-bottom: 6px; }
+  code { font: 13px var(--mono); background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .tut { font: 12px var(--mono); color: var(--accent); }
 </style>
 </head>
 <body>
@@ -118,10 +158,20 @@
   <h1>Parts<span>Bin</span></h1>
   <p>Tell it what's in your drawer. Get three things you can build this weekend.</p>
 </header>
-<main>
+<nav class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-view="make">🛠 Make projects</button>
+  <button role="tab" aria-selected="false" data-view="gallery">🖼 Gallery</button>
+  <button role="tab" aria-selected="false" data-view="how">📘 How it works</button>
+</nav>
+<main class="view" id="view-make">
   <form id="form">
     <label for="parts">Parts you have</label>
     <textarea id="parts" placeholder="arduino uno&#10;4x sg90 servo&#10;hc-sr04&#10;breadboard&#10;jumper wires" required></textarea>
+    <div class="presets" aria-label="Example parts lists">
+      <button type="button" data-preset="arduino uno&#10;2x sg90 servo&#10;hc-sr04&#10;10k potentiometer&#10;breadboard&#10;jumper wires">Arduino starter kit</button>
+      <button type="button" data-preset="esp32&#10;bme280&#10;0.96 oled&#10;soil moisture sensor&#10;relay module&#10;breadboard&#10;jumper wires">ESP32 / IoT</button>
+      <button type="button" data-preset="arduino nano&#10;4x sg90 servo&#10;hc-sr04&#10;piezo buzzer&#10;battery holder&#10;4x aa battery">Robot parts</button>
+    </div>
     <div class="drop" id="drop" tabindex="0">📷 Drop a photo of your parts bin, or click to choose<input type="file" id="photo" accept="image/*" hidden /></div>
     <div class="hint">Detected parts are added to the list so you can fix them before generating.</div>
 
@@ -142,14 +192,55 @@
 
   <div>
     <div id="status"></div>
-    <div id="out"><div class="empty">Your project plans will appear here.</div></div>
+    <div id="out"><div class="empty">Your project plans will appear here.<br/><br/>No idea what to type? Click one of the example kits on the left, or browse the <a href="#" data-goto="gallery">Gallery</a>.</div></div>
   </div>
 </main>
+
+<section class="view gallery-wrap" id="view-gallery" hidden>
+  <div id="detail"></div>
+  <div class="gallery-intro">
+    <p id="gallery-note">10 hand-picked example projects. Type your parts on the <a href="#" data-goto="make">Make</a> tab and they'll be ranked and checked against what you own.</p>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section class="view how" id="view-how" hidden>
+  <h2>How PartsBin works</h2>
+  <div class="how-grid">
+    <div class="how-step"><span class="n">01</span><h3>Tell it what you have</h3><p>Type your parts (<code>4x sg90</code>, <code>servo x4</code> and <code>servo (4)</code> all work) or drop a photo of your parts bin; a vision model lists what it sees and you fix the list.</p></div>
+    <div class="how-step"><span class="n">02</span><h3>Add constraints</h3><p>Goal, skill level, time and budget are all optional. Tick "I can't solder" for breadboard-only builds.</p></div>
+    <div class="how-step"><span class="n">03</span><h3>AI designs, code checks</h3><p>The model proposes three projects as structured JSON. The app — not the AI — works out what you own, what's missing and what it costs, and verifies every constraint.</p></div>
+    <div class="how-step"><span class="n">04</span><h3>Fix what breaks</h3><p>Projects that are too long, too hard or over budget are sent back with the reason and replaced. You get the best three, a picture of the parts and a shopping list.</p></div>
+  </div>
+  <h2>Reading a project card</h2>
+  <ul>
+    <li><b style="color:var(--ok)">✓</b> you own it · <b style="color:var(--warn)">◐</b> you own some, need more · <b style="color:var(--bad)">✗</b> missing (with an indicative price in CZK)</li>
+    <li>The picture shows every part: solid = yours, dashed = to buy.</li>
+    <li>The chips at the bottom are the constraint checks the app ran on that project.</li>
+    <li><b>⬇ Shopping list</b> downloads everything you'd need to buy as a Markdown checklist.</li>
+  </ul>
+  <h2>Tutorials</h2>
+  <p>Step-by-step guides live in the repo's <code>docs/tutorials</code> folder: getting started, photo input, constraints &amp; shopping lists, customizing the parts catalog, and two complete builds with code (Air Theremin and Ultrasonic Radar).</p>
+</section>
 
 <script>
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   let lastResult = null;
+  let galleryLoadedFor = null;
+
+  // --- tabs & presets ---------------------------------------------------------
+  function show(view) {
+    document.querySelectorAll(".view").forEach((v) => (v.hidden = v.id !== `view-${view}`));
+    document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === view)));
+    if (view === "gallery") loadGallery();
+  }
+  document.querySelectorAll("nav.tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("[data-goto]");
+    if (link) { e.preventDefault(); show(link.dataset.goto); }
+  });
+  document.querySelectorAll("[data-preset]").forEach((b) => b.addEventListener("click", () => { $("parts").value = b.dataset.preset; }));
 
   fetch("/api/info").then((r) => r.json()).then((d) => ($("model").textContent = `Model: ${d.model}`)).catch(() => {});
 
@@ -217,43 +308,89 @@
     }
   });
 
-  function render(r) {
-    const cards = r.projects.map((p, i) => {
-      const parts = p.parts.map((x) => {
-        const cls = x.missing === 0 ? "have" : x.have === 0 ? "miss" : "part";
-        const mark = x.missing === 0 ? "✓" : x.have === 0 ? "✗" : "◐";
-        const status = x.missing === 0 ? "" : x.have === 0 ? "missing" : `have ${x.have}, need ${x.missing} more`;
-        const price = x.missing && x.unitPriceCzk !== undefined ? `~${x.missing * x.unitPriceCzk} CZK` : status;
-        return `<li class="${cls}"><span class="mark">${mark}</span><span>${x.qty}× ${esc(x.name)}<span class="purpose">${esc(x.purpose || "")}${x.have && x.missing ? ` · ${status}` : ""}</span></span><span class="price">${esc(price)}</span></li>`;
-      }).join("");
-      const steps = p.steps.map((s) => `<li><b>${esc(s.title)}</b>${esc(s.detail)}</li>`).join("");
-      const safety = p.safetyNotes.length ? `<div class="safety">${p.safetyNotes.map((n) => `<p>⚠ ${esc(n)}</p>`).join("")}</div>` : "";
-      const checks = p.checks.map((c) => `<span class="chip ${c.ok ? "ok" : "bad"}" title="${esc(c.detail)}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("");
-      const cost = p.missingCostCzk ? `~${p.missingCostCzk} CZK to buy` : "nothing to buy";
-      return `<article class="project">
-        <div class="project-head">
-          <h2><span class="n">0${i + 1}</span>${esc(p.title)}</h2>
-          <p>${esc(p.summary)}</p>
-          <div class="meta">
-            <span class="chip">${esc(p.difficulty)}</span>
-            <span class="chip">~${p.estimatedHours} h</span>
-            <span class="chip">${p.requiresSoldering ? "soldering" : "solderless"}</span>
-            <span class="chip">you own ${Math.round(p.coverage * 100)}%</span>
-            <span class="chip">${cost}${p.unpricedMissing.length ? " + household" : ""}</span>
-          </div>
-        </div>
-        <div class="cover"><div style="width:${Math.round(p.coverage * 100)}%"></div></div>
-        <div class="body">
-          <section><h3>Parts</h3><ul class="parts">${parts}</ul></section>
-          <section><h3>Build steps</h3><ol class="steps">${steps}</ol>${safety}</section>
-        </div>
-        <div class="foot">${checks}</div>
-      </article>`;
+  function cardHtml(p, i, opts = {}) {
+    const parts = p.parts.map((x) => {
+      const known = opts.statusKnown !== false;
+      const cls = !known ? "have" : x.missing === 0 ? "have" : x.have === 0 ? "miss" : "part";
+      const mark = !known ? "•" : x.missing === 0 ? "✓" : x.have === 0 ? "✗" : "◐";
+      const status = !known || x.missing === 0 ? "" : x.have === 0 ? "missing" : `have ${x.have}, need ${x.missing} more`;
+      const price = known && x.missing && x.unitPriceCzk !== undefined ? `~${x.missing * x.unitPriceCzk} CZK` : status;
+      return `<li class="${cls}"><span class="mark">${mark}</span><span>${x.qty}× ${esc(x.name)}<span class="purpose">${esc(x.purpose || "")}${x.have && x.missing ? ` · ${status}` : ""}</span></span><span class="price">${esc(price)}</span></li>`;
     }).join("");
+    const steps = p.steps.map((s) => `<li><b>${esc(s.title)}</b>${esc(s.detail)}</li>`).join("");
+    const safety = p.safetyNotes.length ? `<div class="safety">${p.safetyNotes.map((n) => `<p>⚠ ${esc(n)}</p>`).join("")}</div>` : "";
+    const checks = p.checks.map((c) => `<span class="chip ${c.ok ? "ok" : "bad"}" title="${esc(c.detail)}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("");
+    const cost = p.missingCostCzk ? `~${p.missingCostCzk} CZK to buy` : "nothing to buy";
+    const ownChips = opts.statusKnown === false ? "" :
+      `<span class="chip">you own ${Math.round(p.coverage * 100)}%</span><span class="chip">${cost}${p.unpricedMissing.length ? " + household" : ""}</span>`;
+    const tut = p.tutorial ? `<span class="chip tut">📘 tutorial: ${esc(p.tutorial)}</span>` : "";
+    const num = opts.numbered === false ? "" : `<span class="n">0${i + 1}</span>`;
+    return `<article class="project">
+      <div class="project-head">
+        <h2>${num}${esc(p.title)}</h2>
+        <p>${esc(p.summary)}</p>
+        <div class="meta">
+          <span class="chip">${esc(p.difficulty)}</span>
+          <span class="chip">~${p.estimatedHours} h</span>
+          <span class="chip">${p.requiresSoldering ? "soldering" : "solderless"}</span>
+          ${ownChips}${tut}
+        </div>
+      </div>
+      ${opts.statusKnown === false ? "" : `<div class="cover"><div style="width:${Math.round(p.coverage * 100)}%"></div></div>`}
+      ${p.svg ? `<div class="pic">${p.svg}</div>` : ""}
+      <div class="body">
+        <section><h3>Parts</h3><ul class="parts">${parts}</ul></section>
+        <section><h3>Build steps</h3><ol class="steps">${steps}</ol>${safety}</section>
+      </div>
+      ${checks ? `<div class="foot">${checks}</div>` : ""}
+    </article>`;
+  }
+
+  function render(r) {
+    const cards = r.projects.map((p, i) => cardHtml(p, i)).join("");
     const notes = r.notes.length ? r.notes.map((n) => `• ${esc(n)}`).join("<br/>") + "<br/>" : "";
     $("out").innerHTML = `<div class="toolbar"><span class="notes">${notes}${r.llmCalls} LLM call(s) · ${esc(r.model)}</span>
       <button type="button" id="dl">⬇ Shopping list</button></div>${cards}`;
     $("dl").addEventListener("click", downloadShoppingList);
+  }
+
+  // --- gallery ------------------------------------------------------------------
+  let gallery = null;
+  async function loadGallery() {
+    const parts = $("parts").value.trim();
+    if (galleryLoadedFor === parts && gallery) return;
+    $("grid").innerHTML = `<div class="empty">Loading…</div>`;
+    try {
+      gallery = await api("/api/gallery", { parts });
+      galleryLoadedFor = parts;
+      $("gallery-note").innerHTML = gallery.checkedAgainstParts
+        ? `${gallery.projects.length} example projects, <b>ranked by how many of your parts they use</b>. Change your parts on the <a href="#" data-goto="make">Make</a> tab.`
+        : `${gallery.projects.length} hand-picked example projects. Type your parts on the <a href="#" data-goto="make">Make</a> tab and they'll be ranked and checked against what you own.`;
+      $("grid").innerHTML = gallery.projects.map((p, i) => `
+        <button class="tile" type="button" data-i="${i}">
+          <div class="thumb">${p.svg}</div>
+          <div class="info">
+            <h3>${esc(p.title)}</h3>
+            <p>${esc(p.summary)}</p>
+            <div class="meta">
+              <span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span>
+              ${gallery.checkedAgainstParts ? `<span class="chip ok">you own ${Math.round(p.coverage * 100)}%</span>` : ""}
+              ${p.tutorial ? `<span class="chip tut">📘 tutorial</span>` : ""}
+            </div>
+            <div class="tag">${p.tags.map((t) => "#" + esc(t)).join(" ")}</div>
+          </div>
+        </button>`).join("");
+      $("grid").querySelectorAll(".tile").forEach((t) => t.addEventListener("click", () => openDetail(Number(t.dataset.i))));
+    } catch (err) {
+      $("grid").innerHTML = `<div class="error">✗ ${esc(err.message)}</div>`;
+    }
+  }
+  function openDetail(i) {
+    const p = gallery.projects[i];
+    $("detail").innerHTML = `<button class="back" type="button" id="back">← Back to gallery</button>` +
+      cardHtml(p, i, { numbered: false, statusKnown: gallery.checkedAgainstParts });
+    $("back").addEventListener("click", () => { $("detail").innerHTML = ""; });
+    $("detail").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function downloadShoppingList() {

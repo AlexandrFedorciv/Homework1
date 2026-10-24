@@ -10,7 +10,8 @@
     "start": "tsx src/cli/index.ts",
     "web": "tsx src/web/server.ts",
     "test": "tsx --test --test-reporter=spec test/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "gallery:images": "tsx scripts/render-gallery.ts"
   },
   "engines": {
     "node": ">=20.12"
