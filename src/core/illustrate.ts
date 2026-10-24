@@ -402,6 +402,11 @@ export function iconFor(key: string, name: string): string {
   return generic();
 }
 
+/** One part's drawing as a standalone SVG (used for interactive part tiles). */
+export function partIconSvg(key: string, name: string): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 98 72" role="img" aria-label="${esc(name)}">${iconFor(key, name)}</svg>`;
+}
+
 // ---------------------------------------------------------------------------
 // Layout
 

@@ -94,13 +94,41 @@
   .chip.acc { border-color: var(--accent); color: var(--accent); }
   .cover { height: 4px; background: var(--line); }
   .cover div { height: 100%; background: var(--ok); }
-  .pic { border-bottom: 1px solid var(--line); background: #f4f1ea; }
-  .pic svg { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; }
-  .body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
-  @media (max-width: 1000px) { .body { grid-template-columns: minmax(0, 1fr); } }
+  .hero { margin: 0; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .hero img { display: block; width: 100%; max-height: 360px; object-fit: cover; }
+  .credit { font-size: 11.5px; color: var(--muted); padding: 6px 18px; }
+  .credit a { color: var(--muted); }
+  .board { padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .board-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 10px; }
+  .board-head h3 { margin: 0; }
+  .board-head small { color: var(--muted); font-size: 12px; }
+  .ptiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(132px, 100%), 1fr)); gap: 10px; }
+  .ptile {
+    position: relative; display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 8px 8px 10px; margin: 0;
+    background: var(--card); color: var(--ink); font: inherit; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer;
+    transition: border-color .15s, transform .15s;
+  }
+  .ptile:hover { transform: translateY(-1px); }
+  .ptile .pimg { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 6px; background: #f4f1ea; display: grid; place-items: center; overflow: hidden; }
+  .ptile .pimg img { width: 100%; height: 100%; object-fit: cover; }
+  .ptile .pimg svg { width: 86%; height: auto; }
+  .ptile .pname { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .ptile .ppurpose { font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+  .ptile .pstate { font: 600 11.5px var(--mono); margin-top: auto; font-variant-numeric: tabular-nums; }
+  .ptile .qty { position: absolute; top: 12px; right: 12px; background: var(--ink); color: var(--paper); font: 600 11px var(--mono); border-radius: 999px; padding: 1px 7px; }
+  .ptile.have { border-color: var(--ok); }
+  .ptile.have .pstate { color: var(--ok); }
+  .ptile.miss { border-style: dashed; border-color: var(--bad); }
+  .ptile.miss .pimg { opacity: .55; }
+  .ptile.miss .pstate { color: var(--bad); }
+  .ptile.part { border-style: dashed; border-color: var(--warn); }
+  .ptile.part .pstate { color: var(--warn); }
+  .ptile.neutral .pstate { color: var(--muted); }
+  .board-sum { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin-top: 12px; font: 13px var(--mono); font-variant-numeric: tabular-nums; }
+  .board-sum b { color: var(--ink); }
+  .linkbtn { background: none; border: 0; padding: 0; color: var(--accent); font: inherit; text-decoration: underline; cursor: pointer; }
+  ol.steps li.hl { background: var(--paper); outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
   .body section { padding: 14px 18px; min-width: 0; }
-  .body section + section { border-left: 1px solid var(--line); }
-  @media (max-width: 1000px) { .body section + section { border-left: 0; border-top: 1px solid var(--line); } }
   h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   ul.parts { list-style: none; margin: 0; padding: 0; font-size: 14px; }
   ul.parts li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 6px; padding: 5px 0; border-bottom: 1px dotted var(--line); }
@@ -364,31 +392,103 @@ flowchart LR
   const clearLog = () => { $("log").innerHTML = ""; $("log").hidden = true; };
 
   // ---------------------------------------------------------------- cards
+  // Every card keeps its own state: how many of each part the viewer has.
+  // Clicking a part tile changes it; totals, tiles and the shopping list follow.
+  const cards = new Map();
+  let seq = 0;
+  const STOP = new Set(["with", "and", "the", "for", "set", "kit", "board", "module", "dev", "mini", "micro", "small", "pcs"]);
+  const words = (name) => name.toLowerCase().replace(/\(.*?\)/g, " ").split(/[^a-z0-9-]+/).filter((w) => w.length >= 3 && !STOP.has(w));
+  const photoSrc = (ph) => "photos/" + ph.file;
+  const creditHtml = (ph, what) => `${what}${ph.title ? " “" + esc(ph.title) + "”" : ""} · ${esc(ph.credit)} · ${ph.licenseUrl ? `<a href="${esc(ph.licenseUrl)}" target="_blank" rel="noopener">${esc(ph.license)}</a>` : esc(ph.license)} · <a href="${esc(ph.source)}" target="_blank" rel="noopener">source</a>`;
+
   function cardHtml(p, i, opts = {}) {
+    const id = "c" + ++seq;
     const known = opts.statusKnown !== false;
-    const parts = p.parts.map((x) => {
-      const cls = !known || x.missing === 0 ? "have" : x.have === 0 ? "miss" : "part";
-      const mark = !known ? "•" : x.missing === 0 ? "✓" : x.have === 0 ? "✗" : "◐";
-      const status = !known || x.missing === 0 ? "" : x.have === 0 ? "missing" : `have ${x.have}, need ${x.missing} more`;
-      const price = known && x.missing && x.unitPriceCzk !== undefined ? `~${x.missing * x.unitPriceCzk} CZK` : status;
-      return `<li class="${cls}"><span class="mark">${mark}</span><span>${x.qty}× ${esc(x.name)}<span class="purpose">${esc(x.purpose || "")}${x.have && x.missing ? " · " + status : ""}</span></span><span class="price">${esc(price)}</span></li>`;
-    }).join("");
+    cards.set(id, { p, known, start: p.parts.map((x) => (known ? x.have : 0)), have: p.parts.map((x) => (known ? x.have : 0)) });
     const steps = p.steps.map((s) => `<li><b>${esc(s.title)}</b>${esc(s.detail)}</li>`).join("");
     const safety = p.safetyNotes.length ? `<div class="safety">${p.safetyNotes.map((n) => `<p>⚠ ${esc(n)}</p>`).join("")}</div>` : "";
     const checks = p.checks.map((c) => `<span class="chip ${c.ok ? "ok" : "bad"}" title="${esc(c.detail)}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("");
-    const cost = p.missingCostCzk ? `~${p.missingCostCzk} CZK to buy` : "nothing to buy";
-    const own = known ? `<span class="chip">you own ${Math.round(p.coverage * 100)}%</span><span class="chip">${cost}${p.unpricedMissing.length ? " + household" : ""}</span>` : "";
     const tut = p.tutorial ? `<span class="chip acc">full build guide in the repo</span>` : "";
     const num = opts.numbered === false ? "" : `<span class="n">0${i + 1}</span>`;
-    return `<article class="project">
+    const hero = p.photo
+      ? `<figure class="hero"><img src="${esc(photoSrc(p.photo))}" alt="A similar finished build: ${esc(p.title)}" loading="lazy"><figcaption class="credit">${creditHtml(p.photo, "Similar real build:")}</figcaption></figure>`
+      : "";
+    const tiles = p.parts.map((x, k) => `
+      <button type="button" class="ptile" data-card="${id}" data-k="${k}" aria-label="${esc(x.name)}">
+        <span class="pimg">${x.photo ? `<img src="${esc(photoSrc(x.photo))}" alt="" loading="lazy">` : x.icon}</span>
+        ${x.qty > 1 ? `<span class="qty">×${x.qty}</span>` : ""}
+        <span class="pname">${esc(x.name)}</span>
+        ${x.purpose ? `<span class="ppurpose">${esc(x.purpose)}</span>` : ""}
+        <span class="pstate"></span>
+      </button>`).join("");
+    const partCredits = p.parts.filter((x) => x.photo).map((x) => creditHtml(x.photo, esc(x.name) + ":")).join("<br>");
+    return `<article class="project" id="${id}">
       <div class="project-head"><h2>${num}${esc(p.title)}</h2><p>${esc(p.summary)}</p>
-        <div class="meta"><span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span><span class="chip">${p.requiresSoldering ? "soldering" : "solderless"}</span>${own}${tut}</div></div>
-      ${known ? `<div class="cover"><div style="width:${Math.round(p.coverage * 100)}%"></div></div>` : ""}
-      ${p.svg ? `<div class="pic">${p.svg}</div>` : ""}
-      <div class="body"><section><h3>Parts</h3><ul class="parts">${parts}</ul></section><section><h3>Build steps</h3><ol class="steps">${steps}</ol>${safety}</section></div>
+        <div class="meta"><span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span><span class="chip">${p.requiresSoldering ? "soldering" : "solderless"}</span><span class="chip" data-own></span><span class="chip" data-cost></span>${tut}</div></div>
+      <div class="cover"><div data-bar style="width:0"></div></div>
+      ${hero}
+      <section class="board">
+        <div class="board-head"><h3>Parts</h3><small>Click a part to change how many you have. Hover to see where it's used.</small></div>
+        <div class="ptiles">${tiles}</div>
+        <div class="board-sum"><span data-sum></span><button type="button" class="linkbtn" data-reset="${id}">reset</button></div>
+        ${partCredits ? `<div class="credit" style="padding:8px 0 0">Part photos: ${partCredits}</div>` : ""}
+      </section>
+      <div class="body"><section><h3>Build steps</h3><ol class="steps">${steps}</ol>${safety}</section></div>
       ${checks ? `<div class="foot">${checks}</div>` : ""}
     </article>`;
   }
+
+  function totals(card) {
+    let missingCost = 0, unpriced = 0, owned = 0, needUnits = 0, toBuy = 0;
+    card.p.parts.forEach((x, k) => {
+      const have = Math.min(card.have[k], x.qty), miss = x.qty - have;
+      owned += have / x.qty;
+      if (miss > 0) { toBuy++; needUnits += miss; if (x.unitPriceCzk !== undefined) missingCost += miss * x.unitPriceCzk; else unpriced++; }
+    });
+    return { coverage: owned / card.p.parts.length, missingCost, unpriced, toBuy, needUnits };
+  }
+
+  function refresh(id) {
+    const card = cards.get(id), root = document.getElementById(id);
+    if (!card || !root) return;
+    root.querySelectorAll(".ptile").forEach((tile) => {
+      const k = Number(tile.dataset.k), x = card.p.parts[k], have = card.have[k], miss = x.qty - have;
+      tile.className = "ptile " + (miss === 0 ? "have" : have === 0 ? "miss" : "part");
+      tile.setAttribute("aria-pressed", String(miss === 0));
+      const price = x.unitPriceCzk !== undefined ? ` · ~${miss * x.unitPriceCzk} CZK` : "";
+      tile.querySelector(".pstate").textContent = miss === 0 ? "✓ you have it" : have === 0 ? `✗ buy${x.qty > 1 ? " " + miss : ""}${price}` : `◐ have ${have} of ${x.qty}${price}`;
+    });
+    const t = totals(card);
+    root.querySelector("[data-own]").textContent = `you own ${Math.round(t.coverage * 100)}%`;
+    root.querySelector("[data-cost]").textContent = t.toBuy ? `~${t.missingCost} CZK to buy${t.unpriced ? " + household" : ""}` : "nothing to buy";
+    root.querySelector("[data-bar]").style.width = Math.round(t.coverage * 100) + "%";
+    root.querySelector("[data-sum]").innerHTML = t.toBuy
+      ? `<b>${card.p.parts.length - t.toBuy}</b> of ${card.p.parts.length} parts ready · <b>${t.toBuy}</b> to buy · <b>~${t.missingCost} CZK</b>${t.unpriced ? ` + ${t.unpriced} household item${t.unpriced > 1 ? "s" : ""}` : ""}`
+      : `<b>You have everything.</b> Time to build!`;
+  }
+  const refreshAll = (scope) => scope.querySelectorAll("article.project").forEach((a) => refresh(a.id));
+
+  document.addEventListener("click", (e) => {
+    const tile = e.target.closest(".ptile");
+    if (tile) {
+      const card = cards.get(tile.dataset.card), k = Number(tile.dataset.k), qty = card.p.parts[k].qty;
+      card.have[k] = card.have[k] >= qty ? 0 : card.have[k] + 1;
+      return refresh(tile.dataset.card);
+    }
+    const reset = e.target.closest("[data-reset]");
+    if (reset) { const card = cards.get(reset.dataset.reset); card.have = card.start.slice(); refresh(reset.dataset.reset); }
+  });
+  function highlight(tile, on) {
+    const card = cards.get(tile.dataset.card), x = card.p.parts[Number(tile.dataset.k)], ws = words(x.name);
+    document.getElementById(tile.dataset.card).querySelectorAll("ol.steps li").forEach((li) => {
+      const text = li.textContent.toLowerCase();
+      li.classList.toggle("hl", on && ws.some((w) => text.includes(w)));
+    });
+  }
+  document.addEventListener("mouseover", (e) => { const t = e.target.closest(".ptile"); if (t) highlight(t, true); });
+  document.addEventListener("mouseout", (e) => { const t = e.target.closest(".ptile"); if (t) highlight(t, false); });
+  document.addEventListener("focusin", (e) => { const t = e.target.closest(".ptile"); if (t) highlight(t, true); });
+  document.addEventListener("focusout", (e) => { const t = e.target.closest(".ptile"); if (t) highlight(t, false); });
 
   // ---------------------------------------------------------------- generate
   $("form").addEventListener("submit", async (e) => {
@@ -423,11 +523,26 @@ flowchart LR
     const notes = r.notes.map((n) => "• " + esc(n)).join("<br>");
     $("out").innerHTML = `<div class="toolbar"><span class="notes">${notes ? notes + "<br>" : ""}${esc(r.model)}</span>
       <button type="button" class="secondary" id="dl">Shopping list</button></div>` + r.projects.map((p, i) => cardHtml(p, i)).join("");
+    refreshAll($("out"));
     $("dl").addEventListener("click", saveShoppingList);
   }
 
+  function shoppingMarkdown() {
+    const lines = ["# Shopping list", "", "Indicative prices in CZK. Parts you marked as owned are left out.", ""];
+    $("out").querySelectorAll("article.project").forEach((a, i) => {
+      const card = cards.get(a.id), t = totals(card);
+      lines.push(`## ${i + 1}. ${card.p.title}`, "");
+      card.p.parts.forEach((x, k) => {
+        const miss = x.qty - Math.min(card.have[k], x.qty);
+        if (miss > 0) lines.push(`- [ ] ${miss}× ${x.name} — ${x.unitPriceCzk !== undefined ? "~" + miss * x.unitPriceCzk + " CZK" : "price n/a"}`);
+      });
+      lines.push(t.toBuy ? `\n**Total:** ~${t.missingCost} CZK` : "You already have everything.", "");
+    });
+    return lines.join("\n");
+  }
+
   async function saveShoppingList() {
-    const md = PB.shoppingList(lastResult.projects);
+    const md = shoppingMarkdown();
     const btn = $("dl");
     try {
       const downloads = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
@@ -471,7 +586,7 @@ flowchart LR
       : `${gallery.projects.length} hand-picked example projects. Type your parts on <a href="#" data-goto="make">Make projects</a> to rank them.`;
     $("grid").innerHTML = gallery.projects.map((p, i) => `
       <button class="tile" type="button" data-i="${i}">
-        <div class="thumb">${p.svg}</div>
+        <div class="thumb">${p.photo ? `<img src="${esc(photoSrc(p.photo))}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover">` : p.svg}</div>
         <div class="info"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p>
           <div class="meta"><span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span>
           ${gallery.checkedAgainstParts ? `<span class="chip ok">you own ${Math.round(p.coverage * 100)}%</span>` : ""}
@@ -484,6 +599,7 @@ flowchart LR
     const p = gallery.projects[i];
     $("detail").innerHTML = `<button class="secondary" type="button" id="back" style="margin-bottom:12px">← Back to gallery</button>` +
       cardHtml(p, i, { numbered: false, statusKnown: gallery.checkedAgainstParts });
+    refreshAll($("detail"));
     $("back").addEventListener("click", () => { $("detail").innerHTML = ""; });
     $("detail").scrollIntoView({ block: "start" });
   }

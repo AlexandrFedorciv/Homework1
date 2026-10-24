@@ -7,9 +7,10 @@
  */
 import catalogData from "../../data/parts-catalog.json" with { type: "json" };
 import showcaseData from "../../data/showcase.json" with { type: "json" };
+import photoData from "../../data/photos.json" with { type: "json" };
 import { PartCatalog, type CatalogEntry } from "../core/catalog.ts";
 import { detectParts, enrichProject, suggestProjects } from "../core/generate.ts";
-import { illustrateProject } from "../core/illustrate.ts";
+import { illustrateProject, partIconSvg } from "../core/illustrate.ts";
 import { parseInventory } from "../core/inventory.ts";
 import type { JsonRequest, LlmClient } from "../core/llm.ts";
 import { createMockClient } from "../core/mock.ts";
@@ -21,6 +22,28 @@ const catalog = new PartCatalog((catalogData as { parts: CatalogEntry[] }).parts
 const showcase = parseShowcase(showcaseData as { projects: unknown[] });
 const mock = createMockClient({ catalog, showcase });
 
+/** An openly licensed photo with its credit (see data/photos.json). */
+export interface Photo {
+  file: string;
+  title?: string;
+  credit: string;
+  license: string;
+  licenseUrl?: string;
+  source: string;
+}
+const photos = photoData as unknown as { parts: Record<string, Photo>; projects: Record<string, Photo> };
+const idByTitle = new Map(showcase.map((p) => [p.title, p.id]));
+
+/** Add what the interactive page needs: a picture per part, a photo of a similar finished build. */
+function decorate<T extends Project>(p: T, galleryId?: string) {
+  const id = galleryId ?? idByTitle.get(p.title);
+  return {
+    ...p,
+    galleryId: id,
+    photo: id ? photos.projects[id] : undefined,
+    parts: p.parts.map((x) => ({ ...x, icon: partIconSvg(x.key, x.name), photo: photos.parts[x.key] })),
+  };
+}
 /** Minimal shape of the page's `sample` capability (see the artifact runtime docs). */
 type SampleFn = ((input: string, opts?: Record<string, unknown>) => Promise<{ text: string; truncated: boolean }>) & {
   limits(): Promise<{ images?: { maxCount: number; mediaTypes: string[] } }>;
@@ -128,7 +151,7 @@ export async function suggest(opts: {
     inventory,
     ...result,
     model: client.label,
-    projects: result.projects.map((p) => ({ ...p, svg: illustrateProject(p) })),
+    projects: result.projects.map((p) => decorate({ ...p, svg: illustrateProject(p) })),
   };
 }
 
@@ -147,12 +170,13 @@ export function gallery(parts: string) {
   const projects = showcase.map((sp) => {
     const p: Project = enrichProject(sp, inventory, {}, catalog);
     if (!has) p.checks = [];
-    return { id: sp.id, tags: sp.tags, tutorial: sp.tutorial, ...p, svg: illustrateProject(p, { showStatus: has }) };
+    return { id: sp.id, tags: sp.tags, tutorial: sp.tutorial, ...decorate({ ...p, svg: illustrateProject(p, { showStatus: has }) }, sp.id) };
   });
   if (has) projects.sort((a, b) => b.coverage - a.coverage);
   return { projects, checkedAgainstParts: has };
 }
 
+/** Shopping list from the page's current state (parts the viewer marked as owned are left out). */
 export function shoppingList(projects: Project[]): string {
   const lines = ["# Shopping list", "", "Indicative prices in CZK — check your supplier.", ""];
   projects.forEach((p, i) => {

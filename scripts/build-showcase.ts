@@ -5,7 +5,7 @@
  * Run:  npm run build:showcase
  */
 import { build, type Plugin } from "esbuild";
-import { copyFileSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 // The core modules import node:fs/url/path only for loading files in Node — functions the
@@ -55,4 +55,6 @@ const out = join("dist", "showcase");
 mkdirSync(out, { recursive: true });
 writeFileSync(join(out, "index.html"), page);
 copyFileSync("docs/images/screenshots/cli-results.png", join(out, "cli-results.png"));
+// Openly licensed photos referenced by data/photos.json
+if (existsSync("docs/images/photos")) cpSync("docs/images/photos", join(out, "photos"), { recursive: true });
 console.log(`${join(out, "index.html")}  (${(page.length / 1024).toFixed(0)} KB, ${testNames.length} tests listed)`);
