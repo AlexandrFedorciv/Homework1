@@ -16,15 +16,20 @@ export type ShowcaseProject = z.infer<typeof ShowcaseProjectSchema>;
 
 let cache: ShowcaseProject[] | undefined;
 
-export function loadShowcase(path = defaultPath()): ShowcaseProject[] {
-  if (cache && path === defaultPath()) return cache;
-  const raw = JSON.parse(readFileSync(path, "utf8")) as { projects: unknown[] };
+/** Validate raw gallery data (works in Node and in the browser build). */
+export function parseShowcase(raw: { projects: unknown[] }): ShowcaseProject[] {
   const projects = z.array(ShowcaseProjectSchema).parse(raw.projects);
   const ids = new Set<string>();
   for (const p of projects) {
     if (ids.has(p.id)) throw new Error(`Duplicate showcase id "${p.id}"`);
     ids.add(p.id);
   }
+  return projects;
+}
+
+export function loadShowcase(path = defaultPath()): ShowcaseProject[] {
+  if (cache && path === defaultPath()) return cache;
+  const projects = parseShowcase(JSON.parse(readFileSync(path, "utf8")) as { projects: unknown[] });
   if (path === defaultPath()) cache = projects;
   return projects;
 }

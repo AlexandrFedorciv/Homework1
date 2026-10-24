@@ -11,7 +11,8 @@
     "web": "tsx src/web/server.ts",
     "test": "tsx --test --test-reporter=spec test/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "gallery:images": "tsx scripts/render-gallery.ts"
+    "gallery:images": "tsx scripts/render-gallery.ts",
+    "build:showcase": "tsx scripts/build-showcase.ts"
   },
   "engines": {
     "node": ">=20.12"
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
     "typescript": "^7.0.2"
   }
 }

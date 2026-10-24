@@ -66,8 +66,8 @@ function score(p: ShowcaseProject, prompt: ParsedPrompt, catalog: PartCatalog): 
   return s;
 }
 
-export function createMockClient(): LlmClient {
-  let catalog: PartCatalog | undefined;
+export function createMockClient(data: { catalog?: PartCatalog; showcase?: ShowcaseProject[] } = {}): LlmClient {
+  let catalog: PartCatalog | undefined = data.catalog;
   return {
     label: "mock (offline, answers from the gallery)",
     async generateJson(req: JsonRequest): Promise<string> {
@@ -78,7 +78,7 @@ export function createMockClient(): LlmClient {
       const wanted = Number((req.schema as any).properties?.projects?.minItems ?? 3);
       const prompt = parsePrompt(req.user, catalog);
 
-      let candidates = loadShowcase().filter((p) => !prompt.avoid.has(p.title));
+      let candidates = (data.showcase ?? loadShowcase()).filter((p) => !prompt.avoid.has(p.title));
       if (prompt.isReplacement) {
         const fits = candidates.filter(
           (p) =>

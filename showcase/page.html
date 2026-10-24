@@ -1,0 +1,500 @@
+<title>PartsBin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: workbench — a sticky parts form on the left, project cards on the right, on graph paper. */
+  :root {
+    --paper: #f4f1ea; --grid: #e3ded2; --ink: #1d1f22; --muted: #6b6a66; --card: #fffdf8; --line: #d9d3c5;
+    --accent: #d9480f; --accent-ink: #ffffff; --ok: #2b8a3e; --warn: #b26a00; --bad: #c92a2a; --log-bg: #1d1f22; --log-fg: #e8e6e1;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #16181b; --grid: #1f2226; --ink: #ece8df; --muted: #a09d95; --card: #1d2024; --line: #33373d;
+      --accent: #ff7a33; --accent-ink: #16181b; --ok: #51cf66; --warn: #fcc419; --bad: #ff6b6b; --log-bg: #0f1113; --log-fg: #e8e6e1;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16181b; --grid: #1f2226; --ink: #ece8df; --muted: #a09d95; --card: #1d2024; --line: #33373d;
+    --accent: #ff7a33; --accent-ink: #16181b; --ok: #51cf66; --warn: #fcc419; --bad: #ff6b6b; --log-bg: #0f1113; --log-fg: #e8e6e1;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: var(--sans); color: var(--ink); background-color: var(--paper); line-height: 1.5; font-size: 15px;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  header.top { padding-block: 28px 6px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+  .brand { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .brand h1 { margin: 0; font-size: 30px; letter-spacing: -0.02em; line-height: 1.1; }
+  .brand h1 span { color: var(--accent); }
+  .brand p { margin: 0; color: var(--muted); }
+  .mode { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; background: var(--card); padding: 3px; }
+  .seg button { border: 0; background: transparent; color: var(--muted); font: 600 13px var(--sans); padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .seg button:disabled { opacity: .45; cursor: not-allowed; }
+  .mode small { color: var(--muted); font-size: 12px; text-align: right; max-width: 360px; }
+
+  nav.tabs { display: flex; gap: 4px; padding-top: 14px; overflow-x: auto; }
+  nav.tabs button {
+    flex: none; padding: 8px 16px; font: 600 14px var(--sans); background: transparent; color: var(--muted); cursor: pointer;
+    border: 1px solid transparent; border-bottom: 0; border-radius: 8px 8px 0 0;
+  }
+  nav.tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); border-color: var(--line); }
+
+  .make { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 24px; align-items: start; padding-block: 16px 48px; }
+  @media (max-width: 880px) { .make { grid-template-columns: minmax(0, 1fr); } }
+  form { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px; position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+  @media (max-width: 880px) { form { position: static; } }
+  label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 14px 0 6px; }
+  label:first-child { margin-top: 0; }
+  textarea, input, select { width: 100%; font: 14px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  textarea { min-height: 128px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--ink); font-weight: 400; }
+  .check input { width: auto; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chipbtn { padding: 4px 10px; font: 12px var(--mono); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+  .chipbtn:hover { border-color: var(--accent); }
+  .drop { border: 1.5px dashed var(--line); border-radius: 8px; padding: 12px; text-align: center; font-size: 13px; color: var(--muted); cursor: pointer; margin-top: 10px; }
+  .drop:hover, .drop.over { border-color: var(--accent); }
+  .drop img { max-width: 100%; max-height: 140px; border-radius: 6px; display: block; margin: 0 auto 6px; }
+  .actions { display: flex; gap: 8px; margin-top: 18px; }
+  .primary { flex: 1; padding: 12px; font: 600 15px var(--sans); color: var(--accent-ink); background: var(--accent); border: 0; border-radius: 8px; cursor: pointer; }
+  .primary:disabled { opacity: .6; cursor: progress; }
+  .secondary { padding: 8px 14px; font: 600 13px var(--sans); background: var(--ink); color: var(--paper); border: 0; border-radius: 8px; cursor: pointer; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  .log { background: var(--log-bg); color: var(--log-fg); border-radius: 10px; padding: 12px 14px; font: 12.5px/1.6 var(--mono); margin-bottom: 16px; overflow-x: auto; }
+  .log div { white-space: pre-wrap; }
+  .log .dim { opacity: .6; }
+  .log .warn { color: #ffd43b; }
+  .log .ok { color: #69db7c; }
+  .error { color: var(--bad); background: var(--card); border: 1px solid var(--bad); padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+  .empty { border: 1.5px dashed var(--line); border-radius: 10px; padding: 40px 24px; text-align: center; color: var(--muted); background: var(--card); }
+
+  .project { background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 18px; overflow: hidden; }
+  .project-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--line); }
+  .project-head h2 { margin: 0 0 4px; font-size: 20px; letter-spacing: -0.01em; display: flex; gap: 10px; align-items: baseline; text-wrap: balance; }
+  .project-head h2 .n { font: 600 14px var(--mono); color: var(--accent); }
+  .project-head p { margin: 0 0 10px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; font: 12px var(--mono); }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+  .chip.ok { border-color: var(--ok); color: var(--ok); }
+  .chip.bad { border-color: var(--bad); color: var(--bad); }
+  .chip.acc { border-color: var(--accent); color: var(--accent); }
+  .cover { height: 4px; background: var(--line); }
+  .cover div { height: 100%; background: var(--ok); }
+  .pic { border-bottom: 1px solid var(--line); background: #f4f1ea; }
+  .pic svg { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; }
+  .body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
+  @media (max-width: 1000px) { .body { grid-template-columns: minmax(0, 1fr); } }
+  .body section { padding: 14px 18px; min-width: 0; }
+  .body section + section { border-left: 1px solid var(--line); }
+  @media (max-width: 1000px) { .body section + section { border-left: 0; border-top: 1px solid var(--line); } }
+  h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  ul.parts { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  ul.parts li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 6px; padding: 5px 0; border-bottom: 1px dotted var(--line); }
+  ul.parts li:last-child { border-bottom: 0; }
+  .mark { font-weight: 700; }
+  .have .mark { color: var(--ok); } .miss .mark { color: var(--bad); } .part .mark { color: var(--warn); }
+  .purpose { display: block; color: var(--muted); font-size: 12px; }
+  .price { font: 12px var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .miss .price, .part .price { color: var(--bad); }
+  ol.steps { margin: 0; padding-left: 0; list-style: none; counter-reset: s; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 10px 32px; font-size: 14px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--ink); font: 600 11px/19px var(--mono); text-align: center; }
+  ol.steps b { display: block; }
+  .safety { margin-top: 4px; padding: 10px 12px; border-left: 3px solid var(--warn); background: var(--paper); font-size: 13px; }
+  .safety p { margin: 0 0 4px; }
+  .foot { padding: 10px 18px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 6px; font: 12px var(--mono); }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .notes { font: 12px var(--mono); color: var(--muted); min-width: 0; }
+
+  .page { padding-block: 16px 48px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr)); gap: 16px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; text-align: left; padding: 0; color: var(--ink); font: inherit; width: 100%; }
+  .tile:hover { border-color: var(--accent); }
+  .tile .thumb { aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: #f4f1ea; border-bottom: 1px solid var(--line); }
+  .tile .thumb svg { width: 100%; height: auto; display: block; }
+  .tile .info { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .tile h3 { margin: 0; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
+  .tile p { margin: 0; font-size: 13px; color: var(--muted); }
+  .tag { font: 11px var(--mono); color: var(--muted); }
+  #detail:not(:empty) { margin-bottom: 24px; }
+  .intro { color: var(--muted); margin: 0 0 14px; }
+
+  .prose { max-width: 860px; }
+  .prose h2 { font-size: 22px; margin: 28px 0 8px; text-wrap: balance; }
+  .prose h2:first-child { margin-top: 4px; }
+  .prose p, .prose li { max-width: 68ch; }
+  .steps4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 14px; margin: 14px 0; }
+  .step4 { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .step4 .n { font: 600 12px var(--mono); color: var(--accent); }
+  .step4 h4 { margin: 4px 0; font-size: 15px; }
+  .step4 p { margin: 0; font-size: 14px; color: var(--muted); }
+  .tablewrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  code { font: 13px var(--mono); background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .shot { display: block; max-width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+  .tests { columns: 2 300px; column-gap: 32px; font: 13px var(--mono); list-style: none; padding-left: 0; }
+  .tests li { break-inside: avoid; margin-bottom: 4px; padding-left: 20px; position: relative; }
+  .tests li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); }
+  pre.mermaid { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Parts<span>Bin</span></h1>
+      <p>Tell it what's in your drawer. Get three electronics projects you can build this weekend.</p>
+    </div>
+    <div class="mode">
+      <div class="seg" role="group" aria-label="Who designs the projects">
+        <button type="button" id="mode-claude" aria-pressed="false">Claude (live)</button>
+        <button type="button" id="mode-demo" aria-pressed="true">Offline demo</button>
+      </div>
+      <small id="mode-note">Checking whether Claude is available…</small>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-view="make" id="tab-make">🛠 Make projects</button>
+    <button role="tab" aria-selected="false" data-view="gallery" id="tab-gallery">Gallery</button>
+    <button role="tab" aria-selected="false" data-view="how" id="tab-how">How it works</button>
+    <button role="tab" aria-selected="false" data-view="about" id="tab-about">About the project</button>
+  </nav>
+</div>
+
+<main>
+  <div class="wrap view" id="view-make">
+    <div class="make">
+      <form id="form" novalidate>
+        <label for="parts">Parts you have</label>
+        <textarea id="parts" spellcheck="false">arduino uno
+2x sg90 servo
+hc-sr04
+10k potentiometer
+breadboard
+jumper wires</textarea>
+        <div class="presets" aria-label="Example parts lists">
+          <button type="button" class="chipbtn" data-preset="arduino uno&#10;2x sg90 servo&#10;hc-sr04&#10;10k potentiometer&#10;breadboard&#10;jumper wires">Arduino starter kit</button>
+          <button type="button" class="chipbtn" data-preset="esp32&#10;bme280&#10;0.96 oled&#10;soil moisture sensor&#10;relay module&#10;breadboard&#10;jumper wires">ESP32 / IoT</button>
+          <button type="button" class="chipbtn" data-preset="arduino nano&#10;4x sg90 servo&#10;hc-sr04&#10;piezo buzzer&#10;battery holder&#10;4x aa battery">Robot parts</button>
+        </div>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Detect parts from a photo">📷 Drop a photo of your parts, or click to choose<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/gif" hidden></div>
+        <div class="hint" id="drop-hint">Detected parts are added to the list so you can fix them first.</div>
+
+        <label for="goal">Goal (optional)</label>
+        <input id="goal" value="something that moves or makes noise">
+        <div class="row">
+          <div><label for="skill">Skill</label>
+            <select id="skill"><option value="">any</option><option selected>beginner</option><option>intermediate</option><option>advanced</option></select></div>
+          <div><label for="hours">Max h</label><input id="hours" type="number" min="0.5" step="0.5" value="4"></div>
+          <div><label for="budget">Budget CZK</label><input id="budget" type="number" min="0" step="50" value="300"></div>
+        </div>
+        <label class="check" for="nosolder"><input type="checkbox" id="nosolder"> I can't solder</label>
+        <div class="actions">
+          <button class="primary" id="go" type="submit">Suggest 3 projects</button>
+          <button class="secondary" id="stop" type="button" hidden>Stop</button>
+        </div>
+        <div class="hint" id="cost-hint"></div>
+      </form>
+
+      <div>
+        <div class="log" id="log" hidden aria-live="polite"></div>
+        <div id="out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap view page" id="view-gallery" hidden>
+    <div id="detail"></div>
+    <p class="intro" id="gallery-note"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="wrap view page" id="view-how" hidden>
+    <div class="prose">
+      <h2>How PartsBin works</h2>
+      <div class="steps4">
+        <div class="step4"><span class="n">1</span><h4>Tell it what you have</h4><p>Type parts (<code>4x sg90</code>, <code>servo x4</code> and <code>servo (4)</code> all work) or drop a photo; a vision model lists what it sees and you fix the list.</p></div>
+        <div class="step4"><span class="n">2</span><h4>Add constraints</h4><p>Goal, skill, time and budget are optional. Tick "I can't solder" for breadboard-only builds.</p></div>
+        <div class="step4"><span class="n">3</span><h4>AI designs, code checks</h4><p>Claude proposes three projects as structured JSON. The app, not the AI, works out what you own, what's missing and what it costs, and verifies every constraint.</p></div>
+        <div class="step4"><span class="n">4</span><h4>Fix what breaks</h4><p>Projects that are too long, too hard or over budget go back to Claude with the reason and get replaced. You get the best three.</p></div>
+      </div>
+      <pre class="mermaid">
+flowchart LR
+  A[Parts list or photo] --> B[Parse + match parts in code]
+  C[Constraints] --> D
+  B --> D[Claude designs 3 projects<br/>JSON schema]
+  D --> E{zod valid?}
+  E -- no, send errors back --> D
+  E -- yes --> F[Diff owned vs missing<br/>prices from catalog]
+  F --> G{Constraints OK?}
+  G -- no, regenerate that one --> D
+  G -- yes --> H[Rank, draw parts,<br/>shopping list]
+      </pre>
+      <h2>Reading a project card</h2>
+      <ul>
+        <li><b style="color:var(--ok)">✓</b> you own it · <b style="color:var(--warn)">◐</b> you own some, need more · <b style="color:var(--bad)">✗</b> missing, with an indicative price in CZK.</li>
+        <li>The drawing shows every part: solid cards are yours, dashed red cards are to buy.</li>
+        <li>The chips at the bottom are the checks the app ran on that project.</li>
+        <li>The dark log above the results shows each step as it happens, including retries and replaced projects.</li>
+      </ul>
+      <h2>Live vs. offline</h2>
+      <p><b>Claude (live)</b> sends your parts to Claude from this page, using your own Claude account; the first time, the page asks your permission. <b>Offline demo</b> runs the same pipeline but answers from the 10 built-in gallery projects, so it's instant and free. To show the self-check, it ignores your limits on the first try, just like a real model sometimes does.</p>
+    </div>
+  </div>
+
+  <div class="wrap view page" id="view-about" hidden>
+    <div class="prose">
+      <h2>About the project</h2>
+      <p>PartsBin is my answer to <b>Homework 1 · Fridge-to-Recipes</b>: an app that takes what you have plus optional constraints and returns three suggestions, each with a full list marking what's missing, step-by-step instructions and an estimated time. Same shape, different fridge: <b>electronics parts instead of ingredients, projects instead of recipes.</b></p>
+      <p>The full app is a TypeScript CLI and a small web server. This page runs the same core code, compiled for the browser, with Claude reached through the page instead of an API key.</p>
+
+      <h2>Assignment requirements</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Requirement</th><th>How PartsBin does it</th></tr></thead>
+        <tbody>
+          <tr><td>Input: list + any subset of constraints</td><td>Parts list or photo; goal, skill level, max hours, budget (CZK), no-soldering</td></tr>
+          <tr><td>3 suggestions with title, full list marking missing items, steps, time</td><td>Every card: ✓ / ◐ / ✗ parts list with quantities and prices, numbered build steps, <code>~N h</code></td></tr>
+          <tr><td>Error handling</td><td>Config, argument, HTTP, validation and file errors each get a clear message and exit code; invalid AI output is sent back with the validation errors</td></tr>
+          <tr><td>At least one retry on transient failures</td><td>Exponential backoff with jitter on 429 / 5xx / 529 / timeouts / network errors, honours <code>Retry-After</code>; permanent errors fail fast</td></tr>
+          <tr><td>API key in an environment variable</td><td><code>.env</code> (git-ignored) + <code>.env.example</code>; this page needs no key at all</td></tr>
+          <tr><td>CLI; minimal web UI is a bonus</td><td>CLI with colours, <code>--json</code>, shopping list and SVG export; web UI with photo upload and gallery</td></tr>
+          <tr><td>README with setup, env vars, example run</td><td>README + 6 tutorials, screenshots, example Arduino and Python code</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2>What makes it more than a prompt</h2>
+      <ul>
+        <li><b>The AI is creative, the code is the referee.</b> What you own, what's missing and what it costs are computed in code from a catalog of %%CATALOG_PARTS%% parts with aliases. <code>SG90</code>, <code>9g micro servo</code> and <code>servos</code> are the same part; quantities count.</li>
+        <li><b>Self-check loop.</b> Skill, time, budget, soldering, "uses your parts" and a mains-voltage safety rule are verified on every project. Failing ones are regenerated individually with the reasons.</li>
+        <li><b>Validated structured output.</b> JSON Schema + zod; broken answers go back with the exact errors (up to 2 repairs).</li>
+        <li><b>Photo → parts</b> with a vision model, and you confirm the list.</li>
+        <li><b>Generated parts drawings</b> for every project, with 60+ component icons.</li>
+        <li><b>Provider-agnostic.</b> Anthropic, any OpenAI-compatible API, or offline; the HTTP layer is plain <code>fetch</code>, no SDK.</li>
+        <li><b>%%GALLERY_PROJECTS%% gallery projects</b> and two complete builds with Arduino + Python code.</li>
+      </ul>
+
+      <h2>The terminal version</h2>
+      <img class="shot" src="cli-results.png" alt="PartsBin CLI output: three projects with owned and missing parts, steps and checks" width="860">
+
+      <h2>Tests</h2>
+      <p>%%TEST_COUNT%% unit tests run with <code>npm test</code>: no network, no API key.</p>
+      <ul class="tests">%%TEST_LIST%%</ul>
+
+      <h2>Built with</h2>
+      <p>TypeScript on Node.js 20+, <code>zod</code> for validation, <code>node:test</code>, plain <code>fetch</code> and <code>node:http</code>; esbuild to compile this page. Claude designs the projects.</p>
+    </div>
+  </div>
+</main>
+
+<script>%%BUNDLE%%</script>
+<script>
+(() => {
+  const PB = window.PartsBin;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+
+  // ---------------------------------------------------------------- mode
+  let sample = null, imagesOk = false, mode = "demo", lastResult = null, ctl = null;
+  function setMode(m) {
+    mode = m;
+    $("mode-claude").setAttribute("aria-pressed", String(m === "claude"));
+    $("mode-demo").setAttribute("aria-pressed", String(m === "demo"));
+    $("mode-note").textContent = m === "claude"
+      ? "Claude designs new projects for your parts. Uses your Claude account; asks permission first."
+      : "Instant and free: answers come from the 10 built-in projects.";
+    $("cost-hint").textContent = m === "claude" ? "A live run takes about 20–90 seconds." : "";
+    $("drop-hint").textContent = m === "claude"
+      ? (imagesOk ? "Detected parts are added to the list so you can fix them first." : "Photo detection isn't available in this view; type your parts instead.")
+      : "In the offline demo, any photo returns a fixed example list.";
+  }
+  $("mode-claude").addEventListener("click", () => sample && setMode("claude"));
+  $("mode-demo").addEventListener("click", () => setMode("demo"));
+  $("mode-claude").disabled = true;
+  setMode("demo");
+  (async () => {
+    try { sample = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch { sample = null; }
+    if (sample) {
+      try { imagesOk = !!(await sample.limits()).images; } catch { imagesOk = false; }
+      $("mode-claude").disabled = false;
+      setMode("claude");
+    } else {
+      $("mode-note").textContent = "Claude isn't reachable from this view, so the offline demo is on.";
+    }
+  })();
+
+  // ---------------------------------------------------------------- tabs
+  function show(view) {
+    document.querySelectorAll(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
+    document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === view)));
+    if (view === "gallery") renderGallery();
+  }
+  document.querySelectorAll("nav.tabs button").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
+  document.addEventListener("click", (e) => { const t = e.target.closest("[data-goto]"); if (t) { e.preventDefault(); show(t.dataset.goto); } });
+  const initial = (location.hash || "").slice(1);
+  if (["gallery", "how", "about"].includes(initial)) show(initial);
+  document.querySelectorAll("[data-preset]").forEach((b) => b.addEventListener("click", () => { $("parts").value = b.dataset.preset; }));
+
+  // ---------------------------------------------------------------- log
+  function log(msg) {
+    const box = $("log");
+    box.hidden = false;
+    const div = document.createElement("div");
+    div.className = /^⚠/.test(msg) ? "warn" : /^↻/.test(msg) ? "warn" : /^✓/.test(msg) ? "ok" : "";
+    div.textContent = msg;
+    box.appendChild(div);
+  }
+  const clearLog = () => { $("log").innerHTML = ""; $("log").hidden = true; };
+
+  // ---------------------------------------------------------------- cards
+  function cardHtml(p, i, opts = {}) {
+    const known = opts.statusKnown !== false;
+    const parts = p.parts.map((x) => {
+      const cls = !known || x.missing === 0 ? "have" : x.have === 0 ? "miss" : "part";
+      const mark = !known ? "•" : x.missing === 0 ? "✓" : x.have === 0 ? "✗" : "◐";
+      const status = !known || x.missing === 0 ? "" : x.have === 0 ? "missing" : `have ${x.have}, need ${x.missing} more`;
+      const price = known && x.missing && x.unitPriceCzk !== undefined ? `~${x.missing * x.unitPriceCzk} CZK` : status;
+      return `<li class="${cls}"><span class="mark">${mark}</span><span>${x.qty}× ${esc(x.name)}<span class="purpose">${esc(x.purpose || "")}${x.have && x.missing ? " · " + status : ""}</span></span><span class="price">${esc(price)}</span></li>`;
+    }).join("");
+    const steps = p.steps.map((s) => `<li><b>${esc(s.title)}</b>${esc(s.detail)}</li>`).join("");
+    const safety = p.safetyNotes.length ? `<div class="safety">${p.safetyNotes.map((n) => `<p>⚠ ${esc(n)}</p>`).join("")}</div>` : "";
+    const checks = p.checks.map((c) => `<span class="chip ${c.ok ? "ok" : "bad"}" title="${esc(c.detail)}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("");
+    const cost = p.missingCostCzk ? `~${p.missingCostCzk} CZK to buy` : "nothing to buy";
+    const own = known ? `<span class="chip">you own ${Math.round(p.coverage * 100)}%</span><span class="chip">${cost}${p.unpricedMissing.length ? " + household" : ""}</span>` : "";
+    const tut = p.tutorial ? `<span class="chip acc">full build guide in the repo</span>` : "";
+    const num = opts.numbered === false ? "" : `<span class="n">0${i + 1}</span>`;
+    return `<article class="project">
+      <div class="project-head"><h2>${num}${esc(p.title)}</h2><p>${esc(p.summary)}</p>
+        <div class="meta"><span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span><span class="chip">${p.requiresSoldering ? "soldering" : "solderless"}</span>${own}${tut}</div></div>
+      ${known ? `<div class="cover"><div style="width:${Math.round(p.coverage * 100)}%"></div></div>` : ""}
+      ${p.svg ? `<div class="pic">${p.svg}</div>` : ""}
+      <div class="body"><section><h3>Parts</h3><ul class="parts">${parts}</ul></section><section><h3>Build steps</h3><ol class="steps">${steps}</ol>${safety}</section></div>
+      ${checks ? `<div class="foot">${checks}</div>` : ""}
+    </article>`;
+  }
+
+  // ---------------------------------------------------------------- generate
+  $("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const constraints = {};
+    const goal = $("goal").value.trim(); if (goal) constraints.goal = goal;
+    if ($("skill").value) constraints.skill = $("skill").value;
+    if ($("hours").value) constraints.maxHours = Number($("hours").value);
+    if ($("budget").value) constraints.budget = Number($("budget").value);
+    if ($("nosolder").checked) constraints.canSolder = false;
+
+    clearLog();
+    ctl = new AbortController();
+    $("go").disabled = true; $("stop").hidden = mode !== "claude";
+    $("out").innerHTML = `<div class="empty">${mode === "claude" ? "Claude is designing your projects…" : "Working…"}</div>`;
+    const t0 = performance.now();
+    try {
+      lastResult = await PB.suggest({ parts: $("parts").value, constraints, mode, sample, log, signal: ctl.signal });
+      log(`✓ done in ${((performance.now() - t0) / 1000).toFixed(1)} s · ${lastResult.llmCalls} AI call(s)`);
+      renderResults(lastResult);
+    } catch (err) {
+      const msg = err && err.message ? err.message : String(err);
+      if (err && err.code === "cancelled") { $("out").innerHTML = `<div class="empty">Stopped.</div>`; }
+      else $("out").innerHTML = `<div class="error">✗ ${esc(msg)}</div>`;
+    } finally {
+      $("go").disabled = false; $("stop").hidden = true;
+    }
+  });
+  $("stop").addEventListener("click", () => ctl && ctl.abort());
+
+  function renderResults(r) {
+    const notes = r.notes.map((n) => "• " + esc(n)).join("<br>");
+    $("out").innerHTML = `<div class="toolbar"><span class="notes">${notes ? notes + "<br>" : ""}${esc(r.model)}</span>
+      <button type="button" class="secondary" id="dl">Shopping list</button></div>` + r.projects.map((p, i) => cardHtml(p, i)).join("");
+    $("dl").addEventListener("click", saveShoppingList);
+  }
+
+  async function saveShoppingList() {
+    const md = PB.shoppingList(lastResult.projects);
+    const btn = $("dl");
+    try {
+      const downloads = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+      if (downloads) { await downloads.save({ filename: "shopping-list.md", data: md }); btn.textContent = "Saved"; return; }
+    } catch (e) { if (e && e.code === "declined") return; }
+    try { await navigator.clipboard.writeText(md); btn.textContent = "Copied to clipboard"; }
+    catch { btn.textContent = "Couldn't save"; }
+  }
+
+  // ---------------------------------------------------------------- photo
+  const drop = $("drop"), photo = $("photo");
+  drop.addEventListener("click", () => photo.click());
+  drop.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), photo.click()));
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); if (e.dataTransfer.files[0]) handlePhoto(e.dataTransfer.files[0]); });
+  photo.addEventListener("change", () => photo.files[0] && handlePhoto(photo.files[0]));
+
+  async function handlePhoto(file) {
+    const url = URL.createObjectURL(file);
+    if (mode === "claude" && !imagesOk) { drop.innerHTML = "Photo detection isn't available here. Type your parts instead."; drop.appendChild(photo); return; }
+    drop.innerHTML = `<img src="${url}" alt="your parts photo">Detecting parts…`;
+    clearLog();
+    try {
+      const parts = await PB.detect({ file, mode, sample, log });
+      const lines = parts.map((p) => `${p.qty}x ${p.name}`);
+      $("parts").value = [$("parts").value.trim(), ...lines].filter(Boolean).join("\n");
+      drop.innerHTML = `<img src="${url}" alt="your parts photo">Found ${parts.length} part type(s)${mode === "demo" ? " (demo list)" : ""}. Check the list above.`;
+    } catch (err) {
+      drop.innerHTML = `<span style="color:var(--bad)">${esc(err && err.message ? err.message : String(err))}</span><br>Click to try another photo`;
+    }
+    drop.appendChild(photo);
+  }
+
+  // ---------------------------------------------------------------- gallery
+  let gallery = null;
+  function renderGallery() {
+    gallery = PB.gallery($("parts").value.trim());
+    $("gallery-note").innerHTML = gallery.checkedAgainstParts
+      ? `${gallery.projects.length} example projects, ranked by how many of your parts they use. Change your parts on the <a href="#" data-goto="make">Make projects</a> tab.`
+      : `${gallery.projects.length} hand-picked example projects. Type your parts on <a href="#" data-goto="make">Make projects</a> to rank them.`;
+    $("grid").innerHTML = gallery.projects.map((p, i) => `
+      <button class="tile" type="button" data-i="${i}">
+        <div class="thumb">${p.svg}</div>
+        <div class="info"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p>
+          <div class="meta"><span class="chip">${esc(p.difficulty)}</span><span class="chip">~${p.estimatedHours} h</span>
+          ${gallery.checkedAgainstParts ? `<span class="chip ok">you own ${Math.round(p.coverage * 100)}%</span>` : ""}
+          ${p.tutorial ? `<span class="chip acc">build guide</span>` : ""}</div>
+          <div class="tag">${p.tags.map((t) => "#" + esc(t)).join(" ")}</div></div>
+      </button>`).join("");
+    $("grid").querySelectorAll(".tile").forEach((t) => t.addEventListener("click", () => openDetail(Number(t.dataset.i))));
+  }
+  function openDetail(i) {
+    const p = gallery.projects[i];
+    $("detail").innerHTML = `<button class="secondary" type="button" id="back" style="margin-bottom:12px">← Back to gallery</button>` +
+      cardHtml(p, i, { numbered: false, statusKnown: gallery.checkedAgainstParts });
+    $("back").addEventListener("click", () => { $("detail").innerHTML = ""; });
+    $("detail").scrollIntoView({ block: "start" });
+  }
+
+  // Open in a realistic state: an offline example run is shown immediately.
+  (async () => {
+    try {
+      const r = await PB.suggest({ parts: $("parts").value, constraints: { goal: "something that moves or makes noise", skill: "beginner", maxHours: 4, budget: 300 }, mode: "demo", log });
+      log("✓ example run (offline demo). Press “Suggest 3 projects” to try your own parts.");
+      lastResult = r; renderResults(r);
+    } catch (e) { $("out").innerHTML = `<div class="error">✗ ${esc(e.message || e)}</div>`; }
+  })();
+})();
+</script>
