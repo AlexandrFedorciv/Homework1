@@ -1,0 +1,27 @@
+{
+  "name": "partsbin",
+  "version": "1.0.0",
+  "description": "Parts-to-Projects: tell it which electronics parts you have, get three buildable DIY project plans with a missing-parts list, build steps and time estimates.",
+  "type": "module",
+  "bin": {
+    "partsbin": "./bin/partsbin.js"
+  },
+  "scripts": {
+    "start": "tsx src/cli/index.ts",
+    "web": "tsx src/web/server.ts",
+    "test": "tsx --test --test-reporter=spec test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.12"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "tsx": "^4.23.15",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}
