@@ -195,15 +195,149 @@ Add your own: see [tutorial 4](docs/tutorials/04-customize-the-catalog.md#add-a-
 
 ## Example run
 
+A real run with **Groq** (`LLM_MODEL=openai/gpt-oss-120b`, see [free providers](#free-providers-no-anthropic-account-needed)),
+on Windows PowerShell, 25 October 2026:
+
 ```bash
 npm start -- "raspberry pi zero 2 w, microsd card, usb cable, phone charger, esp32, 0.96 oled, push button, breadboard, jumper wires" \
-  --goal "protect my home network" --skill beginner --hours 2 --budget 300
+  --goal "protect my home network" --skill beginner --hours 2 --budget 300 --out run.txt
 ```
 
-> ℹ️ The output below was produced with `LLM_PROVIDER=mock`, so the projects come from the gallery instead
-> of being invented by a model. Everything else (part matching, prices, constraint checks, the
-> regeneration of the intermediate project that broke the `--skill beginner --hours 2` limits) is the real pipeline.
-> **TODO before submitting:** run the same command with your API key and paste that output here.
+```text
+🛠  asking openai-compatible/openai/gpt-oss-120b for 3 projects using 9 part type(s)…
+
+━━━ 1. Pi‑hole Ad‑Blocker on Raspberry Pi Zero 2 W ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Turn the Pi Zero 2 W into a network‑wide ad blocker, protecting every device on your home Wi‑Fi from
+unwanted tracking and malicious ads.
+beginner · ~1.5 h · solderless · you own 80% of the parts · ~60 CZK to buy
+
+Parts
+  ✓ 1× Raspberry Pi Zero 2 W — hosts the Pi‑hole software
+  ✓ 1× microSD card — operating system and Pi‑hole data
+  ✓ 1× phone charger (5 V 2 A) — powers the Pi Zero via USB‑C
+  ✓ 1× USB cable — connects charger to Pi Zero
+  ✗ 1× Ethernet cable MISSING (~60 CZK) — optional – provides a stable wired connection to router
+
+Steps
+   1. Prepare the OS — Download the latest Raspberry Pi OS Lite image, flash it to the
+      microSD card with Raspberry Pi Imager, and enable SSH & Wi‑Fi (SSID/password) in the 'Advanced
+      options' before flashing.
+   2. Boot the Pi — Insert the microSD, plug the USB cable into the Pi Zero 2 W, attach the
+      phone charger, and wait for the Pi to obtain an IP address (check your router).
+   3. Install Pi‑hole — SSH into the Pi (`ssh pi@<IP>`; default password ‘raspberry’), run
+      `curl -sSL https://install.pi-hole.net | bash` and follow the on‑screen prompts, selecting the
+      Wi‑Fi interface as the upstream DNS.
+   4. Configure router — Log into your home router and set the DNS server to the Pi’s IP
+      address, or enable the router’s “DNS forwarder” option pointing to the Pi.
+   5. Test blocking — On any device, open a web page with ads; the Pi‑hole dashboard
+      (`http://<Pi‑IP>/admin`) should show queries being blocked.
+   6. Optional wired mode — If you prefer a stable connection, plug the Ethernet cable into
+      a USB‑to‑Ethernet adapter (if you have one) and repeat the router DNS change.
+   7. Maintain — Periodically SSH in and run `pihole -up` to keep the block lists current.
+
+Safety
+  ! Use only the provided 5 V 2 A charger – over‑voltage can damage the Pi.
+  ! Never power the Pi Zero directly from a 12 V source.
+
+Checks  ✓ skill  ✓ time  ✓ budget  ✓ uses-your-parts
+
+━━━ 2. Network Device Watchdog (ESP32) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Periodically ping known home‑network devices; if an unknown MAC appears, the ESP32 lights an LED and
+shows a warning on the OLED, giving you early notice of rogue devices.
+beginner · ~1.5 h · solderless · you own 71% of the parts · ~3 CZK to buy
+
+Parts
+  ✓ 1× ESP32 — performs Wi‑Fi scans and drives the display
+  ✓ 1× 0.96 OLED (SSD1306, I2C) — shows known devices and alerts
+  ✗ 1× LED (5 mm) MISSING (~2 CZK) — visual warning for unknown device
+  ✗ 1× Resistor (220 Ω) MISSING (~1 CZK) — limit LED current
+  ✓ 1× push button — manual scan trigger
+  ✓ 1× breadboard — solder‑less prototype
+  ✓ 1× jumper wires — connections
+
+Steps
+   1. Connect OLED — Same wiring as in Project 2: VCC → 3.3 V, GND → GND, SDA → GPIO 21, SCL
+      → GPIO 22.
+   2. Wire LED — LED anode → GPIO 13 through 220 Ω resistor, cathode → GND.
+   3. Wire push button — One side to GPIO 15, other side to GND; enable internal pull‑up.
+   4. Program the ESP32 — In Arduino IDE, include `WiFi.h` and `Adafruit_SSD1306.h`. Define
+      an array of known MAC addresses (e.g., router, phones). Every 60 s call `WiFi.scanNetworks()`
+      and compare results; if a MAC not in the list is found, turn LED on and print a warning on the
+      OLED. Button forces an immediate scan.
+   5. Upload and power — Connect ESP32 to the phone charger via USB, open Serial Monitor to
+      view debug output, and watch the OLED for the device list.
+   6. Deploy — Place the board near a power outlet; the ESP32 stays on 24 / 7, alerting you
+      via LED (or you can add a simple buzzer later).
+
+Safety
+  ! Keep the ESP32 powered from a regulated 5 V USB supply; do not connect a higher voltage to any
+    GPIO.
+  ! LED current is limited by the 220 Ω resistor – do not remove it.
+
+Checks  ✓ skill  ✓ time  ✓ budget  ✓ uses-your-parts
+
+━━━ 3. ESP32 Motion‑Alert for Router ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Detect motion near your router with a PIR sensor and get an instant email or buzzer alert, letting
+you know when someone is physically tampering with your network hardware.
+beginner · ~1.8 h · solderless · you own 56% of the parts · ~68 CZK to buy
+
+Parts
+  ✓ 1× ESP32 — Wi‑Fi connection and control logic
+  ✓ 1× 0.96 OLED (SSD1306, I2C) — displays status and last alert time
+  ✓ 1× push button — manual test / reset
+  ✗ 1× HC‑SR501 PIR motion sensor MISSING (~50 CZK) — detects movement near the router
+  ✗ 1× LED (5 mm) MISSING (~2 CZK) — visual alert
+  ✗ 1× Resistor (220 Ω) MISSING (~1 CZK) — limit current for LED
+  ✗ 1× Piezo buzzer MISSING (~15 CZK) — audio alert
+  ✓ 1× breadboard — solder‑less prototyping
+  ✓ 1× jumper wires — connect components
+
+Steps
+   1. Wire the OLED — Place the OLED on the breadboard. Connect VCC → 3.3 V (ESP32 pin 1),
+      GND → GND (pin 3), SDA → GPIO 21, SCL → GPIO 22 using jumper wires.
+   2. Wire the PIR sensor — Connect VCC → 3.3 V, GND → GND, OUT → GPIO 4 (a safe
+      digital‑input pin).
+   3. Add LED & buzzer — LED anode → GPIO 5 through the 220 Ω resistor, cathode → GND.
+      Buzzer positive → GPIO 18, negative → GND.
+   4. Connect the push button — One side to GPIO 19, other side to GND; enable internal
+      pull‑up in code (`pinMode(19, INPUT_PULLUP)`).
+   5. Program the ESP32 — Use Arduino IDE: include `WiFi.h`, `ESP_Mail_Client.h`,
+      `Adafruit_SSD1306.h`. On motion (PIR HIGH) send an email via SMTP (e.g., Gmail) and light
+      LED/buzzer for 5 s. Show last alert on OLED. Button clears the display.
+   6. Upload & test — Power the ESP32 from the phone charger via USB. Open Serial Monitor,
+      trigger the PIR by moving hand near sensor – you should hear the buzzer, see LED lit, and
+      receive an email.
+   7. Mount near router — Place the breadboard (or a small cardboard enclosure) beside the
+      router, ensuring the PIR has a clear view.
+
+Safety
+  ! The HC‑SR501 draws < 50 mA – powering it from the ESP32 3.3 V pin is safe.
+  ! Do not leave the buzzer on continuously; it may overheat after many minutes.
+
+Checks  ✓ skill  ✓ time  ✓ budget  ✓ uses-your-parts
+
+Model: openai-compatible/openai/gpt-oss-120b · 1 LLM call
+```
+
+Everything after the model's answer is computed by the app, not the model: matching your parts (`✓` / `✗`),
+the prices and "~60 CZK to buy", the ownership percentage and the `Checks` line.
+
+**Retry and self-check in action.** An earlier run of the same command on Groq's free plan hit its rate limit
+and had its first projects rejected for going over budget. The app regenerated them and retried on its own:
+
+```text
+↻ 3 project(s) broke a constraint — regenerating: "Pi‑hole ad‑blocker with OLED status": budget — ~630 CZK to buy (limit 300 CZK) | …
+⚠ transient error (HTTP 429), retry 1/3 in 6.0 s
+⚠ transient error (HTTP 429), retry 2/3 in 2.0 s
+```
+
+(That run also exposed a pricing bug, "10 jumper wires" priced as 9 extra sets, which is now fixed and covered by a test.)
+
+<details>
+<summary>The same command offline (<code>--provider mock</code>, no API key)</summary>
+
+The mock provider answers from the gallery and deliberately ignores the limits on its first answer, so you can
+see the constraint check replace a project:
 
 ```text
 🛠  asking mock (offline, answers from the gallery) for 3 projects using 9 part type(s)…
@@ -309,6 +443,8 @@ Checks  ✓ skill  ✓ time  ✓ budget  ✓ uses-your-parts
 Model: mock (offline, answers from the gallery) · 2 LLM calls
 ```
 
+</details>
+
 ## How it works
 
 1. **Parse inventory** (`src/core/inventory.ts`) — split the list, read quantities, map each name to a canonical key (`src/core/catalog.ts`) and merge duplicates.
@@ -351,10 +487,10 @@ test/                     node:test suites
 | Input: list + optional constraints (any subset) | parts list / `--photo` + `--goal --skill --hours --budget --no-solder` |
 | Output: title, full list marking missing items, steps, time | every project card: ✓/◐/✗ parts list, numbered steps, `~N h` |
 | Error handling | config, argument, HTTP, validation and file errors each get a clear message and exit code |
-| ≥ 1 retry on transient API failures | `src/core/retry.ts` — up to `LLM_MAX_RETRIES` (default 3) with backoff |
+| ≥ 1 retry on transient API failures | `src/core/retry.ts` — up to `LLM_MAX_RETRIES` (default 3) with backoff; seen working on real HTTP 429s in the [example run](#example-run) |
 | API key in env var, not committed | `.env` (git-ignored), `.env.example` template |
 | CLI; minimal web UI is a bonus | `npm start`, `npm run web` (with gallery and photo upload) |
-| README with setup, env vars, example run | this file |
+| README with setup, env vars, example run | this file: [setup](#setup), [environment variables](#environment-variables), [example run](#example-run) (real Groq output) |
 
 ## Tests
 
@@ -368,5 +504,6 @@ npm run typecheck
 - Prices are indicative hobby-shop prices for the Czech market; edit `data/parts-catalog.json`.
 - Part matching only knows parts in the catalog; unknown parts still match each other by normalized name, but synonyms of unknown parts won't.
 - Time estimates come from the model and are checked against your limit, not measured.
+- Build steps are written by the model and can contain mistakes (in the run above: an outdated default Pi password, and a 5 V PIR sensor powered from 3.3 V). The prompt includes wiring rules for 3.3 V boards, but check pinouts against the module's datasheet before powering anything.
 - The parts pictures are generated illustrations (component icons), not photos of real builds.
 - The example code (`examples/`) is compile-checked; gallery photos show the finished result or a similar real build, not this exact one. Add photos of your own builds to `docs/images/` once you build them.
