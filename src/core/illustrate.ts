@@ -26,8 +26,8 @@ export interface IllustrationOptions {
 }
 
 const C = {
-  paper: "#f4f1ea",
-  grid: "#e6e1d5",
+  paper: "#eaf3fd",
+  grid: "#9dbde3",
   ink: "#1d1f22",
   muted: "#6b6a66",
   accent: "#e8590c",
@@ -345,6 +345,39 @@ function ethernet(): string {
     <rect x="64" y="12" width="14" height="6" fill="${C.yellow}"/>`;
 }
 
+function laser(): string {
+  return `<line x1="58" y1="32" x2="90" y2="32" stroke="#e03131" stroke-width="2.5" stroke-opacity="0.85"/>
+    <circle cx="88" cy="32" r="3.5" fill="#e03131" fill-opacity="0.5"/>
+    <rect x="12" y="20" width="36" height="24" rx="2" fill="${C.pcbBlack}" ${S}/>
+    <rect x="44" y="26" width="16" height="12" rx="3" fill="${C.metal}" ${S}/>
+    ${legs([20, 27, 34], 44, 58)}`;
+}
+
+function robotArm(): string {
+  return `<rect x="18" y="50" width="40" height="10" rx="2" fill="#f5d97a" fill-opacity="0.9" ${S}/>
+    <rect x="30" y="40" width="16" height="12" rx="2" fill="${C.servo}" ${S}/>
+    <path d="M38 42 L54 18" stroke="#f5d97a" stroke-width="7" stroke-linecap="round"/>
+    <path d="M38 42 L54 18" stroke="${C.ink}" stroke-width="1.2" fill="none"/>
+    <circle cx="54" cy="18" r="5" fill="${C.servo}" ${S}/>
+    <path d="M54 18 L76 26" stroke="#f5d97a" stroke-width="6" stroke-linecap="round"/>
+    <path d="M76 26 l8 -6 M76 26 l8 6" stroke="${C.ink}" stroke-width="2.2" stroke-linecap="round"/>`;
+}
+
+function rtcModule(): string {
+  return `${sensor(C.pcbBlue)}<circle cx="45" cy="27" r="9" fill="${C.metal}" ${S}/><text x="45" y="30" font-size="6" fill="${C.ink}" text-anchor="middle" font-family="sans-serif">CR</text>`;
+}
+
+function panTilt(): string {
+  return `<rect x="30" y="44" width="30" height="16" rx="2" fill="${C.servo}" ${S}/>
+    <path d="M22 44 V24 H68 V44" fill="none" stroke="${C.ink}" stroke-width="3"/>
+    <rect x="33" y="10" width="24" height="16" rx="2" fill="${C.servo}" ${S}/>
+    <circle cx="45" cy="44" r="4" fill="${C.white}" ${S}/>`;
+}
+
+function camProgrammer(): string {
+  return `${board(C.pcbBlack, true)}<circle cx="45" cy="32" r="7" fill="${C.ink}"/><circle cx="45" cy="32" r="3" fill="#3d5a80"/>`;
+}
+
 function generic(): string {
   return `<rect x="20" y="10" width="50" height="44" rx="6" fill="${C.white}" ${S} stroke-dasharray="4 3"/>
     <text x="45" y="40" font-size="22" font-weight="700" fill="${C.muted}" text-anchor="middle" font-family="sans-serif">?</text>`;
@@ -359,6 +392,11 @@ const BY_KEY: Record<string, () => string> = {
   "raspberry-pi": () => board(C.pcbGreen),
   "raspberry-pi-zero": () => board(C.pcbGreen, true),
   microsd: sdCard,
+  "laser-module": laser,
+  "robot-arm-kit": robotArm,
+  rtc: rtcModule,
+  "pan-tilt": panTilt,
+  "esp32-cam-mb": camProgrammer,
   "reed-switch": reedSwitch,
   "ethernet-cable": ethernet,
   "esp32-cam": camera,
@@ -422,7 +460,7 @@ export function iconFor(key: string, name: string): string {
   if (/stick|popsicle|dowel/.test(n) && !/glue/.test(n)) return sticks();
   if (/glue/.test(n)) return glue();
   if (/tape/.test(n)) return tape();
-  if (/cardboard|body|box|case|enclosure|3d/.test(n)) return cardboard();
+  if (/cardboard|body|box|case|enclosure|3d|\bbin\b|bucket/.test(n)) return cardboard();
   if (/jar|water|bottle|reservoir/.test(n)) return jar();
   if (/sensor|module/.test(n)) return sensor();
   return generic();
@@ -522,7 +560,7 @@ export function illustrateParts(opts: IllustrationOptions): string {
     : "";
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${esc(title)} — parts">
-  <defs><pattern id="${gridId}" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="${C.grid}" stroke-width="1"/></pattern></defs>
+  <defs><pattern id="${gridId}" width="16" height="16" patternUnits="userSpaceOnUse">${[0, 4, 8, 12].map((d) => `<circle cx="${d}" cy="0" r="0.7" fill="${C.grid}"/><circle cx="0" cy="${d}" r="0.7" fill="${C.grid}"/>`).join("")}</pattern></defs>
   <rect width="${width}" height="${height}" fill="${C.paper}"/><rect width="${width}" height="${height}" fill="url(#${gridId})"/>
   <rect x="0" y="0" width="6" height="${height}" fill="${C.accent}"/>
   <text x="${pad}" y="34" font-size="21" font-weight="700" fill="${C.ink}" ${font}>${esc(title)}</text>

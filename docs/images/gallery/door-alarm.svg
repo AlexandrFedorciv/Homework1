@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 644 369" width="644" height="369" role="img" aria-label="Door Tamper Alarm — parts">
-  <defs><pattern id="grid-owkcha" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#e6e1d5" stroke-width="1"/></pattern></defs>
-  <rect width="644" height="369" fill="#f4f1ea"/><rect width="644" height="369" fill="url(#grid-owkcha)"/>
+  <defs><pattern id="grid-owkcha" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="0" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="0" r="0.7" fill="#9dbde3"/><circle cx="4" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="4" r="0.7" fill="#9dbde3"/><circle cx="8" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="8" r="0.7" fill="#9dbde3"/><circle cx="12" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="12" r="0.7" fill="#9dbde3"/></pattern></defs>
+  <rect width="644" height="369" fill="#eaf3fd"/><rect width="644" height="369" fill="url(#grid-owkcha)"/>
   <rect x="0" y="0" width="6" height="369" fill="#e8590c"/>
   <text x="22" y="34" font-size="21" font-weight="700" fill="#1d1f22" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif">Door Tamper Alarm</text>
   <text x="22" y="56" font-size="12.5" fill="#6b6a66" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif">beginner · ~2 h · 8 part types</text>
@@ -24,7 +24,7 @@
       </g><g transform="translate(322 74)">
         <rect x="0" y="0" width="138" height="124" rx="10" fill="#ffffff" fill-opacity="0.7" stroke="#1d1f22" stroke-width="1.2" />
         <g transform="translate(24 22)" ><circle cx="45" cy="30" r="24" fill="#2b2b2b" stroke="#1d1f22" stroke-width="1.5" stroke-linejoin="round"/><circle cx="45" cy="30" r="17" fill="none" stroke="#444" stroke-width="1"/>
-    <circle cx="45" cy="30" r="4" fill="#f4f1ea"/><text x="45" y="49" font-size="7" fill="#999" text-anchor="middle" font-family="monospace">+</text></g>
+    <circle cx="45" cy="30" r="4" fill="#eaf3fd"/><text x="45" y="49" font-size="7" fill="#999" text-anchor="middle" font-family="monospace">+</text></g>
         <text x="69" y="98" font-size="11.5" fill="#1d1f22" text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif">Piezo buzzer</text>
       </g><g transform="translate(472 74)">
         <rect x="0" y="0" width="138" height="124" rx="10" fill="#ffffff" fill-opacity="0.7" stroke="#1d1f22" stroke-width="1.2" />

@@ -1,6 +1,6 @@
 import type { Constraints, InventoryItem } from "./schemas.ts";
 
-export const PROJECT_SYSTEM_PROMPT = `You are an experienced maker mentor who designs small electronics, home-network and security gadgets for hobbyists.
+export const PROJECT_SYSTEM_PROMPT = `You are an experienced maker mentor who designs small electronics, robotics, home-network and security projects for hobbyists.
 
 Given the parts a person already owns and their constraints, propose distinct, genuinely buildable projects.
 

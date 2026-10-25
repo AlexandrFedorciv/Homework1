@@ -699,6 +699,68 @@
         "cat5e",
         "cat6"
       ]
+    },
+    {
+      "key": "laser-module",
+      "name": "KY-008 laser module",
+      "priceCzk": 30,
+      "aliases": [
+        "ky-008",
+        "ky008",
+        "laser module",
+        "laser diode",
+        "laser diode module",
+        "laser"
+      ]
+    },
+    {
+      "key": "robot-arm-kit",
+      "name": "4-DOF acrylic robot arm kit",
+      "priceCzk": 350,
+      "aliases": [
+        "robot arm kit",
+        "robotic arm kit",
+        "acrylic robot arm",
+        "mearm",
+        "4-dof robot arm",
+        "4dof arm kit"
+      ]
+    },
+    {
+      "key": "rtc",
+      "name": "DS3231 real-time clock module",
+      "priceCzk": 80,
+      "aliases": [
+        "ds3231",
+        "ds1307",
+        "rtc",
+        "rtc module",
+        "real-time clock",
+        "real time clock"
+      ]
+    },
+    {
+      "key": "pan-tilt",
+      "name": "Pan-tilt servo bracket",
+      "priceCzk": 60,
+      "aliases": [
+        "pan-tilt bracket",
+        "pan tilt bracket",
+        "pan-tilt servo bracket",
+        "pan tilt kit",
+        "pan-tilt"
+      ]
+    },
+    {
+      "key": "esp32-cam-mb",
+      "name": "ESP32-CAM-MB USB programmer",
+      "priceCzk": 80,
+      "aliases": [
+        "esp32-cam-mb",
+        "esp32 cam mb",
+        "esp32-cam programmer",
+        "ch340 programmer for esp32-cam"
+      ]
     }
   ]
 }

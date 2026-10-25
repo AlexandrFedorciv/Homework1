@@ -11,14 +11,23 @@
       "licenseUrl": "https://en.wikipedia.org/wiki/Public_domain",
       "source": "https://commons.wikimedia.org/wiki/File%3APi-Hole_6_screenshot_%286.1.2%29.png"
     },
-    "home-vpn": {
-      "file": "projects/home-vpn.jpg",
-      "caption": "The Raspberry Pi Zero 2 W that runs the VPN",
-      "title": "Raspberry Pi Zero 2 W -- 2024 -- 0008",
-      "credit": "Anil Öztas",
-      "license": "CC BY 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-      "source": "https://commons.wikimedia.org/wiki/File%3ARaspberry_Pi_Zero_2_W_--_2024_--_0008.jpg"
+    "radar-sweep": {
+      "file": "projects/radar-sweep.jpg",
+      "caption": "The heart of the radar: an Arduino with an HC-SR04 ultrasonic sensor",
+      "title": "Arduino UNO + HC-SR04 + HC 05 + breadboard - side view 01",
+      "credit": "Pradana Aumars (talk · contribs)",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AArduino_UNO_%2B_HC-SR04_%2B_HC_05_%2B_breadboard_-_side_view_01.jpg"
+    },
+    "obstacle-car": {
+      "file": "projects/obstacle-car.jpg",
+      "caption": "A similar real build: an Arduino obstacle-avoidance robot car",
+      "title": "Obstacle avoidance robot car",
+      "credit": "Anani A. George",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AObstacle_avoidance_robot_car.jpg"
     },
     "security-key": {
       "file": "projects/security-key.jpg",
@@ -29,23 +38,14 @@
       "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
       "source": "https://commons.wikimedia.org/wiki/File%3AYubiKey_5C_NFC.jpg"
     },
-    "totp-display": {
-      "file": "projects/totp-display.jpg",
-      "caption": "Classic hardware 2FA tokens (RSA SecurID) that show rotating codes, like this project",
-      "title": "RSA-SecurID-Token",
-      "credit": "Mateusz Adamowski, taken with Canon EOS.",
-      "license": "CC BY-SA 1.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/1.0/",
-      "source": "https://commons.wikimedia.org/wiki/File%3ARSA-SecurID-Token.jpg"
-    },
-    "password-generator": {
-      "file": "projects/password-generator.jpg",
-      "caption": "A similar build: an ESP32 with a small OLED screen on a breadboard",
-      "title": "ESP32 SH1106 Power-Meter 01",
-      "credit": "King of Pwnt",
-      "license": "CC0",
-      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "source": "https://commons.wikimedia.org/wiki/File%3AESP32_SH1106_Power-Meter_01.jpg"
+    "robot-arm": {
+      "file": "projects/robot-arm.jpg",
+      "caption": "A similar real build: an Arduino robot arm (5 joints)",
+      "title": "Braccio robotico con Arduino 01",
+      "credit": "Nicolò Bertuccioli",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABraccio_robotico_con_Arduino_01.jpg"
     },
     "rfid-lock": {
       "file": "projects/rfid-lock.jpg",
@@ -56,6 +56,33 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "https://commons.wikimedia.org/wiki/File%3ADormakaba_key_fob.jpg"
     },
+    "bluetooth-car": {
+      "file": "projects/bluetooth-car.jpg",
+      "caption": "A similar real build: an Arduino car controlled over Bluetooth",
+      "title": "Bluetooth Arduino Car",
+      "credit": "shreyansh232",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABluetooth_Arduino_Car.jpg"
+    },
+    "home-vpn": {
+      "file": "projects/home-vpn.jpg",
+      "caption": "The Raspberry Pi Zero 2 W that runs the VPN",
+      "title": "Raspberry Pi Zero 2 W -- 2024 -- 0008",
+      "credit": "Anil Öztas",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARaspberry_Pi_Zero_2_W_--_2024_--_0008.jpg"
+    },
+    "desk-crab": {
+      "file": "projects/desk-crab.jpg",
+      "caption": "A similar real build: a small 3-servo walking robot",
+      "title": "Beetle robot",
+      "credit": "Pranit Modak",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ABeetle_robot.jpg"
+    },
     "door-alarm": {
       "file": "projects/door-alarm.jpg",
       "caption": "Close-up of a reed switch, the sensor at the heart of the door alarm",
@@ -65,14 +92,77 @@
       "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
       "source": "https://commons.wikimedia.org/wiki/File%3AInterrupteur_reed.jpg"
     },
-    "pihole-status-light": {
-      "file": "projects/pihole-status-light.jpg",
-      "caption": "The addressable LED strip that makes the light bar",
-      "title": "Pack1 - BTF-WS2812B - John McMaster",
-      "credit": "John McMaster",
-      "license": "CC BY 4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-      "source": "https://commons.wikimedia.org/wiki/File%3APack1_-_BTF-WS2812B_-_John_McMaster.jpg"
+    "laser-tripwire": {
+      "file": "projects/laser-tripwire.jpg",
+      "caption": "A similar real build: a home-made laser tripwire with an alarm",
+      "title": "Home-made Laser Tripwire with audio alert using RaspberryPi",
+      "credit": "Sjilla",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AHome-made_Laser_Tripwire_with_audio_alert_using_RaspberryPi.jpg"
+    },
+    "password-generator": {
+      "file": "projects/password-generator.jpg",
+      "caption": "A similar build: an ESP32 with a small OLED screen on a breadboard",
+      "title": "ESP32 SH1106 Power-Meter 01",
+      "credit": "King of Pwnt",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AESP32_SH1106_Power-Meter_01.jpg"
+    },
+    "pet-feeder": {
+      "file": "projects/pet-feeder.jpg",
+      "caption": "A shop-bought automatic cat feeder, the product this project rebuilds",
+      "title": "Futterautomat mit RFID - pet feeder, cat feeder, RFID controlled",
+      "credit": "Giraldillo",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AFutterautomat_mit_RFID_-_pet_feeder%2C_cat_feeder%2C_RFID_controlled.JPG"
+    },
+    "mini-biped": {
+      "file": "projects/mini-biped.jpg",
+      "caption": "A similar real build",
+      "title": "RunBot biped walking robot by Tao Geng",
+      "credit": "Berndporr",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARunBot_biped_walking_robot_by_Tao_Geng.jpg"
+    },
+    "air-theremin": {
+      "file": "projects/air-theremin.jpg",
+      "caption": "A similar real build",
+      "title": "Etherwave Theremin Kit",
+      "credit": "Hutschi",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AEtherwave_Theremin_Kit.jpg"
+    },
+    "weather-station": {
+      "file": "projects/weather-station.jpg",
+      "caption": "A similar real build: an Arduino weather station in a LEGO case",
+      "title": "Arduino uno diy lcd weather station",
+      "credit": "Crackopl",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AArduino_uno_diy_lcd_weather_station.jpg"
+    },
+    "plant-buddy": {
+      "file": "projects/plant-buddy.jpg",
+      "caption": "A similar real build: an automatic plant-watering system",
+      "title": "Automatic Plant Watering System",
+      "credit": "சு.பத்மா",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AAutomatic_Plant_Watering_System.jpg"
+    },
+    "esp32cam-doorbell": {
+      "file": "projects/esp32cam-doorbell.jpg",
+      "caption": "A shop-bought video doorbell, the product this project rebuilds",
+      "title": "Ring video doorbell",
+      "credit": "Ring",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARing_video_doorbell.jpg"
     }
   }
 }

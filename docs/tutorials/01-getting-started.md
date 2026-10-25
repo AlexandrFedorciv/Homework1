@@ -75,7 +75,7 @@ npm run web          # then open http://localhost:3000
 
 - Click **Raspberry Pi**, **ESP32 + screen** or **Arduino + RFID** to fill in an example parts list.
 - Drop a photo of your parts on the dashed box to detect parts automatically ([tutorial 2](02-photo-to-projects.md)).
-- **Gallery** shows the example projects (small security gadgets), ranked by how many of your parts they use.
+- **Gallery** shows the 20 example projects (robots, a radar, home gadgets and security builds), ranked by how many of your parts they use.
 - **⬇ Shopping list** downloads what you'd need to buy as a Markdown checklist.
 
 ## Step 5: Explore the gallery from the terminal

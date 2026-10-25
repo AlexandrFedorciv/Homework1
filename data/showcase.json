@@ -1,9 +1,14 @@
 {
-  "_note": "Curated example projects: small, beginner-friendly gadgets that protect your own home network, accounts and spaces. Shown in the gallery (CLI --gallery, web 'Gallery' tab) and used by the offline mock provider. Same shape as what the LLM returns, plus id + tags (+ optional tutorial link).",
+  "_note": "Curated example projects: small builds — home-network and security gadgets plus beginner robotics. Shown in the gallery (CLI --gallery, web 'Gallery' tab) and used by the offline mock provider. Same shape as what the LLM returns, plus id + tags (+ optional tutorial link).",
   "projects": [
     {
       "id": "pi-hole",
-      "tags": ["network", "privacy", "ad-blocker", "raspberry-pi"],
+      "tags": [
+        "network",
+        "privacy",
+        "ad-blocker",
+        "raspberry-pi"
+      ],
       "tutorial": "docs/tutorials/05-build-pi-hole.md",
       "title": "Pi-hole Ad Blocker",
       "summary": "A tiny Raspberry Pi that blocks ads and trackers for every device on your home Wi-Fi (phones, laptops, smart TVs) by acting as your network's DNS server.",
@@ -11,19 +16,56 @@
       "estimatedHours": 1.5,
       "requiresSoldering": false,
       "parts": [
-        { "name": "Raspberry Pi Zero 2 W", "qty": 1, "purpose": "runs Pi-hole 24/7 (any Raspberry Pi works)" },
-        { "name": "microSD card (16 GB+)", "qty": 1, "purpose": "operating system and blocklists" },
-        { "name": "5 V / 2 A power supply", "qty": 1, "purpose": "keeps the Pi running" },
-        { "name": "USB cable", "qty": 1, "purpose": "power cable for the Pi" }
+        {
+          "name": "Raspberry Pi Zero 2 W",
+          "qty": 1,
+          "purpose": "runs Pi-hole 24/7 (any Raspberry Pi works)"
+        },
+        {
+          "name": "microSD card (16 GB+)",
+          "qty": 1,
+          "purpose": "operating system and blocklists"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "keeps the Pi running"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power cable for the Pi"
+        }
       ],
       "steps": [
-        { "title": "Flash the SD card", "detail": "In Raspberry Pi Imager choose Raspberry Pi OS Lite (64-bit). In the settings set a hostname (pihole), your Wi-Fi, a username and password, and enable SSH. Write the card." },
-        { "title": "Boot and connect", "detail": "Put the card in the Pi, power it, wait two minutes, then from your computer run: ssh <username>@pihole.local" },
-        { "title": "Give it a fixed address", "detail": "In your router's admin page, find the Pi in the list of connected devices and add a DHCP reservation, so its IP address never changes." },
-        { "title": "Install Pi-hole", "detail": "Update first (sudo apt update && sudo apt full-upgrade -y), then run the official installer: curl -sSL https://install.pi-hole.net | bash. Accept the defaults and note the admin address it shows at the end." },
-        { "title": "Set the admin password", "detail": "Run sudo pihole setpassword, then open http://pihole.local/admin in a browser and log in to the dashboard." },
-        { "title": "Point your network at it", "detail": "In the router's DHCP/DNS settings, set the Pi's IP address as the only DNS server. Reconnect your devices to Wi-Fi so they pick up the change." },
-        { "title": "Test and tune", "detail": "Open a news site: ads should be gone and the dashboard's 'Queries blocked' counter should rise. If a site breaks, find its domain in Query Log and click Allow." }
+        {
+          "title": "Flash the SD card",
+          "detail": "In Raspberry Pi Imager choose Raspberry Pi OS Lite (64-bit). In the settings set a hostname (pihole), your Wi-Fi, a username and password, and enable SSH. Write the card."
+        },
+        {
+          "title": "Boot and connect",
+          "detail": "Put the card in the Pi, power it, wait two minutes, then from your computer run: ssh <username>@pihole.local"
+        },
+        {
+          "title": "Give it a fixed address",
+          "detail": "In your router's admin page, find the Pi in the list of connected devices and add a DHCP reservation, so its IP address never changes."
+        },
+        {
+          "title": "Install Pi-hole",
+          "detail": "Update first (sudo apt update && sudo apt full-upgrade -y), then run the official installer: curl -sSL https://install.pi-hole.net | bash. Accept the defaults and note the admin address it shows at the end."
+        },
+        {
+          "title": "Set the admin password",
+          "detail": "Run sudo pihole setpassword, then open http://pihole.local/admin in a browser and log in to the dashboard."
+        },
+        {
+          "title": "Point your network at it",
+          "detail": "In the router's DHCP/DNS settings, set the Pi's IP address as the only DNS server. Reconnect your devices to Wi-Fi so they pick up the change."
+        },
+        {
+          "title": "Test and tune",
+          "detail": "Open a news site: ads should be gone and the dashboard's 'Queries blocked' counter should rise. If a site breaks, find its domain in Query Log and click Allow."
+        }
       ],
       "safetyNotes": [
         "If the Pi is off, websites stop loading for everyone. Plug it into a reliable socket, or keep a note of how to switch the router's DNS back.",
@@ -31,116 +73,317 @@
       ]
     },
     {
-      "id": "home-vpn",
-      "tags": ["network", "privacy", "vpn", "raspberry-pi"],
-      "title": "Home VPN with WireGuard",
-      "summary": "Your own VPN server at home: on public Wi-Fi your phone sends everything through an encrypted tunnel to your house, and gets your Pi-hole ad blocking on the go.",
-      "difficulty": "intermediate",
-      "estimatedHours": 2.5,
+      "id": "radar-sweep",
+      "tags": [
+        "sensor",
+        "servo",
+        "visualization"
+      ],
+      "tutorial": "docs/tutorials/07-build-radar-sweep.md",
+      "title": "Ultrasonic Radar Sweep",
+      "summary": "A servo sweeps the ultrasonic sensor back and forth and your laptop draws a live radar screen of nearby objects.",
+      "difficulty": "beginner",
+      "estimatedHours": 3,
       "requiresSoldering": false,
       "parts": [
-        { "name": "Raspberry Pi Zero 2 W", "qty": 1, "purpose": "VPN server (a Raspberry Pi 4 with Ethernet is faster)" },
-        { "name": "microSD card (16 GB+)", "qty": 1, "purpose": "operating system" },
-        { "name": "5 V / 2 A power supply", "qty": 1, "purpose": "power" },
-        { "name": "USB cable", "qty": 1, "purpose": "power cable for the Pi" }
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "controls the sweep and takes readings"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 1,
+          "purpose": "pans the sensor 15–165°"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "distance at each angle"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "serial link to the laptop"
+        }
       ],
       "steps": [
-        { "title": "Prepare the Pi", "detail": "Flash Raspberry Pi OS Lite with SSH enabled (as in the Pi-hole build) and give the Pi a DHCP reservation in your router. You can run the VPN on the same Pi as Pi-hole." },
-        { "title": "Install WireGuard", "detail": "sudo apt update && sudo apt install -y wireguard qrencode. Then create keys for the server and your phone: wg genkey | tee server.key | wg pubkey > server.pub (repeat with phone.key / phone.pub)." },
-        { "title": "Write the server config", "detail": "Create /etc/wireguard/wg0.conf with Address = 10.8.0.1/24, ListenPort = 51820, the server private key, and a [Peer] for the phone (its public key, AllowedIPs = 10.8.0.2/32). Add PostUp/PostDown iptables MASQUERADE rules so the phone can reach the internet through the Pi." },
-        { "title": "Turn on forwarding and start", "detail": "Set net.ipv4.ip_forward=1 in /etc/sysctl.conf (apply with sudo sysctl -p), then sudo systemctl enable --now wg-quick@wg0." },
-        { "title": "Open one port", "detail": "In the router, forward UDP port 51820 to the Pi's IP. If your home IP changes, set up a free dynamic-DNS name (for example DuckDNS) for it." },
-        { "title": "Connect your phone", "detail": "Write phone.conf (Address = 10.8.0.2/32, DNS = the Pi's IP, the server's public key, Endpoint = your-home-address:51820, AllowedIPs = 0.0.0.0/0), show it as a QR code with qrencode -t ansiutf8 < phone.conf and scan it in the WireGuard app." },
-        { "title": "Test from outside", "detail": "Switch the phone to mobile data, turn the tunnel on and open a website. The WireGuard app shows data flowing; sudo wg on the Pi shows the phone's latest handshake." }
+        {
+          "title": "Mount the sensor",
+          "detail": "Glue or tape the HC-SR04 onto the servo horn so it rotates with it."
+        },
+        {
+          "title": "Wire it up",
+          "detail": "Servo signal→D9, servo power→5V/GND (one SG90 is fine on USB power). HC-SR04 TRIG→D10, ECHO→D11."
+        },
+        {
+          "title": "Sweep and measure",
+          "detail": "Loop the servo from 15° to 165° and back in 2° steps; at each step wait 30 ms, then measure distance."
+        },
+        {
+          "title": "Stream the data",
+          "detail": "Print 'angle,distance' lines over Serial at 115200 baud."
+        },
+        {
+          "title": "Draw the radar",
+          "detail": "Run the Python viewer (pyserial + matplotlib polar plot) that reads the lines and draws fading green dots."
+        },
+        {
+          "title": "Calibrate",
+          "detail": "Place an object at a measured 30 cm and check the plot; adjust the speed-of-sound constant if it's off."
+        }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "obstacle-car",
+      "tags": [
+        "robot",
+        "car",
+        "motors",
+        "sensor"
+      ],
+      "title": "Obstacle-Avoiding Robot Car",
+      "summary": "A two-wheeled robot that drives around on its own: when its ultrasonic 'eyes' see a wall, it stops, looks left and right, and turns toward the side with more space.",
+      "difficulty": "beginner",
+      "estimatedHours": 3,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "the brain: drives and decides where to turn"
+        },
+        {
+          "name": "2WD robot car chassis kit",
+          "qty": 1,
+          "purpose": "frame, 2 TT gear motors, wheels and caster"
+        },
+        {
+          "name": "L298N / TB6612 motor driver",
+          "qty": 1,
+          "purpose": "powers both motors forward and backward"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "measures the distance ahead"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 1,
+          "purpose": "turns the sensor to look left and right"
+        },
+        {
+          "name": "Battery holder (4×AA or 2×18650)",
+          "qty": 1,
+          "purpose": "2×18650 version"
+        },
+        {
+          "name": "18650 Li-ion cell",
+          "qty": 2,
+          "purpose": "about 7.4 V for motors and Arduino"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the chassis",
+          "detail": "Assemble the kit: motors, wheels and caster on the base plate. Fix the Arduino, motor driver and battery holder on top with screws or double-sided tape."
+        },
+        {
+          "title": "Wire the motors",
+          "detail": "L298N: left motor to OUT1/OUT2, right motor to OUT3/OUT4. ENA→D5, IN1→D7, IN2→D8, ENB→D6, IN3→D4, IN4→D2."
+        },
+        {
+          "title": "Wire the power",
+          "detail": "Battery + to the L298N 12V input, battery − to its GND. With the 5V jumper on, the L298N's 5V pin powers the Arduino: connect it to the Arduino 5V, and GND to GND."
+        },
+        {
+          "title": "Mount the eyes",
+          "detail": "Glue the HC-SR04 onto the servo horn at the front. Servo signal→D3, red→5V, brown→GND. HC-SR04 TRIG→A0, ECHO→A1 (analog pins work as digital pins)."
+        },
+        {
+          "title": "Drive and avoid",
+          "detail": "Drive forward and measure every 50 ms. Closer than 25 cm: stop, reverse for 0.3 s, turn the servo to 150° and 30° to measure both sides, then turn toward the side with more space for about 0.4 s."
+        },
+        {
+          "title": "Tune it",
+          "detail": "Motors are never identical: if the car drifts, lower the faster side's PWM value (e.g. 170 vs 180) until it drives straight."
+        }
       ],
       "safetyNotes": [
-        "Forward only UDP 51820, nothing else, and keep the Pi updated (sudo apt full-upgrade).",
-        "Treat phone.conf like a password: delete it from the Pi after scanning, and remove a lost phone's [Peer] block straight away."
+        "18650 cells are powerful: use a holder with no bare contacts, never short them, and charge them with a proper charger.",
+        "Test on the floor, not on a table it can drive off."
       ]
     },
     {
       "id": "security-key",
-      "tags": ["accounts", "2fa", "passkeys", "pico"],
+      "tags": [
+        "accounts",
+        "2fa",
+        "passkeys",
+        "pico"
+      ],
       "title": "DIY Security Key",
       "summary": "Turn a Raspberry Pi Pico into a FIDO2 USB security key you can use for passkeys and two-factor login, with open-source firmware.",
       "difficulty": "beginner",
       "estimatedHours": 1,
       "requiresSoldering": false,
       "parts": [
-        { "name": "Raspberry Pi Pico", "qty": 1, "purpose": "runs the open-source pico-fido firmware" },
-        { "name": "USB cable", "qty": 1, "purpose": "connects it to your computer (data cable, not charge-only)" },
-        { "name": "Small case or heat-shrink tube", "qty": 1, "purpose": "protects the board on your keyring" }
+        {
+          "name": "Raspberry Pi Pico",
+          "qty": 1,
+          "purpose": "runs the open-source pico-fido firmware"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "connects it to your computer (data cable, not charge-only)"
+        },
+        {
+          "name": "Small case or heat-shrink tube",
+          "qty": 1,
+          "purpose": "protects the board on your keyring"
+        }
       ],
       "steps": [
-        { "title": "Download the firmware", "detail": "From the pico-fido project's Releases page on GitHub, download the .uf2 file built for your board (Raspberry Pi Pico / RP2040)." },
-        { "title": "Flash it", "detail": "Hold the white BOOTSEL button while plugging the Pico in. It appears as a USB drive called RPI-RP2; drag the .uf2 file onto it. The board restarts as a security key." },
-        { "title": "Set a PIN", "detail": "In Chrome go to Settings → Privacy and security → Security → Manage security keys → Create a PIN (Windows: Settings → Accounts → Sign-in options → Security key)." },
-        { "title": "Try it safely", "detail": "Open webauthn.io, register, then log in. When the browser asks you to touch the key, press the BOOTSEL button, which pico-fido uses as the 'touch' confirmation." },
-        { "title": "Use it on a real account", "detail": "Add it as an extra security key on an account that supports passkeys or FIDO2 (Google, GitHub, Microsoft). Keep your existing 2FA method as a backup." },
-        { "title": "Make it pocket-proof", "detail": "Slide the board into a small case or heat-shrink tube and put it on your keyring." }
+        {
+          "title": "Download the firmware",
+          "detail": "From the pico-fido project's Releases page on GitHub, download the .uf2 file built for your board (Raspberry Pi Pico / RP2040)."
+        },
+        {
+          "title": "Flash it",
+          "detail": "Hold the white BOOTSEL button while plugging the Pico in. It appears as a USB drive called RPI-RP2; drag the .uf2 file onto it. The board restarts as a security key."
+        },
+        {
+          "title": "Set a PIN",
+          "detail": "In Chrome go to Settings → Privacy and security → Security → Manage security keys → Create a PIN (Windows: Settings → Accounts → Sign-in options → Security key)."
+        },
+        {
+          "title": "Try it safely",
+          "detail": "Open webauthn.io, register, then log in. When the browser asks you to touch the key, press the BOOTSEL button, which pico-fido uses as the 'touch' confirmation."
+        },
+        {
+          "title": "Use it on a real account",
+          "detail": "Add it as an extra security key on an account that supports passkeys or FIDO2 (Google, GitHub, Microsoft). Keep your existing 2FA method as a backup."
+        },
+        {
+          "title": "Make it pocket-proof",
+          "detail": "Slide the board into a small case or heat-shrink tube and put it on your keyring."
+        }
       ],
       "safetyNotes": [
         "This is a learning project: the Pico has no secure chip, so someone with the key in hand could read its secrets. Always keep a backup login method."
       ]
     },
     {
-      "id": "totp-display",
-      "tags": ["accounts", "2fa", "esp32", "display"],
-      "title": "2FA Code Display",
-      "summary": "A desk gadget that shows your rotating 6-digit two-factor codes (TOTP, like Google Authenticator) on a small screen, with a countdown bar.",
+      "id": "robot-arm",
+      "tags": [
+        "robot",
+        "arm",
+        "servo"
+      ],
+      "title": "Mini Robot Arm",
+      "summary": "A 4-servo desk robot arm you control with four knobs, and it can record your moves and replay them on its own at the press of a button.",
       "difficulty": "intermediate",
-      "estimatedHours": 3,
+      "estimatedHours": 4,
       "requiresSoldering": false,
       "parts": [
-        { "name": "ESP32 dev board", "qty": 1, "purpose": "gets the exact time over Wi-Fi and computes the codes" },
-        { "name": "0.96\" OLED display (SSD1306, I2C)", "qty": 1, "purpose": "shows the code and countdown" },
-        { "name": "Push button", "qty": 1, "purpose": "switches between accounts" },
-        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
-        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
-        { "name": "USB cable", "qty": 1, "purpose": "power" }
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "reads the knobs and moves the servos"
+        },
+        {
+          "name": "4-DOF acrylic robot arm kit",
+          "qty": 1,
+          "purpose": "the arm frame: base, shoulder, elbow, gripper"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 4,
+          "purpose": "one per joint (MG90S metal-gear servos are sturdier)"
+        },
+        {
+          "name": "Potentiometer (10k)",
+          "qty": 4,
+          "purpose": "one control knob per joint"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "record / replay"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "separate power for the servos"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "knobs and power rails"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
       ],
       "steps": [
-        { "title": "Wire it", "detail": "OLED: VCC→3V3, GND→GND, SDA→GPIO21, SCL→GPIO22. Button between GPIO4 and GND (use INPUT_PULLUP)." },
-        { "title": "Get the exact time", "detail": "Connect to Wi-Fi and call configTime(0, 0, \"pool.ntp.org\"). TOTP codes only match if the clock is right to within a few seconds." },
-        { "title": "Add a test secret", "detail": "When a site shows you a 2FA QR code, it also offers the secret as text (Base32). Start with a test account, decode the Base32 secret to bytes and store it in your sketch." },
-        { "title": "Compute the code", "detail": "Use a TOTP library (for example TOTP-Arduino), or follow RFC 6238 yourself: HMAC-SHA1 of the 30-second time step, dynamic truncation, last 6 digits." },
-        { "title": "Draw the screen", "detail": "With the Adafruit SSD1306 library: account name on top, the 6-digit code in big digits, and a bar that shrinks over the 30 seconds." },
-        { "title": "Check against your phone", "detail": "Add the same test secret to your phone's authenticator app. Both should show the same code at the same moment." }
+        {
+          "title": "Center the servos first",
+          "detail": "Before building, upload a sketch that sets all four servos to 90°. Then assemble the arm kit with every joint in its middle position, so each servo can move both ways."
+        },
+        {
+          "title": "Wire the knobs",
+          "detail": "Each potentiometer: outer legs to 5V and GND, middle leg to A0, A1, A2 and A3 (base, shoulder, elbow, gripper)."
+        },
+        {
+          "title": "Wire the servos",
+          "detail": "Signals to D3, D5, D6 and D9. Servo red and brown wires go to the 5 V / 2 A supply on the breadboard rails, and the supply GND connects to Arduino GND."
+        },
+        {
+          "title": "Find safe limits",
+          "detail": "For each joint, slowly turn its knob and note the angles where it would hit the frame. Map the knob (0–1023) only to that safe range, so a servo never pushes against the frame."
+        },
+        {
+          "title": "Smooth movement",
+          "detail": "Average the last few knob readings and move each servo at most 2° per step, every 15 ms, so the arm glides instead of jerking."
+        },
+        {
+          "title": "Record and replay",
+          "detail": "A short button press saves the current 4 angles (up to 100 poses). A long press plays them back in a loop; press again to stop."
+        }
       ],
       "safetyNotes": [
-        "The secret is stored in the ESP32's flash in plain form. Use it for test or low-value accounts, keep the device at home, and keep your phone app as the main 2FA."
-      ]
-    },
-    {
-      "id": "password-generator",
-      "tags": ["accounts", "passwords", "esp32", "display"],
-      "title": "Hardware Password Generator",
-      "summary": "Press a button, get a strong random password or passphrase on a small screen, made by the ESP32's hardware random-number generator. Nothing is stored or sent anywhere.",
-      "difficulty": "beginner",
-      "estimatedHours": 1.5,
-      "requiresSoldering": false,
-      "parts": [
-        { "name": "ESP32 dev board", "qty": 1, "purpose": "hardware random-number generator" },
-        { "name": "0.96\" OLED display (SSD1306, I2C)", "qty": 1, "purpose": "shows the password" },
-        { "name": "Push button", "qty": 2, "purpose": "new password / switch mode" },
-        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
-        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
-        { "name": "USB cable", "qty": 1, "purpose": "power" }
-      ],
-      "steps": [
-        { "title": "Wire it", "detail": "OLED on I2C (SDA→GPIO21, SCL→GPIO22, VCC→3V3, GND→GND). Buttons from GPIO4 and GPIO5 to GND, INPUT_PULLUP." },
-        { "title": "Use real randomness", "detail": "Call esp_random() for random numbers. It is a true hardware RNG while Wi-Fi or Bluetooth is on; with radios off, call bootloader_random_enable() first." },
-        { "title": "Pick characters fairly", "detail": "For each character, draw a random number and reject it if it falls above the largest multiple of your alphabet size (rejection sampling), so no character is more likely than another." },
-        { "title": "Passphrase mode", "detail": "The second button switches to 5 random words from a word list (for example the EFF short word list stored in flash): easier to type, still strong." },
-        { "title": "Show the strength", "detail": "Display the length and the entropy in bits (length × log2(alphabet size)). Aim for at least 80 bits." }
-      ],
-      "safetyNotes": [
-        "Type the password straight into your password manager and press the button again so it disappears from the screen."
+        "A servo pushing against the frame draws a lot of current and gets hot. Set the angle limits before long sessions.",
+        "Don't power four servos from the Arduino's 5V pin; use the separate supply."
       ]
     },
     {
       "id": "rfid-lock",
-      "tags": ["physical-security", "rfid", "arduino", "servo"],
+      "tags": [
+        "physical-security",
+        "rfid",
+        "arduino",
+        "servo"
+      ],
       "tutorial": "docs/tutorials/06-build-rfid-lock.md",
       "title": "RFID Access Lock",
       "summary": "Tap the right card and a servo opens the latch on your drawer or box; tap the wrong one and it beeps red. After 5 wrong tries it locks out for 30 seconds.",
@@ -148,22 +391,72 @@
       "estimatedHours": 2,
       "requiresSoldering": false,
       "parts": [
-        { "name": "Arduino Uno", "qty": 1, "purpose": "checks the card and drives the latch" },
-        { "name": "RC522 RFID reader + tags", "qty": 1, "purpose": "reads the card or key fob" },
-        { "name": "SG90 micro servo", "qty": 1, "purpose": "moves the latch" },
-        { "name": "LED (5 mm)", "qty": 2, "purpose": "green = open, red = denied" },
-        { "name": "Resistor", "qty": 2, "purpose": "220 Ω for the LEDs" },
-        { "name": "Piezo buzzer", "qty": 1, "purpose": "beeps" },
-        { "name": "Breadboard", "qty": 1, "purpose": "prototyping" },
-        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" }
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "checks the card and drives the latch"
+        },
+        {
+          "name": "RC522 RFID reader + tags",
+          "qty": 1,
+          "purpose": "reads the card or key fob"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 1,
+          "purpose": "moves the latch"
+        },
+        {
+          "name": "LED (5 mm)",
+          "qty": 2,
+          "purpose": "green = open, red = denied"
+        },
+        {
+          "name": "Resistor",
+          "qty": 2,
+          "purpose": "220 Ω for the LEDs"
+        },
+        {
+          "name": "Piezo buzzer",
+          "qty": 1,
+          "purpose": "beeps"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
       ],
       "steps": [
-        { "title": "Wire the reader", "detail": "RC522 runs on 3.3 V: 3.3V→3.3V (not 5V!), GND→GND, RST→D9, SDA(SS)→D10, MOSI→D11, MISO→D12, SCK→D13." },
-        { "title": "Wire latch, LEDs and buzzer", "detail": "Servo signal→D6, red→5V, brown→GND. Green LED→D7, red LED→D8 through 220 Ω resistors. Buzzer + →D5, − →GND." },
-        { "title": "Read your card IDs", "detail": "Install the MFRC522 library, upload the sketch and open the Serial Monitor at 115200 baud. Tap each card; it prints its UID." },
-        { "title": "Allow your cards", "detail": "Copy the UIDs of the cards you want to accept into the ALLOWED list at the top of the sketch and upload again." },
-        { "title": "Build the latch", "detail": "Glue the servo inside the box lid so its horn swings behind a small block on the box wall. Find the 'open' and 'closed' angles and set them in the sketch." },
-        { "title": "Test the lockout", "detail": "Tap an unknown card 5 times: the red LED should blink and every card is ignored for 30 seconds." }
+        {
+          "title": "Wire the reader",
+          "detail": "RC522 runs on 3.3 V: 3.3V→3.3V (not 5V!), GND→GND, RST→D9, SDA(SS)→D10, MOSI→D11, MISO→D12, SCK→D13."
+        },
+        {
+          "title": "Wire latch, LEDs and buzzer",
+          "detail": "Servo signal→D6, red→5V, brown→GND. Green LED→D7, red LED→D8 through 220 Ω resistors. Buzzer + →D5, − →GND."
+        },
+        {
+          "title": "Read your card IDs",
+          "detail": "Install the MFRC522 library, upload the sketch and open the Serial Monitor at 115200 baud. Tap each card; it prints its UID."
+        },
+        {
+          "title": "Allow your cards",
+          "detail": "Copy the UIDs of the cards you want to accept into the ALLOWED list at the top of the sketch and upload again."
+        },
+        {
+          "title": "Build the latch",
+          "detail": "Glue the servo inside the box lid so its horn swings behind a small block on the box wall. Find the 'open' and 'closed' angles and set them in the sketch."
+        },
+        {
+          "title": "Test the lockout",
+          "detail": "Tap an unknown card 5 times: the red LED should blink and every card is ignored for 30 seconds."
+        }
       ],
       "safetyNotes": [
         "A card's UID alone is easy to copy with a cheap cloner, so this is a learning lock for a drawer, not for a door.",
@@ -171,58 +464,1116 @@
       ]
     },
     {
+      "id": "bluetooth-car",
+      "tags": [
+        "robot",
+        "car",
+        "bluetooth",
+        "phone"
+      ],
+      "title": "Bluetooth RC Car",
+      "summary": "Drive a little robot car from your phone: a free Bluetooth controller app sends forward, back, left and right to the Arduino.",
+      "difficulty": "beginner",
+      "estimatedHours": 3,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "turns phone commands into motor moves"
+        },
+        {
+          "name": "2WD robot car chassis kit",
+          "qty": 1,
+          "purpose": "frame, 2 TT gear motors, wheels and caster"
+        },
+        {
+          "name": "L298N / TB6612 motor driver",
+          "qty": 1,
+          "purpose": "powers both motors"
+        },
+        {
+          "name": "HC-05 Bluetooth module",
+          "qty": 1,
+          "purpose": "receives commands from the phone"
+        },
+        {
+          "name": "Resistor",
+          "qty": 2,
+          "purpose": "1 kΩ + 2 kΩ voltage divider for the HC-05 RX pin"
+        },
+        {
+          "name": "Battery holder (4×AA or 2×18650)",
+          "qty": 1,
+          "purpose": "2×18650 version"
+        },
+        {
+          "name": "18650 Li-ion cell",
+          "qty": 2,
+          "purpose": "power"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the car",
+          "detail": "Assemble the chassis kit and wire the L298N exactly as in the Obstacle-Avoiding Car: ENA→D5, IN1→D7, IN2→D8, ENB→D6, IN3→D4, IN4→D2, battery to the L298N, its 5V to the Arduino."
+        },
+        {
+          "title": "Wire the Bluetooth module",
+          "detail": "HC-05 VCC→5V, GND→GND, TXD→D10. Its RXD is 3.3 V only: connect Arduino D11 → 1 kΩ → HC-05 RXD, and RXD → 2 kΩ → GND."
+        },
+        {
+          "title": "Read commands",
+          "detail": "Use SoftwareSerial on D10/D11 at 9600 baud. Read one character at a time: F, B, L, R = drive, S = stop, digits 0–9 = speed."
+        },
+        {
+          "title": "Pair your phone",
+          "detail": "Android: pair with 'HC-05' in Bluetooth settings (PIN 1234 or 0000), then connect from a free 'Arduino Bluetooth RC car' controller app."
+        },
+        {
+          "title": "Fail safe",
+          "detail": "If no command arrives for 500 ms, stop the motors, so the car doesn't drive away when the phone disconnects."
+        }
+      ],
+      "safetyNotes": [
+        "iPhones can't connect to the classic HC-05. For iPhone, use a BLE module such as the HM-10 and a BLE controller app instead.",
+        "Handle 18650 cells with care and charge them with a proper charger."
+      ]
+    },
+    {
+      "id": "home-vpn",
+      "tags": [
+        "network",
+        "privacy",
+        "vpn",
+        "raspberry-pi"
+      ],
+      "title": "Home VPN with WireGuard",
+      "summary": "Your own VPN server at home: on public Wi-Fi your phone sends everything through an encrypted tunnel to your house, and gets your Pi-hole ad blocking on the go.",
+      "difficulty": "intermediate",
+      "estimatedHours": 2.5,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Raspberry Pi Zero 2 W",
+          "qty": 1,
+          "purpose": "VPN server (a Raspberry Pi 4 with Ethernet is faster)"
+        },
+        {
+          "name": "microSD card (16 GB+)",
+          "qty": 1,
+          "purpose": "operating system"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "power"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power cable for the Pi"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Prepare the Pi",
+          "detail": "Flash Raspberry Pi OS Lite with SSH enabled (as in the Pi-hole build) and give the Pi a DHCP reservation in your router. You can run the VPN on the same Pi as Pi-hole."
+        },
+        {
+          "title": "Install WireGuard",
+          "detail": "sudo apt update && sudo apt install -y wireguard qrencode. Then create keys for the server and your phone: wg genkey | tee server.key | wg pubkey > server.pub (repeat with phone.key / phone.pub)."
+        },
+        {
+          "title": "Write the server config",
+          "detail": "Create /etc/wireguard/wg0.conf with Address = 10.8.0.1/24, ListenPort = 51820, the server private key, and a [Peer] for the phone (its public key, AllowedIPs = 10.8.0.2/32). Add PostUp/PostDown iptables MASQUERADE rules so the phone can reach the internet through the Pi."
+        },
+        {
+          "title": "Turn on forwarding and start",
+          "detail": "Set net.ipv4.ip_forward=1 in /etc/sysctl.conf (apply with sudo sysctl -p), then sudo systemctl enable --now wg-quick@wg0."
+        },
+        {
+          "title": "Open one port",
+          "detail": "In the router, forward UDP port 51820 to the Pi's IP. If your home IP changes, set up a free dynamic-DNS name (for example DuckDNS) for it."
+        },
+        {
+          "title": "Connect your phone",
+          "detail": "Write phone.conf (Address = 10.8.0.2/32, DNS = the Pi's IP, the server's public key, Endpoint = your-home-address:51820, AllowedIPs = 0.0.0.0/0), show it as a QR code with qrencode -t ansiutf8 < phone.conf and scan it in the WireGuard app."
+        },
+        {
+          "title": "Test from outside",
+          "detail": "Switch the phone to mobile data, turn the tunnel on and open a website. The WireGuard app shows data flowing; sudo wg on the Pi shows the phone's latest handshake."
+        }
+      ],
+      "safetyNotes": [
+        "Forward only UDP 51820, nothing else, and keep the Pi updated (sudo apt full-upgrade).",
+        "Treat phone.conf like a password: delete it from the Pi after scanning, and remove a lost phone's [Peer] block straight away."
+      ]
+    },
+    {
+      "id": "desk-crab",
+      "tags": [
+        "robot",
+        "walking",
+        "servo"
+      ],
+      "title": "Desk Crab — a 4-servo walking robot",
+      "summary": "A palm-sized quadruped that shuffles across your desk and backs away from obstacles it 'sees' with the ultrasonic sensor.",
+      "difficulty": "intermediate",
+      "estimatedHours": 6,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "brain: gait timing and obstacle logic"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 4,
+          "purpose": "one per leg (hip joint)"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "eyes: obstacle distance"
+        },
+        {
+          "name": "Battery holder (4×AA or 2×18650)",
+          "qty": 1,
+          "purpose": "separate 6 V supply for the servos"
+        },
+        {
+          "name": "AA battery",
+          "qty": 4,
+          "purpose": "servo power"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "power distribution"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Popsicle sticks",
+          "qty": 8,
+          "purpose": "legs and body frame"
+        },
+        {
+          "name": "Hot glue sticks",
+          "qty": 2,
+          "purpose": "mounting servos to the frame"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the frame",
+          "detail": "Glue two popsicle sticks into a cross for the body. Hot-glue one servo at each arm end, horns facing outward."
+        },
+        {
+          "title": "Attach the legs",
+          "detail": "Screw a servo horn onto each servo and glue a popsicle-stick leg to it, angled ~30° down so the body sits 3 cm off the desk."
+        },
+        {
+          "title": "Wire the servos",
+          "detail": "Signal wires to D3, D5, D6, D9. Servo + and − go to the AA pack via the breadboard rails — NOT to the Arduino 5 V pin. Connect the pack's − to Arduino GND (common ground)."
+        },
+        {
+          "title": "Wire the sensor",
+          "detail": "HC-SR04: VCC→5V, GND→GND, TRIG→D10, ECHO→D11. Mount it on the front of the body with a dab of glue."
+        },
+        {
+          "title": "Center and calibrate",
+          "detail": "Upload a sketch that writes 90° to every servo, then re-seat the horns so all legs point straight. Note any per-leg offset in an array."
+        },
+        {
+          "title": "Write the gait",
+          "detail": "Use a 4-phase creep gait: lift-swing one leg at a time in order FL, BR, FR, BL. Store poses in a table and step through them every 150 ms with millis() instead of delay()."
+        },
+        {
+          "title": "Add obstacle avoidance",
+          "detail": "Read distance every 100 ms; if < 15 cm, play the gait table backwards for 2 s, then turn by running only the left legs."
+        },
+        {
+          "title": "Test and tune",
+          "detail": "Run on a non-slip surface. If it drags, increase the lift angle; if it tips, shorten the swing range."
+        }
+      ],
+      "safetyNotes": [
+        "Power the servos from the battery pack: four servos stalling at once can brown out or damage the Arduino's regulator.",
+        "Hot glue is hot enough to burn — let joints cool before handling."
+      ]
+    },
+    {
       "id": "door-alarm",
-      "tags": ["physical-security", "iot", "esp32", "notifications"],
+      "tags": [
+        "physical-security",
+        "iot",
+        "esp32",
+        "notifications"
+      ],
       "title": "Door Tamper Alarm",
       "summary": "A magnetic sensor on your door or drawer: when it's opened while armed, the ESP32 beeps and sends a notification to your phone.",
       "difficulty": "beginner",
       "estimatedHours": 2,
       "requiresSoldering": false,
       "parts": [
-        { "name": "ESP32 dev board", "qty": 1, "purpose": "watches the sensor, sends the alert over Wi-Fi" },
-        { "name": "Reed switch + magnet (door sensor)", "qty": 1, "purpose": "detects the door opening" },
-        { "name": "Piezo buzzer", "qty": 1, "purpose": "local alarm" },
-        { "name": "Push button", "qty": 1, "purpose": "arm / disarm" },
-        { "name": "LED (5 mm)", "qty": 1, "purpose": "armed indicator" },
-        { "name": "Resistor", "qty": 1, "purpose": "220 Ω for the LED" },
-        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
-        { "name": "5 V / 2 A power supply", "qty": 1, "purpose": "USB power" }
+        {
+          "name": "ESP32 dev board",
+          "qty": 1,
+          "purpose": "watches the sensor, sends the alert over Wi-Fi"
+        },
+        {
+          "name": "Reed switch + magnet (door sensor)",
+          "qty": 1,
+          "purpose": "detects the door opening"
+        },
+        {
+          "name": "Piezo buzzer",
+          "qty": 1,
+          "purpose": "local alarm"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "arm / disarm"
+        },
+        {
+          "name": "LED (5 mm)",
+          "qty": 1,
+          "purpose": "armed indicator"
+        },
+        {
+          "name": "Resistor",
+          "qty": 1,
+          "purpose": "220 Ω for the LED"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "USB power"
+        }
       ],
       "steps": [
-        { "title": "Wire the sensor", "detail": "Reed switch between GPIO27 and GND, with INPUT_PULLUP. Door closed (magnet near) = LOW, door open = HIGH." },
-        { "title": "Wire buzzer, LED and button", "detail": "Buzzer on GPIO25, LED through 220 Ω on GPIO26, button from GPIO4 to GND (INPUT_PULLUP)." },
-        { "title": "Arm and disarm", "detail": "The button toggles 'armed'. Give yourself 20 seconds to leave after arming, and 15 seconds after the door opens to disarm before the alarm goes off." },
-        { "title": "Phone notifications", "detail": "Install the free ntfy app and subscribe to a long random topic name. On alarm, the ESP32 sends an HTTP POST to https://ntfy.sh/<your-topic> with the message 'Door opened!'." },
-        { "title": "Mount it", "detail": "Stick the reed switch on the frame and the magnet on the door, less than 1 cm apart when closed. Test that opening the door triggers it." }
+        {
+          "title": "Wire the sensor",
+          "detail": "Reed switch between GPIO27 and GND, with INPUT_PULLUP. Door closed (magnet near) = LOW, door open = HIGH."
+        },
+        {
+          "title": "Wire buzzer, LED and button",
+          "detail": "Buzzer on GPIO25, LED through 220 Ω on GPIO26, button from GPIO4 to GND (INPUT_PULLUP)."
+        },
+        {
+          "title": "Arm and disarm",
+          "detail": "The button toggles 'armed'. Give yourself 20 seconds to leave after arming, and 15 seconds after the door opens to disarm before the alarm goes off."
+        },
+        {
+          "title": "Phone notifications",
+          "detail": "Install the free ntfy app and subscribe to a long random topic name. On alarm, the ESP32 sends an HTTP POST to https://ntfy.sh/<your-topic> with the message 'Door opened!'."
+        },
+        {
+          "title": "Mount it",
+          "detail": "Stick the reed switch on the frame and the magnet on the door, less than 1 cm apart when closed. Test that opening the door triggers it."
+        }
       ],
       "safetyNotes": [
         "Anyone who knows an ntfy topic name can read it, so use a long random name and don't put personal details in messages."
       ]
     },
     {
-      "id": "pihole-status-light",
-      "tags": ["network", "ad-blocker", "esp32", "led"],
-      "title": "Ad-Blocker Status Light",
-      "summary": "A small LED bar on your shelf that glows greener the more ads and trackers your Pi-hole is blocking, and turns red if Pi-hole goes offline.",
+      "id": "laser-tripwire",
+      "tags": [
+        "security",
+        "laser",
+        "alarm",
+        "sensor"
+      ],
+      "title": "Laser Tripwire Alarm",
+      "summary": "A laser beam across a doorway hits a light sensor on the other side. When someone walks through and breaks the beam, a buzzer sounds until you reset it.",
+      "difficulty": "beginner",
+      "estimatedHours": 1,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Nano",
+          "qty": 1,
+          "purpose": "watches the light sensor"
+        },
+        {
+          "name": "KY-008 laser module",
+          "qty": 1,
+          "purpose": "the beam (low-power red laser)"
+        },
+        {
+          "name": "Photoresistor (LDR)",
+          "qty": 1,
+          "purpose": "sees the laser dot"
+        },
+        {
+          "name": "Resistor",
+          "qty": 1,
+          "purpose": "10 kΩ for the light-sensor divider"
+        },
+        {
+          "name": "Piezo buzzer",
+          "qty": 1,
+          "purpose": "the alarm"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "arm / reset"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Wire it",
+          "detail": "Laser module S→D7 (so the Arduino can switch it), − →GND. LDR from 5V to A0, 10 kΩ from A0 to GND. Buzzer→D8, button from D2 to GND (INPUT_PULLUP)."
+        },
+        {
+          "title": "Shield the sensor",
+          "detail": "Put the LDR at the end of a short dark tube (a straw or rolled paper) so room light hardly reaches it and only the laser dot does."
+        },
+        {
+          "title": "Aim",
+          "detail": "Place the laser on one side of the doorway at ankle height and the sensor on the other. Adjust until the dot sits right on the LDR."
+        },
+        {
+          "title": "Calibrate",
+          "detail": "Print analogRead(A0) with the beam on and off. Set the alarm threshold halfway between the two values."
+        },
+        {
+          "title": "Arm and alarm",
+          "detail": "Pressing the button arms the alarm after 5 seconds. If the reading drops below the threshold for more than 50 ms, sound the buzzer until the button is pressed again."
+        }
+      ],
+      "safetyNotes": [
+        "Never look into the laser or point it at people's or pets' eyes. Mount it low (ankle height) and use only a low-power module."
+      ]
+    },
+    {
+      "id": "password-generator",
+      "tags": [
+        "accounts",
+        "passwords",
+        "esp32",
+        "display"
+      ],
+      "title": "Hardware Password Generator",
+      "summary": "Press a button, get a strong random password or passphrase on a small screen, made by the ESP32's hardware random-number generator. Nothing is stored or sent anywhere.",
       "difficulty": "beginner",
       "estimatedHours": 1.5,
       "requiresSoldering": false,
       "parts": [
-        { "name": "ESP32 dev board", "qty": 1, "purpose": "asks Pi-hole for its stats over Wi-Fi" },
-        { "name": "WS2812B addressable LED strip (1 m)", "qty": 1, "purpose": "cut a piece with 8 LEDs for the bar" },
-        { "name": "Resistor", "qty": 1, "purpose": "330 Ω on the LED data line" },
-        { "name": "Jumper wire set", "qty": 1, "purpose": "wiring" },
-        { "name": "USB cable", "qty": 1, "purpose": "power" }
+        {
+          "name": "ESP32 dev board",
+          "qty": 1,
+          "purpose": "hardware random-number generator"
+        },
+        {
+          "name": "0.96\" OLED display (SSD1306, I2C)",
+          "qty": 1,
+          "purpose": "shows the password"
+        },
+        {
+          "name": "Push button",
+          "qty": 2,
+          "purpose": "new password / switch mode"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power"
+        }
       ],
       "steps": [
-        { "title": "You need a Pi-hole", "detail": "Build the Pi-hole Ad Blocker first. In its web settings, create an app password for the API." },
-        { "title": "Wire the LEDs", "detail": "LED strip 5V→VIN (USB 5 V), GND→GND, DIN→330 Ω→GPIO13. 8 LEDs at low brightness are fine on USB power." },
-        { "title": "Log in to the API", "detail": "Pi-hole v6: POST {\"password\": \"<app password>\"} to http://pi.hole/api/auth and keep the session ID it returns (see http://pi.hole/api/docs)." },
-        { "title": "Read the stats", "detail": "Every 30 seconds GET http://pi.hole/api/stats/summary with the X-FTL-SID header and read queries.percent_blocked." },
-        { "title": "Show it", "detail": "With FastLED, light 1 LED per ~5 % blocked, from yellow to green. If the request fails 3 times in a row, blink all LEDs red." }
+        {
+          "title": "Wire it",
+          "detail": "OLED on I2C (SDA→GPIO21, SCL→GPIO22, VCC→3V3, GND→GND). Buttons from GPIO4 and GPIO5 to GND, INPUT_PULLUP."
+        },
+        {
+          "title": "Use real randomness",
+          "detail": "Call esp_random() for random numbers. It is a true hardware RNG while Wi-Fi or Bluetooth is on; with radios off, call bootloader_random_enable() first."
+        },
+        {
+          "title": "Pick characters fairly",
+          "detail": "For each character, draw a random number and reject it if it falls above the largest multiple of your alphabet size (rejection sampling), so no character is more likely than another."
+        },
+        {
+          "title": "Passphrase mode",
+          "detail": "The second button switches to 5 random words from a word list (for example the EFF short word list stored in flash): easier to type, still strong."
+        },
+        {
+          "title": "Show the strength",
+          "detail": "Display the length and the entropy in bits (length × log2(alphabet size)). Aim for at least 80 bits."
+        }
       ],
       "safetyNotes": [
-        "Keep the app password only on the ESP32 and your home network; don't publish the sketch with it inside."
+        "Type the password straight into your password manager and press the button again so it disappears from the screen."
+      ]
+    },
+    {
+      "id": "smart-trash-can",
+      "tags": [
+        "home",
+        "servo",
+        "sensor"
+      ],
+      "title": "Smart Trash Can",
+      "summary": "Wave your hand near the bin and the lid opens by itself; it closes gently a few seconds after you're done. No more touching a dirty lid.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Nano",
+          "qty": 1,
+          "purpose": "watches for a hand and moves the lid"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "detects your hand in front of the bin"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 1,
+          "purpose": "lifts a light lid (use an MG996R for a heavy one)"
+        },
+        {
+          "name": "Battery holder (4×AA or 2×18650)",
+          "qty": 1,
+          "purpose": "4×AA version"
+        },
+        {
+          "name": "AA battery",
+          "qty": 4,
+          "purpose": "power"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Small trash bin with hinged lid",
+          "qty": 1,
+          "purpose": "the bin"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Mount the sensor",
+          "detail": "Fix the HC-SR04 on the front of the bin, facing outward, about two thirds of the way up. TRIG→D9, ECHO→D10, VCC→5V, GND→GND."
+        },
+        {
+          "title": "Mount the servo",
+          "detail": "Glue the servo next to the lid hinge so its horn pushes the lid up from below. Signal→D6; power it from the battery pack with a shared GND."
+        },
+        {
+          "title": "Find the angles",
+          "detail": "Upload a test sketch and find the 'closed' angle (horn flat) and 'open' angle (lid up, ~100°)."
+        },
+        {
+          "title": "Open on a wave",
+          "detail": "Measure every 100 ms. Closer than 15 cm: open the lid. Keep it open until no hand has been seen for 3 seconds."
+        },
+        {
+          "title": "Close gently",
+          "detail": "Close in 2° steps every 15 ms instead of all at once, so the lid doesn't slam."
+        }
+      ],
+      "safetyNotes": [
+        "Keep the electronics and battery pack above the bin, away from liquids."
+      ]
+    },
+    {
+      "id": "pet-feeder",
+      "tags": [
+        "home",
+        "pets",
+        "servo",
+        "clock"
+      ],
+      "title": "Automatic Pet Feeder",
+      "summary": "A food container with a servo flap that drops a portion at set times every day, plus a button for an extra snack (limited to a few per day).",
+      "difficulty": "beginner",
+      "estimatedHours": 3,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Nano",
+          "qty": 1,
+          "purpose": "keeps the schedule"
+        },
+        {
+          "name": "DS3231 real-time clock module",
+          "qty": 1,
+          "purpose": "knows the time, even after a power cut"
+        },
+        {
+          "name": "MG996R metal-gear servo",
+          "qty": 1,
+          "purpose": "opens the food flap"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "extra snack"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "power"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Plastic bottle and cardboard",
+          "qty": 1,
+          "purpose": "food container, chute and flap"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the hopper",
+          "detail": "Cut the bottom off a large plastic bottle and mount it upside down as a funnel. Glue a cardboard or plastic flap to the servo horn so it covers the bottle's neck."
+        },
+        {
+          "title": "Wire it",
+          "detail": "DS3231: SDA→A4, SCL→A5, VCC→5V, GND→GND. Servo signal→D9, power from the 5 V supply (shared GND). Button from D2 to GND (INPUT_PULLUP)."
+        },
+        {
+          "title": "Set the clock once",
+          "detail": "With the RTClib library, set the DS3231 to your computer's time once. Its coin battery keeps the time afterwards."
+        },
+        {
+          "title": "Feeding schedule",
+          "detail": "Store feeding times in an array (for example 7:30 and 18:00). At each time, open the flap for about 0.6 s, then close it."
+        },
+        {
+          "title": "Calibrate the portion",
+          "detail": "Weigh what falls out in one opening and adjust the open time until it matches your pet's portion."
+        },
+        {
+          "title": "Snack button",
+          "detail": "The button gives a small portion, at most 3 times a day and not more often than every 30 minutes."
+        }
+      ],
+      "safetyNotes": [
+        "Watch the first few days in person, and don't rely on it alone while you're away for long.",
+        "Make sure your pet can't get a paw or tongue near the moving flap."
+      ]
+    },
+    {
+      "id": "laser-cat-toy",
+      "tags": [
+        "robot",
+        "pets",
+        "servo",
+        "laser"
+      ],
+      "title": "Laser Cat Toy",
+      "summary": "A tiny pan-tilt turret that moves a laser dot around the floor in random paths for five minutes, so your cat can hunt it.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Nano",
+          "qty": 1,
+          "purpose": "plans the random paths"
+        },
+        {
+          "name": "Pan-tilt servo bracket",
+          "qty": 1,
+          "purpose": "holds two servos for left/right and up/down"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 2,
+          "purpose": "pan and tilt"
+        },
+        {
+          "name": "KY-008 laser module",
+          "qty": 1,
+          "purpose": "the dot (low-power red laser)"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "start a play session"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power from a USB charger"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the turret",
+          "detail": "Assemble the pan-tilt bracket with both servos centered at 90°. Glue the laser module on the top plate, pointing forward."
+        },
+        {
+          "title": "Wire it",
+          "detail": "Pan servo→D9, tilt servo→D10, laser S→D7, button from D2 to GND. Servos and laser share 5V/GND."
+        },
+        {
+          "title": "Mount it",
+          "detail": "Put it on a shelf about 1 m up, pointing down at the floor in front of it."
+        },
+        {
+          "title": "Keep the dot on the floor",
+          "detail": "Find the tilt angles where the dot is between 0.5 m and 2 m away on the floor, and never allow tilt outside that range."
+        },
+        {
+          "title": "Random paths",
+          "detail": "Pick a random target inside the allowed area, glide there 1° at a time, pause 0.2–1.5 s, repeat. Mix fast dashes and slow creeps."
+        },
+        {
+          "title": "Play sessions",
+          "detail": "The button starts a 5-minute session; then the laser turns off. End sessions with a real toy for the cat to 'catch'."
+        }
+      ],
+      "safetyNotes": [
+        "Never let the beam reach eye level: limit the tilt so the dot always stays on the floor, and only use a low-power module.",
+        "Only run it while you're in the room."
+      ]
+    },
+    {
+      "id": "mini-biped",
+      "tags": [
+        "robot",
+        "walking",
+        "servo"
+      ],
+      "title": "Mini Biped Walker",
+      "summary": "A small two-legged robot with hips and ankles that waddles forward, dances and turns away from walls — a first step towards a bigger walking robot.",
+      "difficulty": "intermediate",
+      "estimatedHours": 8,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Nano",
+          "qty": 1,
+          "purpose": "gait and behaviour"
+        },
+        {
+          "name": "SG90 micro servo",
+          "qty": 4,
+          "purpose": "left/right hip and left/right ankle"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "the 'eyes' (and the head)"
+        },
+        {
+          "name": "Piezo buzzer",
+          "qty": 1,
+          "purpose": "beeps and chirps"
+        },
+        {
+          "name": "Battery holder (4×AA or 2×18650)",
+          "qty": 1,
+          "purpose": "servo power"
+        },
+        {
+          "name": "AA battery",
+          "qty": 4,
+          "purpose": "power"
+        },
+        {
+          "name": "Mini breadboard",
+          "qty": 1,
+          "purpose": "wiring hub inside the body"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Cardboard or 3D-printed body",
+          "qty": 1,
+          "purpose": "head, hips and feet"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Build the body",
+          "detail": "Make a box for the head/body that holds the Nano, battery pack and sensor. Hip servos mount under the box, vertical shafts; each ankle servo hangs off its hip horn, horizontal shaft, with a flat foot glued to its horn."
+        },
+        {
+          "title": "Wire everything",
+          "detail": "Servos: left hip D2, right hip D3, left ankle D4, right ankle D5; power from the battery pack, shared GND. HC-SR04 TRIG→D8, ECHO→D9. Buzzer→D10."
+        },
+        {
+          "title": "Find home positions",
+          "detail": "Center all servos at 90°, re-seat horns so the robot stands straight with feet flat. Store the per-servo trim offsets in an array."
+        },
+        {
+          "title": "Walk with sine waves",
+          "detail": "Drive each joint as angle = home + A·sin(2πt/T + φ). Ankles: A ≈ 25°, in phase (rocks the weight side to side). Hips: A ≈ 30°, shifted by +90° phase. T ≈ 1 s per step."
+        },
+        {
+          "title": "Tune balance",
+          "detail": "If it falls sideways, reduce ankle amplitude; if it shuffles in place, increase the hip amplitude or the phase shift."
+        },
+        {
+          "title": "Add behaviours",
+          "detail": "Walk forward; when the wall is < 20 cm, chirp, step back 3 times and turn (asymmetric hip amplitude). Add a 'dance' that plays with the phases."
+        }
+      ],
+      "safetyNotes": [
+        "Disconnect the servo battery while uploading code so the robot doesn't jump off the table."
+      ]
+    },
+    {
+      "id": "air-theremin",
+      "tags": [
+        "music",
+        "sound",
+        "sensor"
+      ],
+      "tutorial": "docs/tutorials/08-build-air-theremin.md",
+      "title": "Air Theremin",
+      "summary": "Play notes by moving your hand above an ultrasonic sensor; a potentiometer picks the musical scale.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "Arduino Uno",
+          "qty": 1,
+          "purpose": "reads distance, generates tones"
+        },
+        {
+          "name": "HC-SR04 ultrasonic sensor",
+          "qty": 1,
+          "purpose": "measures hand height"
+        },
+        {
+          "name": "Piezo buzzer",
+          "qty": 1,
+          "purpose": "sound output"
+        },
+        {
+          "name": "Potentiometer (10k)",
+          "qty": 1,
+          "purpose": "scale / octave selector"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Wire the sensor",
+          "detail": "HC-SR04: VCC→5V, GND→GND, TRIG→D9, ECHO→D10."
+        },
+        {
+          "title": "Wire the buzzer and pot",
+          "detail": "Buzzer + to D8, − to GND. Potentiometer outer legs to 5V and GND, wiper to A0."
+        },
+        {
+          "title": "Measure distance",
+          "detail": "Send a 10 µs TRIG pulse, read ECHO with pulseIn(), convert to cm (duration / 58). Clamp to 5–50 cm."
+        },
+        {
+          "title": "Map distance to notes",
+          "detail": "Split 5–50 cm into 8 zones and map each to a note of the selected scale (major, minor, pentatonic — chosen by the pot reading)."
+        },
+        {
+          "title": "Play",
+          "detail": "Call tone(8, frequency) when the note changes; noTone(8) when no hand is detected for 300 ms."
+        },
+        {
+          "title": "Smooth it",
+          "detail": "Average the last 5 readings so the pitch doesn't jitter between notes."
+        }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "weather-station",
+      "tags": [
+        "iot",
+        "display",
+        "sensor"
+      ],
+      "title": "Desk Weather Station",
+      "summary": "A tiny OLED dashboard showing temperature, humidity and pressure with a 'rain coming?' trend arrow based on the pressure change over 3 hours.",
+      "difficulty": "beginner",
+      "estimatedHours": 2,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "ESP32 dev board",
+          "qty": 1,
+          "purpose": "reads the sensor, drives the display"
+        },
+        {
+          "name": "BME280 environment sensor",
+          "qty": 1,
+          "purpose": "temperature, humidity, pressure"
+        },
+        {
+          "name": "0.96\" OLED display (SSD1306, I2C)",
+          "qty": 1,
+          "purpose": "shows the readings"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Share the I2C bus",
+          "detail": "Both modules: VCC→3V3, GND→GND, SDA→GPIO21, SCL→GPIO22. They have different addresses (BME280 0x76, OLED 0x3C), so they can share the two wires."
+        },
+        {
+          "title": "Scan the bus",
+          "detail": "Upload an I2C scanner sketch and check both addresses appear in the Serial Monitor before writing any other code."
+        },
+        {
+          "title": "Read the sensor",
+          "detail": "Use the Adafruit BME280 library; read every 5 s. Note: a sensor mounted right next to the ESP32 reads 1–2 °C warm — keep them a few cm apart."
+        },
+        {
+          "title": "Draw the dashboard",
+          "detail": "With Adafruit SSD1306: big temperature on top, humidity and pressure below, and an arrow (↑ / → / ↓) for the pressure trend."
+        },
+        {
+          "title": "Pressure trend",
+          "detail": "Store one pressure sample every 10 minutes in an 18-slot ring buffer (3 hours). A drop of more than 3 hPa over 3 hours means weather is likely getting worse."
+        }
+      ],
+      "safetyNotes": []
+    },
+    {
+      "id": "plant-buddy",
+      "tags": [
+        "plants",
+        "iot",
+        "wifi",
+        "pump"
+      ],
+      "title": "Plant Watering Buddy",
+      "summary": "An ESP32 watches the soil moisture of one plant, waters it with a tiny pump when it gets dry and shows the moisture history on a web page on your Wi-Fi.",
+      "difficulty": "intermediate",
+      "estimatedHours": 4,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "ESP32 dev board",
+          "qty": 1,
+          "purpose": "reads the sensor, runs the pump and a small web server"
+        },
+        {
+          "name": "Capacitive soil moisture sensor",
+          "qty": 1,
+          "purpose": "measures how wet the soil is (no corrosion, unlike resistive probes)"
+        },
+        {
+          "name": "5 V relay module",
+          "qty": 1,
+          "purpose": "switches the pump"
+        },
+        {
+          "name": "Mini 5 V water pump + tubing",
+          "qty": 1,
+          "purpose": "moves water from a jar to the pot"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "powers the pump (and the ESP32 via USB)"
+        },
+        {
+          "name": "Breadboard",
+          "qty": 1,
+          "purpose": "prototyping"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Water jar",
+          "qty": 1,
+          "purpose": "reservoir"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Wire the sensor",
+          "detail": "Sensor VCC→3V3, GND→GND, AOUT→GPIO34 (an ADC1 pin — ADC2 pins don't work while Wi-Fi is on)."
+        },
+        {
+          "title": "Calibrate dry and wet",
+          "detail": "Print analogRead(34) with the probe in air (dry value, ~3000) and in a glass of water (wet value, ~1200). Map readings to 0–100 % between those two numbers."
+        },
+        {
+          "title": "Wire relay and pump",
+          "detail": "Relay VCC→5V (VIN), GND→GND, IN→GPIO26. Pump + goes through the relay's COM/NO contacts to the 5 V supply; pump − to supply GND. Share GND with the ESP32."
+        },
+        {
+          "title": "Watering logic",
+          "detail": "Every 10 minutes: if moisture < 30 %, run the pump for 3 s, then wait at least 30 minutes before watering again so the water has time to soak in. Never run the pump more than 5 times per day (safety cap)."
+        },
+        {
+          "title": "Web dashboard",
+          "detail": "Connect to Wi-Fi and serve a page with the current moisture and the last 24 readings (keep them in a ring buffer) using the WebServer library."
+        },
+        {
+          "title": "Test without the plant",
+          "detail": "Put the probe in a cup, let it dry, check the pump triggers once and stops. Only then place it in the real pot, with the pump tube clipped to the pot's edge."
+        }
+      ],
+      "safetyNotes": [
+        "Keep the electronics above and away from the water; put the board in a box or bag.",
+        "Mini pumps burn out if they run dry — keep the reservoir filled or add a water-level check."
+      ]
+    },
+    {
+      "id": "esp32cam-doorbell",
+      "tags": [
+        "security",
+        "camera",
+        "esp32",
+        "notifications"
+      ],
+      "title": "ESP32-CAM Video Doorbell",
+      "summary": "A doorbell button with a tiny camera: when someone presses it, you get a phone notification with a photo of who's at the door.",
+      "difficulty": "intermediate",
+      "estimatedHours": 3,
+      "requiresSoldering": false,
+      "parts": [
+        {
+          "name": "ESP32-CAM module",
+          "qty": 1,
+          "purpose": "camera + Wi-Fi"
+        },
+        {
+          "name": "ESP32-CAM-MB USB programmer",
+          "qty": 1,
+          "purpose": "uploads code to the ESP32-CAM over USB"
+        },
+        {
+          "name": "Push button",
+          "qty": 1,
+          "purpose": "the doorbell button"
+        },
+        {
+          "name": "5 V / 2 A power supply",
+          "qty": 1,
+          "purpose": "power"
+        },
+        {
+          "name": "USB cable",
+          "qty": 1,
+          "purpose": "power and programming"
+        },
+        {
+          "name": "Jumper wire set",
+          "qty": 1,
+          "purpose": "wiring"
+        },
+        {
+          "name": "Small weatherproof box",
+          "qty": 1,
+          "purpose": "case with a hole for the lens"
+        }
+      ],
+      "steps": [
+        {
+          "title": "Program it",
+          "detail": "Plug the ESP32-CAM onto the MB programmer, select the 'AI Thinker ESP32-CAM' board in the Arduino IDE and upload the CameraWebServer example to check the camera works."
+        },
+        {
+          "title": "Wire the button",
+          "detail": "Button between GPIO13 and GND (INPUT_PULLUP). GPIO13 is free on the AI Thinker board when the SD card isn't used."
+        },
+        {
+          "title": "Take a photo",
+          "detail": "On a button press (debounced), grab a frame with esp_camera_fb_get() at VGA size."
+        },
+        {
+          "title": "Send it to your phone",
+          "detail": "Install the ntfy app and subscribe to a long random topic. Send the JPEG with an HTTP PUT to https://ntfy.sh/<your-topic> with the header 'Filename: door.jpg'. It arrives as a notification with the picture."
+        },
+        {
+          "title": "Box it",
+          "detail": "Mount it in the box with the lens behind a small hole and the button on the front. A 5 V USB charger nearby powers it."
+        }
+      ],
+      "safetyNotes": [
+        "Point the camera only at your own doorstep, and check your local rules about recording shared hallways or the street.",
+        "Anyone who knows the ntfy topic name can see the photos: use a long random name, or your own ntfy server."
       ]
     }
   ]

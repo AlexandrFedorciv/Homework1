@@ -33,19 +33,18 @@ LLM_PROVIDER=mock npm start -- "raspberry pi zero 2 w, microsd card, usb cable, 
 ```
 
 ```
-↻ 2 project(s) broke a constraint — regenerating: "Home VPN with WireGuard": skill — difficulty intermediate (yours: beginner), time — 2.5 h (limit 2 h) | "2FA Code Display": skill — difficulty intermediate (yours: beginner), time — 3 h (limit 2 h)
+↻ 1 project(s) broke a constraint — regenerating: "Home VPN with WireGuard": skill — difficulty intermediate (yours: beginner), time — 2.5 h (limit 2 h)
 …
-• Replaced "Home VPN with WireGuard" (skill, time) with "Hardware Password Generator".
-• Replaced "2FA Code Display" (skill, time) with "Ad-Blocker Status Light".
+• Replaced "Home VPN with WireGuard" (skill, time) with "Desk Weather Station".
 Model: mock (offline, answers from the gallery) · 2 LLM calls
 ```
 
 What happened:
 
-1. The model proposed 3 projects. Two of them (the VPN and the 2FA display) were too hard and too long for a beginner with 2 hours.
+1. The model proposed 3 projects. One of them (the VPN) was too hard and too long for a beginner with 2 hours.
 2. The app **computed** that from the structured answer. It doesn't ask the model "did you follow the rules?"
-3. Only the bad projects were sent back, with the exact reasons and a "don't repeat these titles" list.
-4. The replacements passed, so they took the old projects' places. If a replacement is *not* better, the original is kept and you'll see `Kept "…" — the replacement wasn't better.`
+3. Only the bad project was sent back, with the exact reasons and a "don't repeat these titles" list.
+4. The replacement passed, so it took the old project's place. If a replacement is *not* better, the original is kept and you'll see `Kept "…" — the replacement wasn't better.`
 5. Finally the three projects are sorted: fewest failed checks first, then most parts owned, then cheapest.
 
 With a real model you'll usually see **1 LLM call**, because good models mostly follow the rules. The check is the safety net for when they don't.

@@ -8,30 +8,36 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --paper: #f4f1ea;
-    --grid: #e3ded2;
-    --ink: #1d1f22;
-    --muted: #6b6a66;
-    --card: #fffdf8;
-    --line: #d9d3c5;
-    --accent: #e8590c;
-    --ok: #2b8a3e;
-    --warn: #c77700;
-    --bad: #c92a2a;
+    --paper: #e4effb; --grid: rgba(37, 99, 176, 0.42); --grid-major: rgba(37, 99, 176, 0.16);
+    --ink: #102a46; --muted: #4a6382; --card: #fbfdff; --line: #bfd3ea; --sheet: #eef5fd;
+    --accent: #d9480f; --ok: #2b8a3e; --warn: #a35f00; --bad: #c92a2a;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
     --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --bp: #2f6fe0; --bp-minor: rgba(255, 255, 255, 0.10); --bp-major: rgba(255, 255, 255, 0.16); --bp-glow: rgba(120, 180, 255, 0.35);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #16181b; --grid: #1f2226; --ink: #ece8df; --muted: #9a978f;
-      --card: #1d2024; --line: #33373d; --accent: #ff7a33; --ok: #51cf66; --warn: #fcc419; --bad: #ff6b6b;
+      --paper: #0c1a2c; --grid: rgba(125, 175, 235, 0.30); --grid-major: rgba(125, 175, 235, 0.12);
+      --ink: #e3edf8; --muted: #9db3cc; --card: #12243a; --line: #24405f; --sheet: #e8f1fb;
+      --accent: #ff8a4c; --ok: #5bd37a; --warn: #fcc419; --bad: #ff7a7a;
+      --bp: #0f2c6b; --bp-minor: rgba(255, 255, 255, 0.06); --bp-major: rgba(255, 255, 255, 0.10); --bp-glow: rgba(70, 130, 230, 0.30);
+      color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; font-family: var(--sans); color: var(--ink); background-color: var(--paper);
-    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 24px 24px; line-height: 1.5;
+    margin: 0; font-family: var(--sans); color: var(--ink); line-height: 1.5;
+    background-color: var(--bp);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 18v12M18 24h12' stroke='%23ffffff' stroke-opacity='0.55' stroke-width='1.2'/%3E%3C/svg%3E"),
+      linear-gradient(var(--bp-major) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-major) 1px, transparent 1px),
+      linear-gradient(var(--bp-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-minor) 1px, transparent 1px),
+      radial-gradient(ellipse at 50% 35%, var(--bp-glow), transparent 70%);
+    background-size: 48px 48px, 48px 48px, 48px 48px, 8px 8px, 8px 8px, 100% 100%;
+    background-position: 0 0, 24px 24px, 24px 24px, 0 0, 0 0, 0 0;
+    background-attachment: scroll, scroll, scroll, scroll, scroll, fixed;
   }
   header { max-width: 1200px; margin: 0 auto; padding: 32px 16px 8px; display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
   h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
@@ -124,7 +130,7 @@
     border: 1px solid var(--line); border-radius: 999px;
   }
   .presets button:hover { border-color: var(--accent); }
-  .pic { border-bottom: 1px solid var(--line); background: #f4f1ea; }
+  .pic { border-bottom: 1px solid var(--line); background: var(--sheet); }
   .pic svg { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; }
   .gallery-wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
   .gallery-intro { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -132,7 +138,7 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; text-align: left; padding: 0; color: var(--ink); font: inherit; margin: 0; width: 100%; }
   .tile:hover { border-color: var(--accent); }
-  .tile .thumb { aspect-ratio: 16 / 10; overflow: hidden; background: #f4f1ea; border-bottom: 1px solid var(--line); }
+  .tile .thumb { aspect-ratio: 16 / 10; overflow: hidden; background: var(--sheet); border-bottom: 1px solid var(--line); }
   .tile .thumb svg { width: 100%; height: auto; display: block; }
   .tile .info { padding: 12px 14px 14px; }
   .tile h3 { margin: 0 0 4px; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
@@ -151,17 +157,29 @@
   .how li { margin-bottom: 6px; }
   code { font: 13px var(--mono); background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
   .tut { font: 12px var(--mono); color: var(--accent); }
+  /* text on the blueprint sits on solid navy plates */
+  header { margin-top: 20px; padding: 16px 20px; background: rgba(8, 30, 82, 0.88); border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 2px; max-width: 1168px; }
+  header h1 { color: #fff; }
+  header p { color: rgba(255, 255, 255, 0.92); }
+  h1 span { color: #ffb36b; }
+  nav.tabs { margin-top: 14px; padding: 0; gap: 0; background: rgba(8, 30, 82, 0.88); border: 1.5px solid rgba(255, 255, 255, 0.85); width: fit-content; }
+  nav.tabs button { padding: 9px 18px; border: 0; border-radius: 0; border-right: 1px solid rgba(255, 255, 255, 0.55); font: 600 12.5px var(--mono); text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255, 255, 255, 0.9); }
+  nav.tabs button:last-child { border-right: 0; }
+  nav.tabs button[aria-selected="true"] { background: #ffffff; color: #1d4fb8; text-shadow: none; }
+  .notes, .gallery-intro p, #status:not(:empty) { display: inline-block; padding: 6px 10px; background: rgba(8, 30, 82, 0.88); border-radius: 8px; color: rgba(255, 255, 255, 0.92); }
+  .gallery-intro a { color: #ffd8a8; }
+  .how { background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin-top: 16px; margin-bottom: 32px; }
 </style>
 </head>
 <body>
 <header>
   <h1>Parts<span>Bin</span></h1>
-  <p>Tell it what's in your drawer. Get three things you can build this weekend.</p>
+  <p>Tell it what's in your drawer. Get three things you can build this weekend: robots, a radar, home and security gadgets.</p>
 </header>
 <nav class="tabs" role="tablist">
-  <button role="tab" aria-selected="true" data-view="make">🛠 Make projects</button>
-  <button role="tab" aria-selected="false" data-view="gallery">🖼 Gallery</button>
-  <button role="tab" aria-selected="false" data-view="how">📘 How it works</button>
+  <button role="tab" aria-selected="true" data-view="make">01 · Make projects</button>
+  <button role="tab" aria-selected="false" data-view="gallery">02 · Gallery</button>
+  <button role="tab" aria-selected="false" data-view="how">03 · How it works</button>
 </nav>
 <main class="view" id="view-make">
   <form id="form">

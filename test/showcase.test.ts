@@ -12,7 +12,7 @@ const catalog = PartCatalog.load();
 
 test("gallery: valid projects with unique ids and existing tutorials", () => {
   const projects = loadShowcase();
-  assert.ok(projects.length >= 8);
+  assert.ok(projects.length >= 20);
   assert.equal(new Set(projects.map((p) => p.id)).size, projects.length);
   for (const p of projects) {
     if (p.tutorial) assert.ok(existsSync(p.tutorial), `${p.id}: missing tutorial ${p.tutorial}`);
@@ -20,7 +20,7 @@ test("gallery: valid projects with unique ids and existing tutorials", () => {
 });
 
 test("gallery: electronic parts all resolve to catalog entries (so they get prices and icons)", () => {
-  const household = /popsicle|glue|cardboard|tape|jar|body|case|heat-shrink/i;
+  const household = /popsicle|glue|cardboard|tape|jar|body|case|heat-shrink|bin|bottle|box/i;
   for (const p of loadShowcase()) {
     for (const part of p.parts) {
       if (household.test(part.name)) continue;
@@ -51,11 +51,11 @@ test("illustration: titles are XML-escaped and every catalog part has a drawing"
 });
 
 test("mock: picks gallery projects that use your parts and match your goal", async () => {
-  const inventory = parseInventory("raspberry pi zero 2 w, microsd card, phone charger, usb cable, esp32, led strip", catalog);
+  const inventory = parseInventory("raspberry pi zero 2 w, microsd card, phone charger, usb cable", catalog);
   const r = await suggestProjects({ inventory, constraints: { goal: "block ads on my network" } }, { client: createMockClient(), catalog });
   const titles = r.projects.map((p) => p.title);
   assert.ok(titles.includes("Pi-hole Ad Blocker"), titles.join(", "));
-  assert.ok(titles.includes("Ad-Blocker Status Light"), titles.join(", "));
+  assert.ok(titles.includes("Home VPN with WireGuard"), titles.join(", "));
 });
 
 test("mock: replacement requests respect skill and time", async () => {

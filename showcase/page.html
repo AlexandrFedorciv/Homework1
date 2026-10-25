@@ -3,30 +3,42 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Layout: workbench — a sticky parts form on the left, project cards on the right, on graph paper. */
+  /* Layout: workbench — a sticky parts form on the left, project cards on the right, on a blue engineering blueprint (fine grid + crosshair marks). */
   :root {
-    --paper: #f4f1ea; --grid: #e3ded2; --ink: #1d1f22; --muted: #6b6a66; --card: #fffdf8; --line: #d9d3c5;
-    --accent: #d9480f; --accent-ink: #ffffff; --ok: #2b8a3e; --warn: #b26a00; --bad: #c92a2a; --log-bg: #1d1f22; --log-fg: #e8e6e1;
+    --paper: #e4effb; --grid: rgba(37, 99, 176, 0.42); --grid-major: rgba(37, 99, 176, 0.16); --ink: #102a46; --muted: #4a6382; --card: #fbfdff; --line: #bfd3ea; --sheet: #eef5fd;
+    --accent: #d9480f; --accent-ink: #ffffff; --ok: #2b8a3e; --warn: #a35f00; --bad: #c92a2a; --log-bg: #102a46; --log-fg: #e6f0fb;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
     --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --bp: #2f6fe0; --bp-minor: rgba(255, 255, 255, 0.10); --bp-major: rgba(255, 255, 255, 0.16); --bp-glow: rgba(120, 180, 255, 0.35); --on-bp: #ffffff; --on-bp-muted: rgba(255, 255, 255, 0.82); --on-bp-link: #ffd8a8;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper: #16181b; --grid: #1f2226; --ink: #ece8df; --muted: #a09d95; --card: #1d2024; --line: #33373d;
-      --accent: #ff7a33; --accent-ink: #16181b; --ok: #51cf66; --warn: #fcc419; --bad: #ff6b6b; --log-bg: #0f1113; --log-fg: #e8e6e1;
-      color-scheme: dark;
+    --paper: #0c1a2c; --grid: rgba(125, 175, 235, 0.30); --grid-major: rgba(125, 175, 235, 0.12); --ink: #e3edf8; --muted: #9db3cc; --card: #12243a; --line: #24405f; --sheet: #e8f1fb;
+    --accent: #ff8a4c; --accent-ink: #0c1a2c; --ok: #5bd37a; --warn: #fcc419; --bad: #ff7a7a; --log-bg: #07111e; --log-fg: #e3edf8;
+    --bp: #0f2c6b; --bp-minor: rgba(255, 255, 255, 0.06); --bp-major: rgba(255, 255, 255, 0.10); --bp-glow: rgba(70, 130, 230, 0.30); --on-bp: #ffffff; --on-bp-muted: rgba(255, 255, 255, 0.78); --on-bp-link: #ffc58f;
+    color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --paper: #16181b; --grid: #1f2226; --ink: #ece8df; --muted: #a09d95; --card: #1d2024; --line: #33373d;
-    --accent: #ff7a33; --accent-ink: #16181b; --ok: #51cf66; --warn: #fcc419; --bad: #ff6b6b; --log-bg: #0f1113; --log-fg: #e8e6e1;
+    --paper: #0c1a2c; --grid: rgba(125, 175, 235, 0.30); --grid-major: rgba(125, 175, 235, 0.12); --ink: #e3edf8; --muted: #9db3cc; --card: #12243a; --line: #24405f; --sheet: #e8f1fb;
+    --accent: #ff8a4c; --accent-ink: #0c1a2c; --ok: #5bd37a; --warn: #fcc419; --bad: #ff7a7a; --log-bg: #07111e; --log-fg: #e3edf8;
+    --bp: #0f2c6b; --bp-minor: rgba(255, 255, 255, 0.06); --bp-major: rgba(255, 255, 255, 0.10); --bp-glow: rgba(70, 130, 230, 0.30); --on-bp: #ffffff; --on-bp-muted: rgba(255, 255, 255, 0.78); --on-bp-link: #ffc58f;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; font-family: var(--sans); color: var(--ink); background-color: var(--paper); line-height: 1.5; font-size: 15px;
-    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 24px 24px;
+    margin: 0; font-family: var(--sans); color: var(--ink); line-height: 1.5; font-size: 15px;
+    background-color: var(--bp);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 18v12M18 24h12' stroke='%23ffffff' stroke-opacity='0.55' stroke-width='1.2'/%3E%3C/svg%3E"),
+      linear-gradient(var(--bp-major) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-major) 1px, transparent 1px),
+      linear-gradient(var(--bp-minor) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bp-minor) 1px, transparent 1px),
+      radial-gradient(ellipse at 50% 35%, var(--bp-glow), transparent 70%);
+    background-size: 48px 48px, 48px 48px, 48px 48px, 8px 8px, 8px 8px, 100% 100%;
+    background-position: 0 0, 24px 24px, 24px 24px, 0 0, 0 0, 0 0;
+    background-attachment: scroll, scroll, scroll, scroll, scroll, fixed;
   }
   .wrap { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   a { color: var(--accent); }
@@ -109,7 +121,7 @@
     transition: border-color .15s, transform .15s;
   }
   .ptile:hover { transform: translateY(-1px); }
-  .ptile .pimg { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 6px; background: #f4f1ea; display: grid; place-items: center; overflow: hidden; }
+  .ptile .pimg { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 6px; background: var(--sheet); display: grid; place-items: center; overflow: hidden; }
   .ptile .pimg img { width: 100%; height: 100%; object-fit: cover; }
   .ptile .pimg svg { width: 86%; height: auto; }
   .ptile .pname { font-size: 13px; font-weight: 600; line-height: 1.3; }
@@ -152,7 +164,7 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr)); gap: 16px; }
   .tile { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; text-align: left; padding: 0; color: var(--ink); font: inherit; width: 100%; }
   .tile:hover { border-color: var(--accent); }
-  .tile .thumb { aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: #f4f1ea; border-bottom: 1px solid var(--line); }
+  .tile .thumb { aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; background: var(--sheet); border-bottom: 1px solid var(--line); }
   .tile .thumb svg { width: 100%; height: auto; display: block; }
   .tile .info { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
   .tile h3 { margin: 0; font-size: 16px; text-transform: none; letter-spacing: 0; color: var(--ink); }
@@ -182,13 +194,41 @@
   .tests li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); }
   pre.mermaid { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; overflow-x: auto; }
   @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+  /* Text on the blueprint sits on solid navy "title-block" plates so it never fights the grid */
+  :root { --plate: rgba(8, 30, 82, 0.88); --plate-line: rgba(255, 255, 255, 0.45); }
+  header.top { margin-top: 20px; padding: 18px 22px; background: var(--plate); border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 2px;
+    box-shadow: inset 0 0 0 4px var(--plate), inset 0 0 0 5px rgba(255, 255, 255, 0.35); }
+  header.top .brand h1 { color: #ffffff; }
+  header.top .brand p { color: rgba(255, 255, 255, 0.92); font-size: 15.5px; }
+  .brand h1 span { color: #ffb36b; }
+  .mode small { color: rgba(255, 255, 255, 0.85); }
+  /* Tabs drawn like title-block cells on a technical drawing */
+  nav.tabs { margin-top: 14px; padding: 0; gap: 0; background: var(--plate); border: 1.5px solid rgba(255, 255, 255, 0.85); border-radius: 0; width: fit-content; max-width: 100%; }
+  nav.tabs button {
+    display: flex; align-items: center; gap: 10px; padding: 9px 18px; border: 0; border-radius: 0; border-right: 1px solid rgba(255, 255, 255, 0.55);
+    font: 600 12.5px var(--mono); text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255, 255, 255, 0.9); background: transparent;
+  }
+  nav.tabs button:last-child { border-right: 0; }
+  nav.tabs button .sheet {
+    font: 600 10.5px var(--mono); letter-spacing: 0.04em; padding: 1px 5px; border: 1px solid currentColor; color: inherit; opacity: 0.85;
+  }
+  nav.tabs button:hover { color: #ffffff; background: rgba(255, 255, 255, 0.08); }
+  nav.tabs button[aria-selected="true"] { background: #ffffff; color: #1d4fb8; text-shadow: none; }
+  nav.tabs button[aria-selected="true"] .sheet { background: #1d4fb8; color: #ffffff; border-color: #1d4fb8; opacity: 1; }
+  nav.tabs button:focus-visible { outline: 2px solid #ffb36b; outline-offset: -3px; }
+  .notes { display: inline-block; padding: 6px 10px; background: var(--plate); border-radius: 2px; color: rgba(255, 255, 255, 0.92); }
+  .intro { display: inline-block; padding: 8px 12px; background: var(--plate); border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 2px; color: #ffffff; }
+  .intro a, .notes a { color: #ffd8a8; }
+  .prose { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 24px 24px; max-width: 920px; }
+  .toolbar .secondary { background: var(--card); color: var(--ink); }
 </style>
 
 <div class="wrap">
   <header class="top">
     <div class="brand">
       <h1>Parts<span>Bin</span></h1>
-      <p>Tell it what's in your drawer. Get three small security gadgets you can build this weekend: ad blockers, 2FA, locks, alarms.</p>
+      <p>Tell it what's in your drawer. Get three small builds for this weekend: robots, a radar, home-network and security gadgets.</p>
     </div>
     <div class="mode">
       <div class="seg" role="group" aria-label="Who designs the projects">
@@ -200,10 +240,10 @@
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
-    <button role="tab" aria-selected="true" data-view="make" id="tab-make">🛠 Make projects</button>
-    <button role="tab" aria-selected="false" data-view="gallery" id="tab-gallery">Gallery</button>
-    <button role="tab" aria-selected="false" data-view="how" id="tab-how">How it works</button>
-    <button role="tab" aria-selected="false" data-view="about" id="tab-about">About the project</button>
+    <button role="tab" aria-selected="true" data-view="make" id="tab-make"><span class="sheet">01</span>Make projects</button>
+    <button role="tab" aria-selected="false" data-view="gallery" id="tab-gallery"><span class="sheet">02</span>Gallery</button>
+    <button role="tab" aria-selected="false" data-view="how" id="tab-how"><span class="sheet">03</span>How it works</button>
+    <button role="tab" aria-selected="false" data-view="about" id="tab-about"><span class="sheet">04</span>About the project</button>
   </nav>
 </div>
 
@@ -319,7 +359,7 @@ flowchart LR
         <li><b>Photo → parts</b> with a vision model, and you confirm the list.</li>
         <li><b>Generated parts drawings</b> for every project, with 60+ component icons.</li>
         <li><b>Provider-agnostic.</b> Anthropic, any OpenAI-compatible API, or offline; the HTTP layer is plain <code>fetch</code>, no SDK.</li>
-        <li><b>%%GALLERY_PROJECTS%% small security projects</b> in the gallery (ad blocker, VPN, 2FA, security key, RFID lock, door alarm…), with step-by-step guides for the Pi-hole and the RFID lock.</li>
+        <li><b>%%GALLERY_PROJECTS%% gallery projects</b>: beginner robotics (radar, robot cars, robot arm, walkers), home gadgets and security builds (Pi-hole, VPN, security key, RFID lock, alarms), with full step-by-step guides for the Pi-hole, RFID lock, radar and theremin.</li>
       </ul>
 
       <h2>The terminal version</h2>

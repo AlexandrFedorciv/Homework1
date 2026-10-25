@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494 233" width="494" height="233" role="img" aria-label="DIY Security Key — parts">
-  <defs><pattern id="grid-8d195m" width="16" height="16" patternUnits="userSpaceOnUse"><path d="M16 0H0V16" fill="none" stroke="#e6e1d5" stroke-width="1"/></pattern></defs>
-  <rect width="494" height="233" fill="#f4f1ea"/><rect width="494" height="233" fill="url(#grid-8d195m)"/>
+  <defs><pattern id="grid-8d195m" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="0" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="0" r="0.7" fill="#9dbde3"/><circle cx="4" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="4" r="0.7" fill="#9dbde3"/><circle cx="8" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="8" r="0.7" fill="#9dbde3"/><circle cx="12" cy="0" r="0.7" fill="#9dbde3"/><circle cx="0" cy="12" r="0.7" fill="#9dbde3"/></pattern></defs>
+  <rect width="494" height="233" fill="#eaf3fd"/><rect width="494" height="233" fill="url(#grid-8d195m)"/>
   <rect x="0" y="0" width="6" height="233" fill="#e8590c"/>
   <text x="22" y="34" font-size="21" font-weight="700" fill="#1d1f22" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif">DIY Security Key</text>
   <text x="22" y="56" font-size="12.5" fill="#6b6a66" font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif">beginner · ~1 h · 3 part types</text>
