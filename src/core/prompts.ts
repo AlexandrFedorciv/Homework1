@@ -10,6 +10,13 @@ Rules:
 - For parts they own, reuse their exact wording. For other parts, prefer the common names given in the prompt.
 - Quantities must be exact (e.g. a 4-legged walker needs 4 servos).
 - Steps must be concrete: wiring with pin numbers, what the code does, calibration and how to test. Aim for 5-9 steps.
+- Wiring must be electrically correct for the board:
+  - ESP32, Raspberry Pi and Pico use 3.3 V logic. Never connect 5 V to their GPIO pins. Power sensors whose output goes to a GPIO from 3.3 V, or use a level shifter.
+  - On the ESP32, avoid boot-strapping pins (GPIO0, 2, 12, 15) and input-only pins (34-39) for outputs. Use pins such as 4, 5, 13, 14, 16-19, 21-23, 25-27, 32, 33.
+  - On a Raspberry Pi, I2C is SDA = GPIO2 (pin 3) and SCL = GPIO3 (pin 5). Its 3.3 V is pin 1 and GND is pin 6.
+  - Buttons go between a GPIO pin and GND, with the internal pull-up enabled.
+  - Drive LEDs through a 220-330 Ω resistor, servos from 5 V (not the 3.3 V pin), and motors through a driver, never straight from a pin.
+- Jumper wires and screws are sold as a set: list them once with quantity 1.
 - estimatedHours is a realistic total for someone at the stated skill level, including debugging.
 - Respect every constraint. If no soldering is possible, use only solderless connections (breadboard, jumper wires, screw terminals).
 - Never propose mains-voltage (230 V / 110 V AC) wiring unless the skill level is "advanced".

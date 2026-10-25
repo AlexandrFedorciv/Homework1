@@ -46,6 +46,17 @@ test("diff marks owned, partially owned and missing parts", () => {
   assert.deepEqual([byKey["ultrasonic-sensor"]!.have, byKey["ultrasonic-sensor"]!.missing], [0, 1]);
 });
 
+test("packs (jumper wires) count as one set, so 10 wires never cost 9 sets", () => {
+  const project = {
+    title: "t", summary: "s", difficulty: "beginner" as const, estimatedHours: 1, requiresSoldering: false, steps: [], safetyNotes: [],
+    parts: [{ name: "jumper wires", qty: 10, purpose: "" }],
+  };
+  const owned = diffParts(project, parseInventory("jumper wires", catalog), catalog)[0]!;
+  assert.deepEqual([owned.qty, owned.have, owned.missing], [1, 1, 0]);
+  const notOwned = diffParts(project, parseInventory("esp32", catalog), catalog)[0]!;
+  assert.deepEqual([notOwned.qty, notOwned.have, notOwned.missing, notOwned.unitPriceCzk], [1, 0, 1, 70]);
+});
+
 test("duplicate lines from the model are merged", () => {
   const parts = diffParts(
     {

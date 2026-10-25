@@ -121,6 +121,7 @@ npm start -- [parts...] [options]
 | `--gallery` | List the example projects, ranked by your parts if you give any (no API key needed) |
 | `--project <id>` | Show one example project in full, checked against your parts |
 | `--json` | Raw JSON output |
+| `--out <file>` | Also save the whole run (progress + results) as a UTF-8 text file |
 | `--shopping-list <file>` | Write a Markdown shopping list |
 | `--svg-dir <dir>` | Save a parts picture (SVG) for every project |
 | `--provider <name>` | Override `LLM_PROVIDER` for one run |

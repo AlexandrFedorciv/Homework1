@@ -15,6 +15,11 @@ export interface CatalogEntry {
   name: string;
   priceCzk: number;
   aliases: string[];
+  /**
+   * Sold as a pack (jumper wires, screws): the price is per pack and owning one pack covers any
+   * quantity a project asks for, so "10 jumper wires" never becomes "buy 9 sets".
+   */
+  bulk?: boolean;
 }
 
 interface Alias {

@@ -517,6 +517,7 @@
       "key": "jumper-wires",
       "name": "Jumper wire set",
       "priceCzk": 70,
+      "bulk": true,
       "aliases": [
         "jumper wire",
         "jumper",
@@ -638,6 +639,7 @@
       "key": "m3-screws",
       "name": "M3 screw & nut set",
       "priceCzk": 100,
+      "bulk": true,
       "aliases": [
         "m3 screw",
         "m3 screws",

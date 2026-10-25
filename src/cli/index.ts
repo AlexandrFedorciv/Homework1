@@ -39,6 +39,7 @@ ${c.bold("Gallery")} (curated example projects — no API key needed)
 
 ${c.bold("Output")}
   --json                print raw JSON instead of formatted text
+  --out <file>          also save the whole run (progress + results) as a UTF-8 text file
   --shopping-list <f>   also write a Markdown shopping list
   --svg-dir <dir>       also save a parts illustration (SVG) for every project
   --provider <name>     override LLM_PROVIDER (anthropic | openai | mock)
@@ -67,7 +68,13 @@ function num(flag: string, value: string | undefined): number | undefined {
   return n;
 }
 
-const log = (msg: string) => process.stderr.write(c.dim(msg) + "\n");
+/** Everything shown during a run, kept for --out (written as UTF-8, so Windows terminals can't garble it). */
+const transcript: string[] = [];
+const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
+const log = (msg: string) => {
+  transcript.push(stripAnsi(msg));
+  process.stderr.write(c.dim(msg) + "\n");
+};
 
 // Exit quietly when piped into `head` & co.
 process.stdout.on("error", (e: NodeJS.ErrnoException) => {
@@ -86,6 +93,7 @@ const OPTIONS = {
   "no-solder": { type: "boolean" },
   json: { type: "boolean" },
   "shopping-list": { type: "string" },
+  out: { type: "string" },
   "svg-dir": { type: "string" },
   gallery: { type: "boolean" },
   project: { type: "string" },
@@ -180,7 +188,13 @@ async function main(): Promise<void> {
   if (values.json) {
     console.log(JSON.stringify({ inventory, constraints, ...result }, null, 2));
   } else {
-    console.log("\n" + formatResult(result, getClient().label));
+    const text = formatResult(result, getClient().label);
+    console.log("\n" + text);
+    transcript.push("", stripAnsi(text));
+  }
+  if (values.out) {
+    writeFileSync(values.out, transcript.join("\n") + "\n", "utf8");
+    log(`📝 run saved to ${values.out}`);
   }
   writeOutputs(result.projects, values, true);
   if (values["shopping-list"]) {

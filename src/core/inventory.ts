@@ -62,15 +62,17 @@ export function diffParts(project: LlmProject, inventory: InventoryItem[], catal
   }
 
   return [...merged.entries()].map(([key, p]) => {
-    const have = Math.min(owned.get(key) ?? 0, p.qty);
     const entry = catalog.get(key);
+    // Packs (jumper wires, screws) are counted as one pack, whatever unit count the model used.
+    const qty = entry?.bulk ? 1 : p.qty;
+    const have = Math.min(owned.get(key) ?? 0, qty);
     return {
       name: p.name,
       key,
-      qty: p.qty,
+      qty,
       purpose: p.purpose,
       have,
-      missing: p.qty - have,
+      missing: qty - have,
       ...(entry ? { unitPriceCzk: entry.priceCzk } : {}),
     };
   });
