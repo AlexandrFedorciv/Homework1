@@ -95,7 +95,7 @@
   .cover { height: 4px; background: var(--line); }
   .cover div { height: 100%; background: var(--ok); }
   .hero { margin: 0; border-bottom: 1px solid var(--line); background: var(--paper); }
-  .hero img { display: block; width: 100%; max-height: 360px; object-fit: cover; }
+  .hero img { display: block; width: 100%; max-height: 360px; object-fit: cover; object-position: 50% 20%; }
   .credit { font-size: 11.5px; color: var(--muted); padding: 6px 18px; }
   .credit a { color: var(--muted); }
   .board { padding: 14px 18px; border-bottom: 1px solid var(--line); }
@@ -188,7 +188,7 @@
   <header class="top">
     <div class="brand">
       <h1>Parts<span>Bin</span></h1>
-      <p>Tell it what's in your drawer. Get three electronics projects you can build this weekend.</p>
+      <p>Tell it what's in your drawer. Get three small security gadgets you can build this weekend: ad blockers, 2FA, locks, alarms.</p>
     </div>
     <div class="mode">
       <div class="seg" role="group" aria-label="Who designs the projects">
@@ -212,26 +212,29 @@
     <div class="make">
       <form id="form" novalidate>
         <label for="parts">Parts you have</label>
-        <textarea id="parts" spellcheck="false">arduino uno
-2x sg90 servo
-hc-sr04
-10k potentiometer
+        <textarea id="parts" spellcheck="false">raspberry pi zero 2 w
+microsd card
+usb cable
+phone charger
+esp32
+0.96 oled
+push button
 breadboard
 jumper wires</textarea>
         <div class="presets" aria-label="Example parts lists">
-          <button type="button" class="chipbtn" data-preset="arduino uno&#10;2x sg90 servo&#10;hc-sr04&#10;10k potentiometer&#10;breadboard&#10;jumper wires">Arduino starter kit</button>
-          <button type="button" class="chipbtn" data-preset="esp32&#10;bme280&#10;0.96 oled&#10;soil moisture sensor&#10;relay module&#10;breadboard&#10;jumper wires">ESP32 / IoT</button>
-          <button type="button" class="chipbtn" data-preset="arduino nano&#10;4x sg90 servo&#10;hc-sr04&#10;piezo buzzer&#10;battery holder&#10;4x aa battery">Robot parts</button>
+          <button type="button" class="chipbtn" data-preset="raspberry pi zero 2 w&#10;microsd card&#10;usb cable&#10;phone charger">Raspberry Pi</button>
+          <button type="button" class="chipbtn" data-preset="esp32&#10;0.96 oled&#10;2x push button&#10;breadboard&#10;jumper wires&#10;usb cable">ESP32 + screen</button>
+          <button type="button" class="chipbtn" data-preset="arduino uno&#10;rc522 rfid reader&#10;sg90 servo&#10;2x led&#10;2x resistor&#10;piezo buzzer&#10;breadboard&#10;jumper wires">Arduino + RFID</button>
         </div>
         <div class="drop" id="drop" tabindex="0" role="button" aria-label="Detect parts from a photo">📷 Drop a photo of your parts, or click to choose<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/gif" hidden></div>
         <div class="hint" id="drop-hint">Detected parts are added to the list so you can fix them first.</div>
 
         <label for="goal">Goal (optional)</label>
-        <input id="goal" value="something that moves or makes noise">
+        <input id="goal" value="protect my home network">
         <div class="row">
           <div><label for="skill">Skill</label>
             <select id="skill"><option value="">any</option><option selected>beginner</option><option>intermediate</option><option>advanced</option></select></div>
-          <div><label for="hours">Max h</label><input id="hours" type="number" min="0.5" step="0.5" value="4"></div>
+          <div><label for="hours">Max h</label><input id="hours" type="number" min="0.5" step="0.5" value="2"></div>
           <div><label for="budget">Budget CZK</label><input id="budget" type="number" min="0" step="50" value="300"></div>
         </div>
         <label class="check" for="nosolder"><input type="checkbox" id="nosolder"> I can't solder</label>
@@ -284,7 +287,7 @@ flowchart LR
         <li>The dark log above the results shows each step as it happens, including retries and replaced projects.</li>
       </ul>
       <h2>Live vs. offline</h2>
-      <p><b>Claude (live)</b> sends your parts to Claude from this page, using your own Claude account; the first time, the page asks your permission. <b>Offline demo</b> runs the same pipeline but answers from the 10 built-in gallery projects, so it's instant and free. To show the self-check, it ignores your limits on the first try, just like a real model sometimes does.</p>
+      <p><b>Claude (live)</b> sends your parts to Claude from this page, using your own Claude account; the first time, the page asks your permission. <b>Offline demo</b> runs the same pipeline but answers from the %%GALLERY_PROJECTS%% built-in gallery projects, so it's instant and free. To show the self-check, it ignores your limits on the first try, just like a real model sometimes does.</p>
     </div>
   </div>
 
@@ -304,7 +307,7 @@ flowchart LR
           <tr><td>At least one retry on transient failures</td><td>Exponential backoff with jitter on 429 / 5xx / 529 / timeouts / network errors, honours <code>Retry-After</code>; permanent errors fail fast</td></tr>
           <tr><td>API key in an environment variable</td><td><code>.env</code> (git-ignored) + <code>.env.example</code>; this page needs no key at all</td></tr>
           <tr><td>CLI; minimal web UI is a bonus</td><td>CLI with colours, <code>--json</code>, shopping list and SVG export; web UI with photo upload and gallery</td></tr>
-          <tr><td>README with setup, env vars, example run</td><td>README + 6 tutorials, screenshots, example Arduino and Python code</td></tr>
+          <tr><td>README with setup, env vars, example run</td><td>README + 6 tutorials, screenshots, example Arduino code</td></tr>
         </tbody>
       </table></div>
 
@@ -316,7 +319,7 @@ flowchart LR
         <li><b>Photo → parts</b> with a vision model, and you confirm the list.</li>
         <li><b>Generated parts drawings</b> for every project, with 60+ component icons.</li>
         <li><b>Provider-agnostic.</b> Anthropic, any OpenAI-compatible API, or offline; the HTTP layer is plain <code>fetch</code>, no SDK.</li>
-        <li><b>%%GALLERY_PROJECTS%% gallery projects</b> and two complete builds with Arduino + Python code.</li>
+        <li><b>%%GALLERY_PROJECTS%% small security projects</b> in the gallery (ad blocker, VPN, 2FA, security key, RFID lock, door alarm…), with step-by-step guides for the Pi-hole and the RFID lock.</li>
       </ul>
 
       <h2>The terminal version</h2>
@@ -347,7 +350,7 @@ flowchart LR
     $("mode-demo").setAttribute("aria-pressed", String(m === "demo"));
     $("mode-note").textContent = m === "claude"
       ? "Claude designs new projects for your parts. Uses your Claude account; asks permission first."
-      : "Instant and free: answers come from the 10 built-in projects.";
+      : "Instant and free: answers come from the %%GALLERY_PROJECTS%% built-in projects.";
     $("cost-hint").textContent = m === "claude" ? "A live run takes about 20–90 seconds." : "";
     $("drop-hint").textContent = m === "claude"
       ? (imagesOk ? "Detected parts are added to the list so you can fix them first." : "Photo detection isn't available in this view; type your parts instead.")
@@ -411,7 +414,7 @@ flowchart LR
     const tut = p.tutorial ? `<span class="chip acc">full build guide in the repo</span>` : "";
     const num = opts.numbered === false ? "" : `<span class="n">0${i + 1}</span>`;
     const hero = p.photo
-      ? `<figure class="hero"><img src="${esc(photoSrc(p.photo))}" alt="A similar finished build: ${esc(p.title)}" loading="lazy"><figcaption class="credit">${creditHtml(p.photo, "Similar real build:")}</figcaption></figure>`
+      ? `<figure class="hero"><img src="${esc(photoSrc(p.photo))}" alt="${esc(p.photo.caption || "A similar real build")}" loading="lazy"><figcaption class="credit">${creditHtml(p.photo, esc(p.photo.caption || "A similar real build") + ":")}</figcaption></figure>`
       : "";
     const tiles = p.parts.map((x, k) => `
       <button type="button" class="ptile" data-card="${id}" data-k="${k}" aria-label="${esc(x.name)}">
@@ -607,7 +610,7 @@ flowchart LR
   // Open in a realistic state: an offline example run is shown immediately.
   (async () => {
     try {
-      const r = await PB.suggest({ parts: $("parts").value, constraints: { goal: "something that moves or makes noise", skill: "beginner", maxHours: 4, budget: 300 }, mode: "demo", log });
+      const r = await PB.suggest({ parts: $("parts").value, constraints: { goal: "protect my home network", skill: "beginner", maxHours: 2, budget: 300 }, mode: "demo", log });
       log("✓ example run (offline demo). Press “Suggest 3 projects” to try your own parts.");
       lastResult = r; renderResults(r);
     } catch (e) { $("out").innerHTML = `<div class="error">✗ ${esc(e.message || e)}</div>`; }

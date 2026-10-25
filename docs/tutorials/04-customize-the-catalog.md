@@ -100,4 +100,4 @@ This writes `docs/images/gallery/<id>.svg` for every project.
 
 ---
 
-**Next:** [5 · Build the Air Theremin →](05-build-air-theremin.md)
+**Next:** [5 · Build the Pi-hole Ad Blocker →](05-build-pi-hole.md)

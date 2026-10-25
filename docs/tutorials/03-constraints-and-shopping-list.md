@@ -12,7 +12,7 @@ All of them are optional. Use any combination.
 
 | Flag (CLI) | Web field | What it means | How it's checked |
 |---|---|---|---|
-| `--goal "…"` | Goal | theme or idea, e.g. `"walking robot"`, `"plants"` | guides the model (not checked: it's a wish, not a rule) |
+| `--goal "…"` | Goal | theme or idea, e.g. `"block ads on my network"`, `"protect my accounts"` | guides the model (not checked: it's a wish, not a rule) |
 | `--skill beginner` | Skill | the hardest difficulty you want | project difficulty ≤ your level |
 | `--hours 4` | Max h | total build time | `estimatedHours` ≤ limit |
 | `--budget 300` | Budget CZK | money for parts you'd have to buy | sum of missing parts × catalog price ≤ budget |
@@ -28,23 +28,24 @@ Two checks always run:
 The mock provider makes this easy to see, because it ignores the limits on the first try:
 
 ```bash
-LLM_PROVIDER=mock npm start -- "arduino uno, 2x sg90 servo, hc-sr04, breadboard, jumper wires, 10k potentiometer" \
-  --skill beginner --hours 4 --budget 300
+LLM_PROVIDER=mock npm start -- "raspberry pi zero 2 w, microsd card, usb cable, phone charger, esp32, 0.96 oled, push button, breadboard, jumper wires" \
+  --goal "protect my home network" --skill beginner --hours 2 --budget 300
 ```
 
 ```
-↻ 1 project(s) broke a constraint — regenerating: "Desk Crab — a 4-servo walking robot": skill — difficulty intermediate (yours: beginner), time — 6 h (limit 4 h)
+↻ 2 project(s) broke a constraint — regenerating: "Home VPN with WireGuard": skill — difficulty intermediate (yours: beginner), time — 2.5 h (limit 2 h) | "2FA Code Display": skill — difficulty intermediate (yours: beginner), time — 3 h (limit 2 h)
 …
-• Replaced "Desk Crab — a 4-servo walking robot" (skill, time) with "Light-Seeking Sunflower".
+• Replaced "Home VPN with WireGuard" (skill, time) with "Hardware Password Generator".
+• Replaced "2FA Code Display" (skill, time) with "Ad-Blocker Status Light".
 Model: mock (offline, answers from the gallery) · 2 LLM calls
 ```
 
 What happened:
 
-1. The model proposed 3 projects. One of them (Desk Crab) was too hard and too long.
+1. The model proposed 3 projects. Two of them (the VPN and the 2FA display) were too hard and too long for a beginner with 2 hours.
 2. The app **computed** that from the structured answer. It doesn't ask the model "did you follow the rules?"
-3. Only the bad project was sent back, with the exact reasons and a "don't repeat these titles" list.
-4. The replacement passed, so it took the old project's place. If a replacement is *not* better, the original is kept and you'll see `Kept "…" — the replacement wasn't better.`
+3. Only the bad projects were sent back, with the exact reasons and a "don't repeat these titles" list.
+4. The replacements passed, so they took the old projects' places. If a replacement is *not* better, the original is kept and you'll see `Kept "…" — the replacement wasn't better.`
 5. Finally the three projects are sorted: fewest failed checks first, then most parts owned, then cheapest.
 
 With a real model you'll usually see **1 LLM call**, because good models mostly follow the rules. The check is the safety net for when they don't.
@@ -53,31 +54,34 @@ With a real model you'll usually see **1 LLM call**, because good models mostly 
 
 ```
 Parts
-  ✓ 1× Arduino Uno — reads distance, generates tones
-  ◐ 4× SG90 micro servo have 2, MISSING 2 (~120 CZK) — one per leg
-  ✗ 1× Piezo buzzer MISSING (~15 CZK) — sound output
+  ✓ 1× Arduino Uno — checks the card and drives the latch
+  ✓ 1× RC522 RFID reader + tags — reads the card or key fob
+  ◐ 2× LED (5 mm) have 1, MISSING 1 (~2 CZK) — green = open, red = denied
+  ✗ 1× Piezo buzzer MISSING (~15 CZK) — beeps
 ```
 
-The matching is done in code ([`src/core/catalog.ts`](../../src/core/catalog.ts)), not by the model. It understands that `SG90`, `9g micro servo` and `servos` are the same part, but `MG996R servo` is a different one. It also counts: you said `2x sg90`, the project needs 4, so 2 are missing.
+The matching is done in code ([`src/core/catalog.ts`](../../src/core/catalog.ts)), not by the model. It understands that `SG90`, `9g micro servo` and `servos` are the same part, but `MG996R servo` is a different one, and that `rc522` means the RFID reader kit. It also counts: you said `1x led`, the project needs 2, so 1 is missing.
 
 The **parts picture** shows the same thing visually. Solid cards with a green check are yours, dashed red cards are to buy:
 
-![Desk Crab vs. a starter kit](../images/examples/desk-crab-vs-starter-kit.svg)
+![RFID lock vs. a starter kit](../images/examples/rfid-lock-vs-starter-kit.svg)
 
 ## The shopping list
 
 ```bash
-npm start -- "arduino uno, 2x sg90, hc-sr04" --shopping-list shopping.md
+npm start -- "arduino uno, sg90, 1x led, rc522" --shopping-list shopping.md
 ```
 
 ```markdown
-## 1. Ultrasonic Radar Sweep
+## 1. RFID Access Lock
 
+- [ ] 1× LED (5 mm) — ~2 CZK
+- [ ] 2× Resistor — ~2 CZK
+- [ ] 1× Piezo buzzer — ~15 CZK
 - [ ] 1× Breadboard — ~70 CZK
 - [ ] 1× Jumper wire set — ~70 CZK
-- [ ] 1× USB cable — ~60 CZK
 
-**Total:** ~200 CZK
+**Total:** ~159 CZK
 ```
 
 In the web UI, use **⬇ Shopping list** above the results. The checkboxes render as a real checklist on GitHub, in Obsidian and in most note apps.
@@ -89,7 +93,7 @@ In the web UI, use **⬇ Shopping list** above the results. The checkboxes rende
 `--json` prints everything: inventory, constraints, projects with `have`/`missing` per part, `coverage`, `missingCostCzk` and every check with its details. Use it to build your own tools on top:
 
 ```bash
-npm start -- "esp32, bme280, oled" --json > result.json
+npm start -- "esp32, oled, push button" --json > result.json
 ```
 
 ---

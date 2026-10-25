@@ -1,5 +1,78 @@
 {
-  "_note": "Real photos (openly licensed) for parts and gallery projects. Files live in docs/images/photos/. Every entry must keep its credit, license and source.",
+  "_note": "Openly licensed photos (Wikimedia Commons) of the finished result or a similar real build, resized. Files live in docs/images/photos/. Keep every credit, license and source. Parts are shown as drawings.",
   "parts": {},
-  "projects": {}
+  "projects": {
+    "pi-hole": {
+      "file": "projects/pi-hole.jpg",
+      "caption": "The finished result: the Pi-hole dashboard (real screenshot)",
+      "title": "Pi-Hole 6 screenshot (6.1.2)",
+      "credit": "Pi-hole",
+      "license": "Public domain",
+      "licenseUrl": "https://en.wikipedia.org/wiki/Public_domain",
+      "source": "https://commons.wikimedia.org/wiki/File%3APi-Hole_6_screenshot_%286.1.2%29.png"
+    },
+    "home-vpn": {
+      "file": "projects/home-vpn.jpg",
+      "caption": "The Raspberry Pi Zero 2 W that runs the VPN",
+      "title": "Raspberry Pi Zero 2 W -- 2024 -- 0008",
+      "credit": "Anil Öztas",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARaspberry_Pi_Zero_2_W_--_2024_--_0008.jpg"
+    },
+    "security-key": {
+      "file": "projects/security-key.jpg",
+      "caption": "A shop-bought FIDO2 security key (YubiKey), the product this project rebuilds",
+      "title": "YubiKey 5C NFC",
+      "credit": "Daniel Aleksandersen",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AYubiKey_5C_NFC.jpg"
+    },
+    "totp-display": {
+      "file": "projects/totp-display.jpg",
+      "caption": "Classic hardware 2FA tokens (RSA SecurID) that show rotating codes, like this project",
+      "title": "RSA-SecurID-Token",
+      "credit": "Mateusz Adamowski, taken with Canon EOS.",
+      "license": "CC BY-SA 1.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ARSA-SecurID-Token.jpg"
+    },
+    "password-generator": {
+      "file": "projects/password-generator.jpg",
+      "caption": "A similar build: an ESP32 with a small OLED screen on a breadboard",
+      "title": "ESP32 SH1106 Power-Meter 01",
+      "credit": "King of Pwnt",
+      "license": "CC0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AESP32_SH1106_Power-Meter_01.jpg"
+    },
+    "rfid-lock": {
+      "file": "projects/rfid-lock.jpg",
+      "caption": "An RFID key fob from a real door-access system",
+      "title": "Dormakaba key fob",
+      "credit": "Paul2520",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3ADormakaba_key_fob.jpg"
+    },
+    "door-alarm": {
+      "file": "projects/door-alarm.jpg",
+      "caption": "Close-up of a reed switch, the sensor at the heart of the door alarm",
+      "title": "Interrupteur reed",
+      "credit": "Timothée Cognard",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3AInterrupteur_reed.jpg"
+    },
+    "pihole-status-light": {
+      "file": "projects/pihole-status-light.jpg",
+      "caption": "The addressable LED strip that makes the light bar",
+      "title": "Pack1 - BTF-WS2812B - John McMaster",
+      "credit": "John McMaster",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File%3APack1_-_BTF-WS2812B_-_John_McMaster.jpg"
+    }
+  }
 }

@@ -168,15 +168,15 @@
     <label for="parts">Parts you have</label>
     <textarea id="parts" placeholder="arduino uno&#10;4x sg90 servo&#10;hc-sr04&#10;breadboard&#10;jumper wires" required></textarea>
     <div class="presets" aria-label="Example parts lists">
-      <button type="button" data-preset="arduino uno&#10;2x sg90 servo&#10;hc-sr04&#10;10k potentiometer&#10;breadboard&#10;jumper wires">Arduino starter kit</button>
-      <button type="button" data-preset="esp32&#10;bme280&#10;0.96 oled&#10;soil moisture sensor&#10;relay module&#10;breadboard&#10;jumper wires">ESP32 / IoT</button>
-      <button type="button" data-preset="arduino nano&#10;4x sg90 servo&#10;hc-sr04&#10;piezo buzzer&#10;battery holder&#10;4x aa battery">Robot parts</button>
+      <button type="button" data-preset="raspberry pi zero 2 w&#10;microsd card&#10;usb cable&#10;phone charger">Raspberry Pi</button>
+      <button type="button" data-preset="esp32&#10;0.96 oled&#10;2x push button&#10;breadboard&#10;jumper wires&#10;usb cable">ESP32 + screen</button>
+      <button type="button" data-preset="arduino uno&#10;rc522 rfid reader&#10;sg90 servo&#10;2x led&#10;2x resistor&#10;piezo buzzer&#10;breadboard&#10;jumper wires">Arduino + RFID</button>
     </div>
     <div class="drop" id="drop" tabindex="0">📷 Drop a photo of your parts bin, or click to choose<input type="file" id="photo" accept="image/*" hidden /></div>
     <div class="hint">Detected parts are added to the list so you can fix them before generating.</div>
 
     <label for="goal">Goal (optional)</label>
-    <input id="goal" placeholder="something that walks" />
+    <input id="goal" placeholder="block ads on my network" />
 
     <div class="row">
       <div><label for="skill">Skill</label>
@@ -199,7 +199,7 @@
 <section class="view gallery-wrap" id="view-gallery" hidden>
   <div id="detail"></div>
   <div class="gallery-intro">
-    <p id="gallery-note">10 hand-picked example projects. Type your parts on the <a href="#" data-goto="make">Make</a> tab and they'll be ranked and checked against what you own.</p>
+    <p id="gallery-note">Hand-picked example projects. Type your parts on the <a href="#" data-goto="make">Make</a> tab and they'll be ranked and checked against what you own.</p>
   </div>
   <div class="grid" id="grid"></div>
 </section>
@@ -220,7 +220,7 @@
     <li><b>⬇ Shopping list</b> downloads everything you'd need to buy as a Markdown checklist.</li>
   </ul>
   <h2>Tutorials</h2>
-  <p>Step-by-step guides live in the repo's <code>docs/tutorials</code> folder: getting started, photo input, constraints &amp; shopping lists, customizing the parts catalog, and two complete builds with code (Air Theremin and Ultrasonic Radar).</p>
+  <p>Step-by-step guides live in the repo's <code>docs/tutorials</code> folder: getting started, photo input, constraints &amp; shopping lists, customizing the parts catalog, and two complete builds (Pi-hole Ad Blocker and RFID Access Lock).</p>
 </section>
 
 <script>

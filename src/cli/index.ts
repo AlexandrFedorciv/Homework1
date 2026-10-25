@@ -45,9 +45,9 @@ ${c.bold("Output")}
   -h, --help
 
 ${c.bold("Examples")}
-  partsbin "arduino uno, 4x sg90, hc-sr04, breadboard, jumper wires" --goal "something that moves" --skill beginner --hours 4 --budget 300
-  partsbin --gallery "esp32, oled, bme280"
-  partsbin --project air-theremin "arduino uno, hc-sr04" --svg-dir pictures
+  partsbin "raspberry pi zero 2 w, microsd card, esp32, oled, push button" --goal "protect my home network" --skill beginner --hours 2
+  partsbin --gallery "raspberry pi zero 2 w, esp32, oled"
+  partsbin --project rfid-lock "arduino uno, sg90" --svg-dir pictures
 `;
 
 const MEDIA_TYPES: Record<string, ImageInput["mediaType"]> = {

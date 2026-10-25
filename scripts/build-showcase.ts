@@ -48,7 +48,7 @@ const page = readFileSync("showcase/page.html", "utf8")
   .replace("%%TEST_COUNT%%", String(testNames.length))
   .replace("%%TEST_LIST%%", testNames.map((n) => `<li>${esc(n)}</li>`).join(""))
   .replace("%%CATALOG_PARTS%%", String(catalog.parts.length))
-  .replace("%%GALLERY_PROJECTS%%", String(showcase.projects.length))
+  .replaceAll("%%GALLERY_PROJECTS%%", String(showcase.projects.length))
   .replace("%%BUNDLE%%", () => bundle);
 
 const out = join("dist", "showcase");

@@ -25,6 +25,8 @@ const mock = createMockClient({ catalog, showcase });
 /** An openly licensed photo with its credit (see data/photos.json). */
 export interface Photo {
   file: string;
+  /** What the photo shows relative to the project ("A similar real build", "The real instrument …"). */
+  caption?: string;
   title?: string;
   credit: string;
   license: string;

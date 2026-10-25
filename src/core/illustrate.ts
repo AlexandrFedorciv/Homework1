@@ -323,6 +323,28 @@ function jar(): string {
     <rect x="25" y="30" width="40" height="28" fill="#74c0fc" fill-opacity="0.6"/>`;
 }
 
+function sdCard(): string {
+  return `<path d="M30 6 H58 L66 14 V58 H30 Z" fill="${C.pcbBlack}" ${S}/>
+    <rect x="34" y="10" width="4" height="9" fill="${C.yellow}"/><rect x="40" y="10" width="4" height="9" fill="${C.yellow}"/>
+    <rect x="46" y="10" width="4" height="9" fill="${C.yellow}"/><rect x="52" y="10" width="4" height="9" fill="${C.yellow}"/>
+    <text x="48" y="44" font-size="8" font-weight="700" fill="${C.white}" text-anchor="middle" font-family="sans-serif">SD</text>`;
+}
+
+function reedSwitch(): string {
+  return `<rect x="8" y="20" width="44" height="22" rx="4" fill="${C.white}" ${S}/>
+    <rect x="58" y="22" width="26" height="18" rx="4" fill="${C.white}" ${S}/>
+    <line x1="14" y1="31" x2="46" y2="31" stroke="${C.metal}" stroke-width="2"/>
+    <path d="M8 36 C 0 44, 4 54, 12 60" fill="none" stroke="${C.ink}" stroke-width="2"/>
+    <path d="M14 42 C 10 50, 14 56, 22 62" fill="none" stroke="${C.ink}" stroke-width="2"/>
+    <text x="71" y="35" font-size="9" font-weight="700" fill="${C.bad}" text-anchor="middle" font-family="sans-serif">N</text>`;
+}
+
+function ethernet(): string {
+  return `<path d="M8 52 C 20 10, 50 64, 66 26" fill="none" stroke="#1c7ed6" stroke-width="4"/>
+    <rect x="60" y="8" width="22" height="20" rx="2" fill="${C.white}" fill-opacity="0.85" ${S}/>
+    <rect x="64" y="12" width="14" height="6" fill="${C.yellow}"/>`;
+}
+
 function generic(): string {
   return `<rect x="20" y="10" width="50" height="44" rx="6" fill="${C.white}" ${S} stroke-dasharray="4 3"/>
     <text x="45" y="40" font-size="22" font-weight="700" fill="${C.muted}" text-anchor="middle" font-family="sans-serif">?</text>`;
@@ -335,6 +357,10 @@ const BY_KEY: Record<string, () => string> = {
   esp8266: () => board(C.pcbBlue, true),
   "pi-pico": () => board(C.pcbGreen, true),
   "raspberry-pi": () => board(C.pcbGreen),
+  "raspberry-pi-zero": () => board(C.pcbGreen, true),
+  microsd: sdCard,
+  "reed-switch": reedSwitch,
+  "ethernet-cable": ethernet,
   "esp32-cam": camera,
   "servo-sg90": () => servo(),
   "servo-mg996r": () => servo(C.pcbBlack),

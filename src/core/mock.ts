@@ -17,10 +17,11 @@ import { loadShowcase, type ShowcaseProject } from "./showcase.ts";
 
 const DETECTED = {
   parts: [
-    { name: "Arduino Uno", qty: 1 },
-    { name: "SG90 micro servo", qty: 4 },
-    { name: "HC-SR04 ultrasonic sensor", qty: 1 },
-    { name: "Breadboard", qty: 1 },
+    { name: "Raspberry Pi Zero 2 W", qty: 1 },
+    { name: "microSD card", qty: 1 },
+    { name: "ESP32 dev board", qty: 1 },
+    { name: "0.96 inch OLED display", qty: 1 },
+    { name: "Push button", qty: 2 },
     { name: "Jumper wires", qty: 1 },
   ],
 };

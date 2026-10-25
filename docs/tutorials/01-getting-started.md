@@ -28,10 +28,10 @@ Mock mode answers from the built-in [gallery](../../data/showcase.json) instead 
 
 ```bash
 # macOS / Linux
-LLM_PROVIDER=mock npm start -- "arduino uno, 2x sg90 servo, hc-sr04, breadboard, jumper wires" --skill beginner --hours 4
+LLM_PROVIDER=mock npm start -- "raspberry pi zero 2 w, microsd card, usb cable, phone charger, esp32, 0.96 oled, push button, breadboard, jumper wires" --skill beginner --hours 2
 
 # Windows PowerShell
-$env:LLM_PROVIDER="mock"; npm start -- "arduino uno, 2x sg90 servo, hc-sr04, breadboard, jumper wires" --skill beginner --hours 4
+$env:LLM_PROVIDER="mock"; npm start -- "raspberry pi zero 2 w, microsd card, usb cable, phone charger, esp32, 0.96 oled, push button, breadboard, jumper wires" --skill beginner --hours 2
 ```
 
 ![CLI output](../images/screenshots/cli-results.png)
@@ -60,7 +60,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 Now run without the `LLM_PROVIDER=mock` prefix:
 
 ```bash
-npm start -- "arduino uno, 2x sg90 servo, hc-sr04, breadboard, jumper wires" --goal "something that moves" --skill beginner --hours 4
+npm start -- "raspberry pi zero 2 w, microsd card, usb cable, phone charger, esp32, 0.96 oled, push button, breadboard, jumper wires" --goal "protect my home network" --skill beginner --hours 2
 ```
 
 This time the projects are designed by the model for your exact parts. A run takes about 10–40 seconds.
@@ -73,16 +73,16 @@ npm run web          # then open http://localhost:3000
 
 ![Web UI results](../images/screenshots/web-results.png)
 
-- Click **Arduino starter kit**, **ESP32 / IoT** or **Robot parts** to fill in an example parts list.
+- Click **Raspberry Pi**, **ESP32 + screen** or **Arduino + RFID** to fill in an example parts list.
 - Drop a photo of your parts on the dashed box to detect parts automatically ([tutorial 2](02-photo-to-projects.md)).
-- **Gallery** shows the 10 example projects, ranked by how many of your parts they use.
+- **Gallery** shows the example projects (small security gadgets), ranked by how many of your parts they use.
 - **⬇ Shopping list** downloads what you'd need to buy as a Markdown checklist.
 
 ## Step 5: Explore the gallery from the terminal
 
 ```bash
-npm start -- --gallery "arduino uno, 2x sg90, hc-sr04"
-npm start -- --project air-theremin "arduino uno, hc-sr04" --svg-dir pictures
+npm start -- --gallery "raspberry pi zero 2 w, esp32, oled"
+npm start -- --project rfid-lock "arduino uno, sg90" --svg-dir pictures
 ```
 
 ![CLI gallery](../images/screenshots/cli-gallery.png)

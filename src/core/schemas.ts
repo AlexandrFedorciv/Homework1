@@ -8,7 +8,7 @@ export const skillRank = (s: SkillLevel): number => SKILL_LEVELS.indexOf(s);
 
 /** Optional constraints the user can set. Any subset may be given. */
 export const ConstraintsSchema = z.object({
-  /** Free-text goal or theme, e.g. "something that walks" or "plant monitoring". */
+  /** Free-text goal or theme, e.g. "block ads on my network" or "protect my accounts". */
   goal: z.string().trim().min(1).optional(),
   /** Highest difficulty the user is comfortable with. */
   skill: z.enum(SKILL_LEVELS).optional(),
