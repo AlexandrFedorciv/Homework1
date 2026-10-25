@@ -77,6 +77,28 @@ Configuration lives in `.env` (loaded automatically, **git-ignored — never com
 
 ¹ Not needed for local servers like Ollama.
 
+### Free providers (no Anthropic account needed)
+
+**Groq** (free key from [console.groq.com](https://console.groq.com) → API Keys), which is what the example run below uses:
+
+```dotenv
+LLM_PROVIDER=openai
+OPENAI_API_KEY=gsk_...
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+LLM_MODEL=openai/gpt-oss-120b
+```
+
+**Ollama** (runs on your own computer, no key; install from [ollama.com](https://ollama.com), then `ollama pull qwen3:8b`):
+
+```dotenv
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=http://localhost:11434/v1
+LLM_MODEL=qwen3:8b
+```
+
+OpenAI-compatible servers are asked for JSON mode (`response_format: json_object`); the app validates every answer
+with zod and sends any errors back to the model to fix, so smaller models work too.
+
 ## Usage
 
 ### CLI
