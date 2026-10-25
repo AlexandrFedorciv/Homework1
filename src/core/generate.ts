@@ -55,7 +55,7 @@ function formatZodError(err: z.ZodError): string {
 async function generateValidated<T>(
   client: LlmClient,
   req: { system: string; user: string; schema: Record<string, unknown>; image?: ImageInput },
-  validator: z.ZodType<T, z.ZodTypeDef, unknown>,
+  validator: z.ZodType<T>,
   maxRepairs: number,
   counter: { calls: number },
   log: (msg: string) => void,

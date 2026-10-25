@@ -64,7 +64,7 @@ function send(res: ServerResponse, status: number, body: unknown) {
   res.end(JSON.stringify(body));
 }
 
-function parse<T>(schema: z.ZodType<T, z.ZodTypeDef, unknown>, data: unknown): T {
+function parse<T>(schema: z.ZodType<T>, data: unknown): T {
   const r = schema.safeParse(data);
   if (!r.success) throw new BadRequest(r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; "));
   return r.data;

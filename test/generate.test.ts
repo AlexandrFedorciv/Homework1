@@ -59,7 +59,7 @@ test("invalid model output is fed back and repaired", async () => {
   const r = await suggestProjects({ inventory, constraints: {} }, { client, catalog });
   assert.equal(r.llmCalls, 3);
   assert.match(client.prompts[1]!.user, /rejected by the validator: not valid JSON/);
-  assert.match(client.prompts[2]!.user, /projects: Array must contain exactly 3/);
+  assert.match(client.prompts[2]!.user, /projects: .*exactly 3/);
 });
 
 test("gives up with a clear error when the model never produces valid output", async () => {
