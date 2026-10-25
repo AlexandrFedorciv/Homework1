@@ -1,32 +1,65 @@
-# PartsBin — Parts-to-Projects
+<p align="center">
+  <img src="docs/images/readme/banner.png" alt="PartsBin: parts in, projects out" width="100%">
+</p>
 
-Tell PartsBin which electronics parts are lying in your drawer (or just **show it a photo**), add a few
-constraints, and it designs **three buildable DIY projects** for you — each with a full parts list that
-marks what you already own and what you'd have to buy, step-by-step build instructions, an estimated
-build time and a price for the missing parts.
+<p align="center">
+<img src="https://img.shields.io/badge/node-%E2%89%A520.12-5fa04e?logo=nodedotjs&logoColor=white" alt="Node.js 20.12+"> <img src="https://img.shields.io/badge/TypeScript-strict-3178c6?logo=typescript&logoColor=white" alt="TypeScript"> <img src="https://img.shields.io/badge/tests-30%20passing-2b8a3e" alt="Tests: 30 passing"> <img src="https://img.shields.io/badge/LLM-Anthropic%20%C2%B7%20Groq%20%C2%B7%20OpenAI%20%C2%B7%20Ollama-d9480f" alt="LLM: Anthropic · Groq · OpenAI · Ollama"> <img src="https://img.shields.io/badge/dependencies-2-0f2c6b" alt="No LLM SDK"> <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="License: MIT">
+</p>
 
-It's the "Fridge-to-Recipes" homework with a different fridge: **parts instead of ingredients, projects
-instead of recipes** — plus a few things that make it more than a prompt wrapped in a CLI.
+<p align="center">
+  <b>Tell PartsBin which electronics parts are in your drawer (or show it a photo).<br>
+  AI designs three buildable DIY projects: what you own, what to buy, build steps and time.</b>
+</p>
 
-The built-in gallery has **20 small builds** you can make in an afternoon or two: robotics (an ultrasonic radar,
-robot cars, a robot arm, walking robots), home gadgets (smart trash can, pet feeder, weather station) and
-security / home-network projects (Pi-hole ad blocker, home VPN, DIY security key, RFID lock, alarms).
+<p align="center">
+  <a href="#demo">Demo</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="#gallery">Gallery</a> ·
+  <a href="#tutorials">Tutorials</a> ·
+  <a href="#example-run">Example run</a> ·
+  <a href="#how-it-works">How it works</a>
+</p>
 
+It's the "Fridge-to-Recipes" homework with a different fridge: **parts instead of ingredients, projects instead of
+recipes**, plus the things that make it more than a prompt in a CLI: part matching and prices computed in code,
+a self-check that regenerates projects breaking your limits, retries with backoff, a web UI and a 20-project gallery.
+
+## Demo
+
+**In the terminal**: a real run on Windows PowerShell with a free [Groq](#free-providers-no-anthropic-account-needed) key.
+You list parts and limits, the app checks every project against them and marks what you own (✓) and what to buy (✗).
+
+<p align="center"><img src="docs/images/readme/cli-demo.gif" alt="PartsBin CLI demo: a real run with Groq" width="900"></p>
+
+**In the browser** (`npm run web`): pick a parts kit, set limits, get three project cards with a parts drawing,
+then browse the gallery. <sub>(Recorded in offline demo mode, so no API key was used.)</sub>
+
+<p align="center"><img src="docs/images/readme/web-demo.gif" alt="PartsBin web UI demo" width="900"></p>
+
+## Quick start
+
+Needs **Node.js 20.12+**.
+
+```bash
+git clone https://github.com/YOUR-USERNAME/partsbin.git
+cd partsbin
+npm install
+
+# 1. Try it offline, no API key needed
+npm start -- --provider mock "esp32, oled, push button, breadboard, jumper wires" --skill beginner
+
+# 2. Use a real model: copy the template and add a key (Groq's is free, see below)
+cp .env.example .env        # Windows: copy .env.example .env
+npm start -- "arduino uno, hc-sr04, sg90 servo, breadboard, jumper wires" --skill beginner --hours 3
+
+# 3. The web UI
+npm run web                 # → http://localhost:3000
 ```
-parts you own ─┐                     ┌─ 3 projects, each with:
-photo of bin ──┼──▶  LLM  ──▶ verify ┼─   ✓ owned / ✗ missing parts (+ CZK price)
-constraints ───┘      ▲          │   ├─   step-by-step build instructions
-                      └─ repair /─┘   ├─   estimated build time
-                         regenerate   └─   constraint checks + shopping list
-```
-
-![PartsBin web UI](docs/images/screenshots/web-results.png)
-
-**New here?** Start with the [tutorials](docs/README.md), or browse the [gallery](#gallery) below.
 
 ## Features
 
-| | |
+| Feature | What it does |
 |---|---|
 | 📷 **Photo → parts list** | A vision call detects components in a photo of your parts bin. You confirm or edit the list before anything is generated. |
 | 🧮 **Missing parts computed in code, not by the LLM** | Every part name (yours and the model's) is mapped to a canonical key through an alias catalog (`"9g micro servo"`, `"SG90"` and `"servo"` are the same part, but `"MG996R servo"` isn't). Quantities count: own 2 servos, need 4 → *have 2, missing 2*. |
@@ -38,26 +71,43 @@ constraints ───┘      ▲          │   ├─   step-by-step build ins
 | 🖼 **Parts pictures** | Every project, including ones the AI just invented, gets a generated illustration of its parts: solid cards for what you own, dashed red "BUY ~60 Kč" cards for what's missing. 60+ hand-drawn component icons. |
 | 📚 **Gallery of 20 small projects** | Robotics (radar, obstacle-avoiding and Bluetooth cars, robot arm, walkers, laser cat toy), home gadgets (smart trash can, pet feeder, weather station, theremin) and security builds (Pi-hole, VPN, security key, RFID lock, alarms, doorbell). Ranked against *your* parts, with real photos. Works offline, no API key. |
 | 📘 **Tutorials + example code** | Eight step-by-step guides, including four complete builds: Pi-hole ad blocker, RFID lock, ultrasonic radar and air theremin, with Arduino and Python code ([docs](docs/README.md)). |
-| 🖥 **CLI + web UI** | Coloured terminal output, `--json`, Markdown shopping-list export, SVG export, and a web UI with photo drag-and-drop, a gallery and a "how it works" page. |
-| 🧪 **Tested** | 29 unit tests: part matching, quantity parsing, retry/backoff, repair loop, constraint regeneration, HTTP client against a stubbed `fetch`, gallery data, illustrations. |
+| 🖥 **CLI + web UI** | Coloured terminal output, `--json`, `--out` (save a run), Markdown shopping-list export, SVG export, and a web UI with photo drag-and-drop, a gallery and a "how it works" page. |
+| 🧪 **Tested** | 30 unit tests: part matching, quantity parsing, retry/backoff, repair loop, constraint regeneration, HTTP client against a stubbed `fetch`, gallery data, illustrations. |
+
+## Screenshots
+
+<table>
+<tr>
+<td width="50%"><img src="docs/images/screenshots/web-results.png" alt="Project results"><br><sub><b>Make projects</b>: parts drawing, owned ✓ / missing ✗ parts, numbered build steps</sub></td>
+<td width="50%"><img src="docs/images/screenshots/web-gallery.png" alt="Gallery"><br><sub><b>Gallery</b>: 20 projects ranked by how many of your parts they use</sub></td>
+</tr>
+<tr>
+<td><img src="docs/images/screenshots/web-gallery-detail.png" alt="Gallery project"><br><sub><b>A gallery project</b> checked against your parts, with the price of what's missing</sub></td>
+<td><img src="docs/images/screenshots/web-how.png" alt="How it works"><br><sub><b>How it works</b>: the pipeline and how to read a project card</sub></td>
+</tr>
+<tr>
+<td><img src="docs/images/screenshots/cli-results.png" alt="CLI output"><br><sub><b>CLI</b>: the real Groq run from the <a href="#example-run">example</a></sub></td>
+<td><img src="docs/images/screenshots/cli-gallery.png" alt="CLI gallery"><br><sub><b>CLI gallery</b>: <code>npm start -- --gallery</code></sub><br><br>
+<p align="center"><img src="docs/images/screenshots/web-mobile.png" alt="Mobile" width="200"><br><sub><b>On a phone</b></sub></p></td>
+</tr>
+</table>
 
 ## Setup
 
 Requires **Node.js 20.12+** (uses built-in `fetch`, `process.loadEnvFile` and `node:test`).
 
 ```bash
-git clone <this repo> && cd partsbin
+git clone https://github.com/YOUR-USERNAME/partsbin.git && cd partsbin
 npm install
-cp .env.example .env      # then put your API key into .env
+cp .env.example .env      # then put your API key into .env (Windows: copy .env.example .env)
 ```
 
 Try it without any key first:
 
 ```bash
-LLM_PROVIDER=mock npm start -- "raspberry pi zero 2 w, microsd card, esp32, oled" --skill beginner
+npm start -- --provider mock "raspberry pi zero 2 w, microsd card, esp32, oled" --skill beginner
 ```
 
-(Windows PowerShell: `$env:LLM_PROVIDER="mock"; npm start -- "raspberry pi zero 2 w, microsd card, esp32, oled" --skill beginner`.)
 The mock provider answers from the gallery, so it's also the fastest way to demo the app.
 
 ## Environment variables
@@ -138,24 +188,50 @@ Type or photograph your parts (or click one of the example kits), set constraint
 cards with a parts picture, owned/missing parts, steps, constraint checks and a downloadable shopping list.
 The **Gallery** tab shows the example projects ranked against your parts; **How it works** explains the cards.
 
-| Gallery | Project from the gallery | On a phone |
-|---|---|---|
-| ![Gallery](docs/images/screenshots/web-gallery.png) | ![Gallery detail](docs/images/screenshots/web-gallery-detail.png) | ![Mobile](docs/images/screenshots/web-mobile.png) |
-
-The terminal version:
-
-| `npm start -- "…parts…" --skill beginner …` | `npm start -- --gallery "…parts…"` |
-|---|---|
-| ![CLI results](docs/images/screenshots/cli-results.png) | ![CLI gallery](docs/images/screenshots/cli-gallery.png) |
-
 ## Gallery
 
 20 small, mostly beginner builds ship with the app (`data/showcase.json`): **robotics** (radar, robot cars,
-robot arm, walkers), **home gadgets** and **security / home-network projects**. See them with `npm start -- --gallery`
-or in the web UI. Each one is a complete build: parts with purposes, numbered steps, time, difficulty and safety notes.
+robot arm, walkers), **home gadgets** and **security / home-network projects**. Each is a complete build with parts,
+numbered steps, time, difficulty and safety notes. Browse them with `npm start -- --gallery` or in the web UI's Gallery tab.
 
-Photos show the finished result or a similar real build (openly licensed, from Wikimedia Commons, see
-[credits](docs/images/photos/CREDITS.md)); the parts drawings are generated by the app.
+<table>
+<tr>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/pi-hole.jpg" width="190" height="130" alt="Pi-hole Ad Blocker"><br><b>Pi-hole Ad Blocker</b><br><sub>beginner · ~1.5 h · <a href="docs/tutorials/05-build-pi-hole.md">📘 guide</a></sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/radar-sweep.jpg" width="190" height="130" alt="Ultrasonic Radar Sweep"><br><b>Ultrasonic Radar Sweep</b><br><sub>beginner · ~3 h · <a href="docs/tutorials/07-build-radar-sweep.md">📘 guide</a></sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/obstacle-car.jpg" width="190" height="130" alt="Obstacle-Avoiding Robot Car"><br><b>Obstacle-Avoiding Robot Car</b><br><sub>beginner · ~3 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/security-key.jpg" width="190" height="130" alt="DIY Security Key"><br><b>DIY Security Key</b><br><sub>beginner · ~1 h</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/robot-arm.jpg" width="190" height="130" alt="Mini Robot Arm"><br><b>Mini Robot Arm</b><br><sub>intermediate · ~4 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/rfid-lock.jpg" width="190" height="130" alt="RFID Access Lock"><br><b>RFID Access Lock</b><br><sub>beginner · ~2 h · <a href="docs/tutorials/06-build-rfid-lock.md">📘 guide</a></sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/bluetooth-car.jpg" width="190" height="130" alt="Bluetooth RC Car"><br><b>Bluetooth RC Car</b><br><sub>beginner · ~3 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/home-vpn.jpg" width="190" height="130" alt="Home VPN with WireGuard"><br><b>Home VPN with WireGuard</b><br><sub>intermediate · ~2.5 h</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/desk-crab.jpg" width="190" height="130" alt="Desk Crab — a 4-servo walking robot"><br><b>Desk Crab — a 4-servo walking robot</b><br><sub>intermediate · ~6 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/door-alarm.jpg" width="190" height="130" alt="Door Tamper Alarm"><br><b>Door Tamper Alarm</b><br><sub>beginner · ~2 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/laser-tripwire.jpg" width="190" height="130" alt="Laser Tripwire Alarm"><br><b>Laser Tripwire Alarm</b><br><sub>beginner · ~1 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/password-generator.jpg" width="190" height="130" alt="Hardware Password Generator"><br><b>Hardware Password Generator</b><br><sub>beginner · ~1.5 h</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="25%"><img src="docs/images/gallery/smart-trash-can.svg" width="190" height="130" alt="Smart Trash Can"><br><b>Smart Trash Can</b><br><sub>beginner · ~2 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/pet-feeder.jpg" width="190" height="130" alt="Automatic Pet Feeder"><br><b>Automatic Pet Feeder</b><br><sub>beginner · ~3 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/gallery/laser-cat-toy.svg" width="190" height="130" alt="Laser Cat Toy"><br><b>Laser Cat Toy</b><br><sub>beginner · ~2 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/mini-biped.jpg" width="190" height="130" alt="Mini Biped Walker"><br><b>Mini Biped Walker</b><br><sub>intermediate · ~8 h</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/air-theremin.jpg" width="190" height="130" alt="Air Theremin"><br><b>Air Theremin</b><br><sub>beginner · ~2 h · <a href="docs/tutorials/08-build-air-theremin.md">📘 guide</a></sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/weather-station.jpg" width="190" height="130" alt="Desk Weather Station"><br><b>Desk Weather Station</b><br><sub>beginner · ~2 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/plant-buddy.jpg" width="190" height="130" alt="Plant Watering Buddy"><br><b>Plant Watering Buddy</b><br><sub>intermediate · ~4 h</sub></td>
+<td align="center" valign="top" width="25%"><img src="docs/images/photos/projects/esp32cam-doorbell.jpg" width="190" height="130" alt="ESP32-CAM Video Doorbell"><br><b>ESP32-CAM Video Doorbell</b><br><sub>intermediate · ~3 h</sub></td>
+</tr>
+</table>
+
+<sub>Photos show the finished result or a similar real build (openly licensed, from Wikimedia Commons, see
+[credits](docs/images/photos/CREDITS.md)). Projects without a photo show the app's generated parts drawing.</sub>
+
+<details>
+<summary><b>Full gallery table</b>: descriptions, parts drawings and CLI ids</summary>
 
 | Photo | Project | Parts | Level | Guide |
 |---|---|---|---|---|
@@ -180,6 +256,8 @@ Photos show the finished result or a similar real build (openly licensed, from W
 | <img src="docs/images/photos/projects/plant-buddy.jpg" width="220" alt="A similar real build: an automatic plant-watering system"><br><sub>A similar real build: an automatic plant-watering system</sub> | **Plant Watering Buddy**<br>An ESP32 watches the soil moisture of one plant, waters it with a tiny pump when it gets dry and shows the moisture history on a web page on your Wi-Fi.<br>`--project plant-buddy` | <img src="docs/images/gallery/plant-buddy.svg" width="220" alt="Plant Watering Buddy parts"> | intermediate · ~4 h |  |
 | <img src="docs/images/photos/projects/esp32cam-doorbell.jpg" width="220" alt="A shop-bought video doorbell, the product this project rebuilds"><br><sub>A shop-bought video doorbell, the product this project rebuilds</sub> | **ESP32-CAM Video Doorbell**<br>A doorbell button with a tiny camera: when someone presses it, you get a phone notification with a photo of who's at the door.<br>`--project esp32cam-doorbell` | <img src="docs/images/gallery/esp32cam-doorbell.svg" width="220" alt="ESP32-CAM Video Doorbell parts"> | intermediate · ~3 h |  |
 
+</details>
+
 Add your own: see [tutorial 4](docs/tutorials/04-customize-the-catalog.md#add-a-project-to-the-gallery).
 
 ## Tutorials
@@ -192,6 +270,8 @@ Add your own: see [tutorial 4](docs/tutorials/04-customize-the-catalog.md#add-a-
 | 4 | [Customize the catalog and the gallery](docs/tutorials/04-customize-the-catalog.md) | prices, part names, your own projects |
 | 5 | [Build the Pi-hole Ad Blocker](docs/tutorials/05-build-pi-hole.md) | block ads for your whole home network |
 | 6 | [Build the RFID Access Lock](docs/tutorials/06-build-rfid-lock.md) | full build + [Arduino code](examples/rfid-lock/rfid-lock.ino) |
+| 7 | [Build the Ultrasonic Radar](docs/tutorials/07-build-radar-sweep.md) | full build + [Arduino](examples/radar-sweep/radar-sweep.ino) & [Python](examples/radar-sweep/radar_viewer.py) code |
+| 8 | [Build the Air Theremin](docs/tutorials/08-build-air-theremin.md) | full build + [Arduino code](examples/air-theremin/air-theremin.ino) |
 
 ## Example run
 
@@ -447,6 +527,19 @@ Model: mock (offline, answers from the gallery) · 2 LLM calls
 
 ## How it works
 
+```mermaid
+flowchart LR
+    A["Your parts<br/>(text or photo)"] --> B["Parse + match<br/>alias catalog"]
+    C["Constraints<br/>goal · skill · hours · budget"] --> D
+    B --> D["LLM<br/>JSON-schema output"]
+    D -->|"invalid JSON"| E["zod errors<br/>sent back to repair"]
+    E --> D
+    D --> F["Enrich in code<br/>owned / missing / CZK"]
+    F --> G{"All constraints<br/>met?"}
+    G -->|"no: reasons fed back"| D
+    G -->|yes| H["3 ranked projects<br/>CLI · web · shopping list"]
+```
+
 1. **Parse inventory** (`src/core/inventory.ts`) — split the list, read quantities, map each name to a canonical key (`src/core/catalog.ts`) and merge duplicates.
 2. *(optional)* **Detect parts from a photo** — one vision call returns `{parts: [{name, qty}]}`; the user confirms.
 3. **Generate** (`src/core/generate.ts`) — system prompt with design rules (`src/core/prompts.ts`), user prompt with inventory, constraints and the catalog's canonical names + prices. Output is constrained by a JSON Schema and validated with zod; on failure the validator's errors go back to the model (up to 2 repairs).
@@ -456,7 +549,9 @@ Model: mock (offline, answers from the gallery) · 2 LLM calls
 
 All HTTP calls go through `withRetry()` (`src/core/retry.ts`).
 
-```
+### Project structure
+
+```text
 src/
   core/
     schemas.ts     zod + JSON Schemas, result types
@@ -495,7 +590,7 @@ test/                     node:test suites
 ## Tests
 
 ```bash
-npm test          # 29 tests, no network, no API key needed
+npm test          # 30 tests, no network, no API key needed
 npm run typecheck
 ```
 
@@ -507,3 +602,7 @@ npm run typecheck
 - Build steps are written by the model and can contain mistakes (in the run above: an outdated default Pi password, and a 5 V PIR sensor powered from 3.3 V). The prompt includes wiring rules for 3.3 V boards, but check pinouts against the module's datasheet before powering anything.
 - The parts pictures are generated illustrations (component icons), not photos of real builds.
 - The example code (`examples/`) is compile-checked; gallery photos show the finished result or a similar real build, not this exact one. Add photos of your own builds to `docs/images/` once you build them.
+
+## License
+
+[MIT](LICENSE). Gallery photos keep their own Creative Commons licenses, listed in [CREDITS](docs/images/photos/CREDITS.md).
